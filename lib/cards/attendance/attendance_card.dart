@@ -12,70 +12,128 @@ class AttendanceCard extends StatelessWidget {
     if (attendance == null) {
       return const SizedBox.shrink();
     }
-    return Card(
-      color: kWhite,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Text(
-              'Attendance Details',
-              style: TextStyle(
-                color: kBlack,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: kDarkGrey.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+        color: kWhite,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Gradient header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              gradient: LinearGradient(
+                colors: [kDarkGrey, kBlack],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-            const SizedBox(height: 12),
-            // ...existing code...
-            Row(
+            child: Row(
               children: [
-                const Icon(Iconsax.login, color: kDarkGrey, size: 20),
-                const SizedBox(width: 8),
-                Text('Check-In:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
-                const SizedBox(width: 8),
-                Text(
-                  attendance!.checkIn != null ? attendance!.checkIn!.toLocal().toString().substring(11, 16) : 'N/A',
-                  style: TextStyle(color: kDarkGrey),
+                Container(
+                  decoration: BoxDecoration(
+                    color: kWhiteGrey,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(Iconsax.tick_circle, color: kDarkGrey, size: 24),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Iconsax.logout, color: kDarkGrey, size: 20),
-                const SizedBox(width: 8),
-                Text('Check-Out:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Text(
-                  attendance!.checkOut != null ? attendance!.checkOut!.toLocal().toString().substring(11, 16) : 'N/A',
-                  style: TextStyle(color: kDarkGrey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Iconsax.location, color: kDarkGrey, size: 20),
-                const SizedBox(width: 8),
-                Text('Location:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    attendance!.location,
-                    style: TextStyle(color: kGrey),
-                    overflow: TextOverflow.ellipsis,
+                  'Attendance Details',
+                  style: TextStyle(
+                    color: kWhite,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: kWhiteGrey,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: const Icon(Iconsax.login, color: kDarkGrey, size: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('Check-In:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
+                    const SizedBox(width: 8),
+                    Text(
+                      attendance!.checkIn != null ? attendance!.checkIn!.toLocal().toString().substring(11, 16) : 'N/A',
+                      style: TextStyle(color: kDarkGrey, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: kWhiteGrey,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: const Icon(Iconsax.logout, color: kDarkGrey, size: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('Check-Out:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
+                    const SizedBox(width: 8),
+                    Text(
+                      attendance!.checkOut != null ? attendance!.checkOut!.toLocal().toString().substring(11, 16) : 'N/A',
+                      style: TextStyle(color: kDarkGrey, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: kWhiteGrey,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: const Icon(Iconsax.location, color: kDarkGrey, size: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('Location:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        attendance!.location,
+                        style: TextStyle(color: kGrey, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
