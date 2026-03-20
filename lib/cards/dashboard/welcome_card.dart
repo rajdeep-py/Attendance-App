@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../theme/app_theme.dart';
 
 class WelcomeCard extends StatelessWidget {
@@ -10,17 +11,32 @@ class WelcomeCard extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return Card(
 			color: cardColor,
-			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-			elevation: 4,
+			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+			elevation: 8,
 			margin: const EdgeInsets.symmetric(vertical: 8),
 			child: Padding(
-				padding: const EdgeInsets.all(16.0),
-				child: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
+				padding: const EdgeInsets.all(20.0),
+				child: Row(
 					children: [
-						Text('Hello, $userName!', style: kHeaderTextStyle.copyWith(color: kBlack, fontSize: 22)),
-						const SizedBox(height: 8),
-						Text('Ready to record your attendance today?', style: kTaglineTextStyle.copyWith(color: kGrey)),
+						Container(
+							decoration: BoxDecoration(
+								color: kDarkGrey,
+								borderRadius: BorderRadius.circular(12),
+							),
+							padding: const EdgeInsets.all(10),
+							child: const Icon(Iconsax.user, color: kWhiteGrey, size: 32),
+						),
+						const SizedBox(width: 18),
+						Expanded(
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									Text('Hello, $userName!', style: kHeaderTextStyle.copyWith(color: kBlack, fontSize: 22)),
+									const SizedBox(height: 8),
+									Text('Ready to record your attendance today?', style: kTaglineTextStyle.copyWith(color: kGrey)),
+								],
+							),
+						),
 					],
 				),
 			),

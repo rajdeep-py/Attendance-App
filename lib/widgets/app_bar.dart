@@ -16,7 +16,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 	@override
 	Widget build(BuildContext context) {
 		return AppBar(
-			backgroundColor: kBlack,
+			backgroundColor: kWhite,
 			elevation: 0,
 			leading: Padding(
 				padding: const EdgeInsets.all(8.0),
@@ -25,13 +25,13 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 			title: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					Text(title, style: kHeaderTextStyle.copyWith(color: kWhite, fontSize: 20)),
-					Text(subtitle, style: kTaglineTextStyle.copyWith(color: kWhiteGrey, fontSize: 14)),
+					Text(title, style: kHeaderTextStyle.copyWith(color: kBlack, fontSize: 20)),
+					Text(subtitle, style: kTaglineTextStyle.copyWith(color: kGrey, fontSize: 14)),
 				],
 			),
 			actions: [
 				IconButton(
-					icon: const Icon(Icons.notifications_none, color: kWhiteGrey, size: 28),
+					icon: const Icon(Icons.notifications_none, color: kBlack, size: 28),
 					onPressed: () {},
 				),
 			],
