@@ -1,3 +1,4 @@
+import 'package:attendance_app/cards/dashboard/footer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
@@ -22,12 +23,15 @@ class ProfileScreen extends ConsumerWidget {
           ),
       backgroundColor: kWhiteGrey,
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Column(
           children: [
             const SizedBox(height: 16),
             ProfileHeaderCard(user: user),
-            const SizedBox(height: 16),
+            const SizedBox(height: 2),
             const ProfileOptionsCard(),
+            const SizedBox(height: 2),
+            const HomeFooter()
           ],
         ),
       ),

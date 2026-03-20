@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/holiday/calendar_card.dart';
 import '../../cards/holiday/detail_card.dart';
@@ -28,19 +29,19 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
     setState(() {
       _currentIndex = index;
     });
-    final router = Navigator.of(context);
+    final router = GoRouter.of(context);
     switch (index) {
       case 0:
-        router.pushReplacementNamed('/dashboard');
+        router.go('/dashboard');
         break;
       case 1:
-        router.pushReplacementNamed('/my-attendance');
+        router.go('/my-attendance');
         break;
       case 2:
         // Already on Holidays
         break;
       case 3:
-        router.pushReplacementNamed('/profile');
+        router.go('/profile');
         break;
     }
   }
