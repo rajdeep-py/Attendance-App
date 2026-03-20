@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/dashboard_provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 class CheckInOutCard extends ConsumerWidget {
 	final Color cardColor;
@@ -72,10 +73,27 @@ class CheckInOutCard extends ConsumerWidget {
 										elevation: 6,
 									),
 									onPressed: attendance.checkIn == null
-											? () {
-													ref.read(dashboardProvider.notifier).checkIn(DateTime.now(), 'Current Location');
+										? () async {
+											bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+											if (!serviceEnabled) {
+												await Geolocator.openLocationSettings();
+												return;
+											}
+											LocationPermission permission = await Geolocator.checkPermission();
+											if (permission == LocationPermission.denied) {
+												permission = await Geolocator.requestPermission();
+												if (permission == LocationPermission.denied) {
+													return;
 												}
-											: null,
+											}
+											if (permission == LocationPermission.deniedForever) {
+												return;
+											}
+											Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+											String location = '${position.latitude}, ${position.longitude}';
+											ref.read(dashboardProvider.notifier).checkIn(DateTime.now(), location);
+										}
+										: null,
 									icon: const Icon(Iconsax.login, size: 20),
 									label: const Text('Check In'),
 								),
@@ -118,10 +136,10 @@ class CheckInOutCard extends ConsumerWidget {
 										elevation: 6,
 									),
 									onPressed: attendance.checkIn != null && attendance.checkOut == null
-											? () {
-													ref.read(dashboardProvider.notifier).checkOut(DateTime.now());
-												}
-											: null,
+										? () {
+											ref.read(dashboardProvider.notifier).checkOut(DateTime.now());
+										}
+										: null,
 									icon: const Icon(Iconsax.logout, size: 20),
 									label: const Text('Check Out'),
 								),

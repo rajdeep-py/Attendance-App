@@ -45,7 +45,7 @@ class ProfileOptionsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: kDarkGrey.withOpacity(0.08),
+            color: kDarkGrey.withAlpha((0.08 * 255).toInt()),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -56,7 +56,7 @@ class ProfileOptionsCard extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: options.length,
-        separatorBuilder: (_, __) => const Divider(height: 1, color: kWhiteGrey),
+        separatorBuilder: (_, _) => const Divider(height: 1, color: kWhiteGrey),
         itemBuilder: (context, index) {
           final option = options[index];
           return ListTile(

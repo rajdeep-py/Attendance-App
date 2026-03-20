@@ -129,7 +129,7 @@ final ThemeData appTheme = ThemeData(
 	),
 	inputDecorationTheme: InputDecorationTheme(
 		filled: true,
-		fillColor: kDarkGrey,
+		fillColor: kDarkGrey.withAlpha((0.08 * 255).toInt()),
 		border: OutlineInputBorder(
 			borderRadius: BorderRadius.circular(12),
 			borderSide: BorderSide.none,

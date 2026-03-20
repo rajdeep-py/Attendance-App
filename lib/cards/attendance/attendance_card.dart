@@ -18,7 +18,7 @@ class AttendanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: kDarkGrey.withOpacity(0.08),
+            color: kDarkGrey.withAlpha((0.08 * 255).toInt()),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
