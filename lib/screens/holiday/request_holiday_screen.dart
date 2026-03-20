@@ -47,11 +47,39 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
             const SizedBox(height: 16),
             Text('Select Date', style: kHeaderTextStyle.copyWith(fontSize: 18, color: kBlack)),
             const SizedBox(height: 8),
-            CalendarDatePicker(
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now().subtract(const Duration(days: 365)),
-              lastDate: DateTime.now().add(const Duration(days: 365)),
-              onDateChanged: (date) => setState(() => _selectedDate = date),
+            Container(
+              decoration: BoxDecoration(
+                color: kWhite,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: kDarkGrey, // selected day
+                    onPrimary: kWhite, // selected day text
+                    surface: kWhiteGrey, // calendar background
+                    onSurface: kBlack, // default text
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      foregroundColor: kDarkGrey,
+                    ),
+                  ),
+                ),
+                child: CalendarDatePicker(
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now().subtract(const Duration(days: 365)),
+                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                  onDateChanged: (date) => setState(() => _selectedDate = date),
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
