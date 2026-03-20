@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/auth_provider.dart';
@@ -34,8 +35,9 @@ class LoginScreen extends ConsumerWidget {
 									child: TextField(
 										controller: phoneController,
 										keyboardType: TextInputType.phone,
+										style: const TextStyle(color: kBlack),
 										decoration: InputDecoration(
-											prefixIcon: const Icon(Iconsax.mobile, color: kDarkGrey),
+											prefixIcon: const Icon(Iconsax.call, color: kDarkGrey),
 											hintText: 'Phone Number',
 											border: InputBorder.none,
 											filled: true,
@@ -53,6 +55,7 @@ class LoginScreen extends ConsumerWidget {
 									child: TextField(
 										controller: passwordController,
 										obscureText: true,
+										style: const TextStyle(color: kBlack),
 										decoration: InputDecoration(
 											prefixIcon: const Icon(Iconsax.lock, color: kDarkGrey),
 											hintText: 'Password',
@@ -81,6 +84,8 @@ class LoginScreen extends ConsumerWidget {
 												phoneController.text,
 												passwordController.text,
 											);
+											// Use GoRouter for navigation
+											context.go('/dashboard');
 										},
 										child: const Text('Login'),
 									),
