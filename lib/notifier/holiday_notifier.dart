@@ -1,7 +1,10 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../models/holiday.dart';
+import '../models/holiday_request.dart';
 
 class HolidayNotifier extends StateNotifier<Map<DateTime, Holiday>> {
+  List<HolidayRequest> requests = [];
+
   HolidayNotifier()
       : super({
           _dateOnly(DateTime(2026, 3, 25)): Holiday(
@@ -20,6 +23,9 @@ class HolidayNotifier extends StateNotifier<Map<DateTime, Holiday>> {
             occasion: 'International Workers Day',
           ),
         });
+  void addRequest(HolidayRequest request) {
+    requests.add(request);
+  }
 
   static DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 

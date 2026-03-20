@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/dashboard_provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CheckInOutCard extends ConsumerWidget {
 	final Color cardColor;
@@ -11,6 +12,7 @@ class CheckInOutCard extends ConsumerWidget {
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
+		final ImagePicker picker = ImagePicker();
 		final attendance = ref.watch(dashboardProvider);
 		return Card(
 			color: cardColor,
@@ -74,6 +76,7 @@ class CheckInOutCard extends ConsumerWidget {
 									),
 									onPressed: attendance.checkIn == null
 										? () async {
+											// Location
 											bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 											if (!serviceEnabled) {
 												await Geolocator.openLocationSettings();
@@ -91,7 +94,10 @@ class CheckInOutCard extends ConsumerWidget {
 											}
 											Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 											String location = '${position.latitude}, ${position.longitude}';
-											ref.read(dashboardProvider.notifier).checkIn(DateTime.now(), location);
+											// Selfie
+											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+											if (selfie == null) return;
+											ref.read(dashboardProvider.notifier).checkIn(DateTime.now(), location, selfie.path);
 										}
 										: null,
 									icon: const Icon(Iconsax.login, size: 20),
@@ -136,8 +142,10 @@ class CheckInOutCard extends ConsumerWidget {
 										elevation: 6,
 									),
 									onPressed: attendance.checkIn != null && attendance.checkOut == null
-										? () {
-											ref.read(dashboardProvider.notifier).checkOut(DateTime.now());
+										? () async {
+											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+											if (selfie == null) return;
+											ref.read(dashboardProvider.notifier).checkOut(DateTime.now(), selfie.path);
 										}
 										: null,
 									icon: const Icon(Iconsax.logout, size: 20),

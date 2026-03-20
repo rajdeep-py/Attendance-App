@@ -19,6 +19,11 @@ class ProfileOptionsCard extends StatelessWidget {
         'subtitle': 'Get your monthly salary slip',
       },
       {
+        'icon': Iconsax.calendar,
+        'title': 'My Holidays',
+        'subtitle': 'View and manage your holiday requests',
+      },
+      {
         'icon': Iconsax.notification,
         'title': 'Notifications',
         'subtitle': 'Manage notification preferences',

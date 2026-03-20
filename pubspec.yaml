@@ -28,10 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter_riverpod: ^2.4.0
-  go_router: ^7.0.0
+  image_picker: ^1.0.7
+  flutter_riverpod: ^3.3.1
+  go_router: ^17.1.0
   iconsax: ^0.0.8
-  geolocator: ^10.0.1
+  geolocator: ^14.0.2
 
   flutter:
     sdk: flutter
@@ -43,7 +44,7 @@ dependencies:
 
 dev_dependencies:
 # For generating app icons and splash screens
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
 
   # For renaming the app and changing the package name
   rename_app: ^1.3.2

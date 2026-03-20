@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../models/attendance.dart';
 
 class AttendanceNotifier extends StateNotifier<Map<DateTime, Attendance>> {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -35,7 +36,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 							IconButton(
 								icon: const Icon(Iconsax.arrow_left, color: kBlack, size: 24),
 								onPressed: () {
-									Navigator.of(context).maybePop();
+									context.pop();
 								},
 								tooltip: 'Back',
 							),

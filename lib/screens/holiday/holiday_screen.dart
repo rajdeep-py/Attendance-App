@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/holiday/calendar_card.dart';
 import '../../cards/holiday/detail_card.dart';
@@ -68,6 +69,16 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
           ),
           HolidayDetailCard(holiday: holiday),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).go('/request-holiday');
+        },
+        backgroundColor: kDarkGrey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        tooltip: 'Request Holiday',
+        elevation: 8,
+        child: const Icon(Iconsax.add, color: Colors.white, size: 32),
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,

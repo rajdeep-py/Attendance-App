@@ -1,14 +1,15 @@
+import 'package:flutter_riverpod/legacy.dart';
+
 import '../models/attendance.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardNotifier extends StateNotifier<Attendance> {
 	DashboardNotifier() : super(Attendance());
 
-	void checkIn(DateTime time, String location) {
-		state = state.copyWith(checkIn: time, location: location);
+	void checkIn(DateTime time, String location, String selfiePath) {
+		state = state.copyWith(checkIn: time, location: location, checkInSelfie: selfiePath);
 	}
 
-	void checkOut(DateTime time) {
-		state = state.copyWith(checkOut: time);
+	void checkOut(DateTime time, String selfiePath) {
+		state = state.copyWith(checkOut: time, checkOutSelfie: selfiePath);
 	}
 }

@@ -5,6 +5,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/attendance/my_attendance_screen.dart';
 import '../screens/holiday/holiday_screen.dart';
+import '../screens/holiday/request_holiday_screen.dart';
 import '../screens/profile/profile_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -56,6 +57,15 @@ final GoRouter appRouter = GoRouter(
 			   path: '/holidays',
 			   pageBuilder: (context, state) => CustomTransitionPage(
 				   child: const HolidayScreen(),
+				   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+					   return FadeTransition(opacity: animation, child: child);
+				   },
+			   ),
+		   ),
+		   GoRoute(
+			   path: '/request-holiday',
+			   pageBuilder: (context, state) => CustomTransitionPage(
+				   child: const RequestHolidayScreen(),
 				   transitionsBuilder: (context, animation, secondaryAnimation, child) {
 					   return FadeTransition(opacity: animation, child: child);
 				   },
