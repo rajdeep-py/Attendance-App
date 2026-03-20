@@ -34,31 +34,61 @@ class BottomNavBar extends StatelessWidget {
 						break;
 				}
 			},
-			backgroundColor: kDarkGrey,
-			selectedItemColor: kWhite,
-			unselectedItemColor: kWhiteGrey,
+			backgroundColor: kWhite,
+			selectedItemColor: kDarkGrey,
+			unselectedItemColor: kGrey,
 			showSelectedLabels: true,
 			showUnselectedLabels: true,
-			items: const [
+			items: [
 				BottomNavigationBarItem(
-					icon: Icon(Iconsax.category),
+					icon: Container(
+						decoration: BoxDecoration(
+							color: currentIndex == 0 ? kDarkGrey.withAlpha(30) : Colors.transparent,
+							borderRadius: BorderRadius.circular(12),
+						),
+						padding: const EdgeInsets.all(8),
+						child: Icon(Iconsax.category, color: currentIndex == 0 ? kDarkGrey : kGrey, size: 26),
+					),
 					label: 'Dashboard',
 				),
 				BottomNavigationBarItem(
-					icon: Icon(Iconsax.tick_circle),
+					icon: Container(
+						decoration: BoxDecoration(
+							color: currentIndex == 1 ? kDarkGrey.withAlpha(30) : Colors.transparent,
+							borderRadius: BorderRadius.circular(12),
+						),
+						padding: const EdgeInsets.all(8),
+						child: Icon(Iconsax.tick_circle, color: currentIndex == 1 ? kDarkGrey : kGrey, size: 26),
+					),
 					label: 'My Attendance',
 				),
 				BottomNavigationBarItem(
-					icon: Icon(Iconsax.calendar),
+					icon: Container(
+						decoration: BoxDecoration(
+							color: currentIndex == 2 ? kDarkGrey.withAlpha(30) : Colors.transparent,
+							borderRadius: BorderRadius.circular(12),
+						),
+						padding: const EdgeInsets.all(8),
+						child: Icon(Iconsax.calendar, color: currentIndex == 2 ? kDarkGrey : kGrey, size: 26),
+					),
 					label: 'Holidays',
 				),
 				BottomNavigationBarItem(
-					icon: Icon(Iconsax.user),
+					icon: Container(
+						decoration: BoxDecoration(
+							color: currentIndex == 3 ? kDarkGrey.withAlpha(30) : Colors.transparent,
+							borderRadius: BorderRadius.circular(12),
+						),
+						padding: const EdgeInsets.all(8),
+						child: Icon(Iconsax.user, color: currentIndex == 3 ? kDarkGrey : kGrey, size: 26),
+					),
 					label: 'Profile',
 				),
 			],
 			type: BottomNavigationBarType.fixed,
-			elevation: 8,
+			elevation: 16,
+			selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontFamily: kFontFamily),
+			unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400, fontFamily: kFontFamily),
 		);
 	}
 }
