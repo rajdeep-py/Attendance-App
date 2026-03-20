@@ -64,7 +64,12 @@ final ButtonStyle kPremiumButtonStyle = ElevatedButton.styleFrom(
 // App logo widget (example)
 class AppLogo extends StatelessWidget {
 	final double size;
-	const AppLogo({this.size = 48, super.key});
+	final String assetPath;
+	const AppLogo({
+		this.size = 48,
+		this.assetPath = 'assets/logo/logo_no_bg.png',
+		super.key,
+	});
 
 	@override
 	Widget build(BuildContext context) {
@@ -74,7 +79,7 @@ class AppLogo extends StatelessWidget {
 			decoration: BoxDecoration(
 				shape: BoxShape.circle,
 				gradient: const LinearGradient(
-					colors: [kDarkGrey, kBlack],
+					colors: [kWhite, kWhite],
 					begin: Alignment.topLeft,
 					end: Alignment.bottomRight,
 				),
@@ -87,10 +92,11 @@ class AppLogo extends StatelessWidget {
 				],
 			),
 			child: Center(
-				child: Icon(
-					Icons.fingerprint,
-					color: kWhiteGrey,
-					size: size * 0.6,
+				child: Image.asset(
+					assetPath,
+					width: size * 0.6,
+					height: size * 0.6,
+					fit: BoxFit.contain,
 				),
 			),
 		);

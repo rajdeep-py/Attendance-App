@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import '../../cards/dashboard/welcome_card.dart';
@@ -18,13 +19,35 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 	int _currentIndex = 0;
 
+	void _onNavTap(int index) {
+		setState(() {
+			_currentIndex = index;
+		});
+		final router = GoRouter.of(context);
+		switch (index) {
+			case 0:
+				router.go('/dashboard');
+				break;
+			case 1:
+				router.go('/my-attendance');
+				break;
+			case 2:
+				router.go('/holidays');
+				break;
+			case 3:
+				router.go('/profile');
+				break;
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
 			backgroundColor: kWhite,
-			appBar: const DashboardAppBar(
-				title: 'Attendance Dashboard',
+			appBar: const PremiumAppBar(
+				title: 'Dashboard',
 				subtitle: 'Record your attendance easily',
+				logoAssetPath: 'assets/logo/logo_no_bg.png',
 			),
 			body: SingleChildScrollView(
 				padding: const EdgeInsets.all(kScreenPadding),
@@ -41,12 +64,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 			),
 			bottomNavigationBar: BottomNavBar(
 				currentIndex: _currentIndex,
-				onTap: (index) {
-					setState(() {
-						_currentIndex = index;
-						// TODO: Implement navigation for other tabs
-					});
-				},
+				onTap: _onNavTap,
 			),
 		);
 	}

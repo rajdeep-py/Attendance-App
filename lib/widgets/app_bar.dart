@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import 'package:iconsax/iconsax.dart';
 
-class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
+class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 	final String title;
 	final String subtitle;
-	const DashboardAppBar({
+	final String logoAssetPath;
+	final double logoSize;
+	final List<Widget>? actions;
+	final bool showBackIcon;
+	const PremiumAppBar({
 		required this.title,
 		required this.subtitle,
+		this.logoAssetPath = 'assets/logo/logo_no_bg.png',
+		this.logoSize = 40,
+		this.actions,
+		this.showBackIcon = false,
 		super.key,
 	});
 
@@ -18,10 +27,23 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 		return AppBar(
 			backgroundColor: kWhite,
 			elevation: 0,
-			leading: Padding(
-				padding: const EdgeInsets.all(8.0),
-				child: AppLogo(size: 40),
-			),
+						leading: Row(
+							mainAxisSize: MainAxisSize.min,
+							children: [
+								if (showBackIcon)
+									IconButton(
+										icon: const Icon(Iconsax.arrow_left, color: kBlack, size: 24),
+										onPressed: () {
+											Navigator.of(context).maybePop();
+										},
+										tooltip: 'Back',
+									),
+								Padding(
+									padding: const EdgeInsets.all(8.0),
+									child: AppLogo(size: logoSize, assetPath: logoAssetPath),
+								),
+							],
+						),
 			title: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
@@ -29,12 +51,13 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 					Text(subtitle, style: kTaglineTextStyle.copyWith(color: kGrey, fontSize: 14)),
 				],
 			),
-			actions: [
-				IconButton(
-					icon: const Icon(Icons.notifications_none, color: kBlack, size: 28),
-					onPressed: () {},
-				),
-			],
+						actions: actions ?? [
+							IconButton(
+								icon: const Icon(Iconsax.notification, color: kBlack, size: 28),
+								onPressed: () {},
+								tooltip: 'Notifications',
+							),
+						],
 		);
 	}
 }
