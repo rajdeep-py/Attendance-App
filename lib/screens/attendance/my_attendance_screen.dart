@@ -18,6 +18,7 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
   DateTime _selectedDate = DateTime.now();
   int _currentIndex = 1;
 
+
   void _onDateSelected(DateTime date) {
     setState(() {
       _selectedDate = date;
@@ -48,7 +49,8 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final attendanceMap = ref.watch(attendanceProvider);
-    final attendance = attendanceMap[_selectedDate];
+    final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final attendance = attendanceMap[normalizedDate];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const PremiumAppBar(
