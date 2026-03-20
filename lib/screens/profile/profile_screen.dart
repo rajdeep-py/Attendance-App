@@ -18,7 +18,8 @@ class ProfileScreen extends ConsumerWidget {
           appBar: const PremiumAppBar(
             title: 'Profile',
             subtitle: 'View and manage your account',
-            logoAssetPath: 'assets/logo/logo_no_bg.png',
+            logoAssetPath: '',
+            actions: [],
             showBackIcon: false,
           ),
       backgroundColor: kWhiteGrey,

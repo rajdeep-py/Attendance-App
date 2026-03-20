@@ -56,8 +56,9 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
       appBar: const PremiumAppBar(
         title: 'My Attendance',
         subtitle: 'View your daily records',
+        logoAssetPath: '',
+        actions: [],
         showBackIcon: false,
-        logoAssetPath: 'assets/logo/logo_no_bg.png',
       ),
       body: Column(
         children: [

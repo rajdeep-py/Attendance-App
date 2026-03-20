@@ -56,8 +56,9 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
       appBar: const PremiumAppBar(
         title: 'Holidays',
         subtitle: 'View upcoming holidays',
+        logoAssetPath: '',
+        actions: [],
         showBackIcon: false,
-        logoAssetPath: 'assets/logo/logo_no_bg.png',
       ),
       body: Column(
         children: [
