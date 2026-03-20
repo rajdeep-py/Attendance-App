@@ -62,16 +62,19 @@ class CalendarCard extends ConsumerWidget {
         ),
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, date, events) {
-            if (attendanceMap[date] != null) {
-              return Positioned(
-                right: 1,
-                bottom: 1,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: kBlack,
-                    shape: BoxShape.circle,
+            final normalizedDate = DateTime(date.year, date.month, date.day);
+            if (attendanceMap[normalizedDate] != null) {
+              return Positioned.fill(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.only(bottom: 2),
+                    decoration: BoxDecoration(
+                      color: kBlack,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               );

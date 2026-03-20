@@ -22,6 +22,17 @@ class AttendanceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header
+            Text(
+              'Attendance Details',
+              style: TextStyle(
+                color: kBlack,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // ...existing code...
             Row(
               children: [
                 const Icon(Iconsax.login, color: kDarkGrey, size: 20),
