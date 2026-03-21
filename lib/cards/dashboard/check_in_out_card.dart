@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 class CheckInOutCard extends ConsumerWidget {
 	final Color cardColor;
-	const CheckInOutCard({this.cardColor = kDarkGrey, super.key});
+	const CheckInOutCard({this.cardColor = kBrown, super.key});
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +17,7 @@ class CheckInOutCard extends ConsumerWidget {
 		return Card(
 			color: cardColor,
 			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-			elevation: 8,
+			elevation: 2,
 			margin: const EdgeInsets.symmetric(vertical: 8),
 			child: Padding(
 				padding: const EdgeInsets.all(20.0),
@@ -28,7 +28,7 @@ class CheckInOutCard extends ConsumerWidget {
 							children: [
 								Container(
 									decoration: BoxDecoration(
-										color: kDarkGrey,
+										color: kGreen,
 										borderRadius: BorderRadius.circular(12),
 									),
 									padding: const EdgeInsets.all(8),
@@ -47,9 +47,9 @@ class CheckInOutCard extends ConsumerWidget {
 									children: [
 										Row(
 											children: [
-												const Icon(Iconsax.login, color: kDarkGrey, size: 20),
+												const Icon(Iconsax.login, color: kPink, size: 20),
 												const SizedBox(width: 6),
-												Text('Check In:', style: kCaptionTextStyle.copyWith(color: kGrey)),
+												Text('Check In:', style: kCaptionTextStyle.copyWith(color: kBrown)),
 											],
 										),
 										Text(
@@ -60,8 +60,8 @@ class CheckInOutCard extends ConsumerWidget {
 								),
 								ElevatedButton.icon(
 									style: ElevatedButton.styleFrom(
-										backgroundColor: attendance.checkIn == null ? kDarkGrey : kWhiteGrey,
-										foregroundColor: attendance.checkIn == null ? kWhite : kGrey,
+										backgroundColor: attendance.checkIn == null ? kBrown : kWhiteGrey,
+										foregroundColor: attendance.checkIn == null ? kWhite : kBrown,
 										minimumSize: const Size(120, 48),
 										padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 										shape: RoundedRectangleBorder(
@@ -114,9 +114,9 @@ class CheckInOutCard extends ConsumerWidget {
 									children: [
 										Row(
 											children: [
-												const Icon(Iconsax.logout, color: kDarkGrey, size: 20),
+												const Icon(Iconsax.logout, color: kPink, size: 20),
 												const SizedBox(width: 6),
-												Text('Check Out:', style: kCaptionTextStyle.copyWith(color: kGrey)),
+												Text('Check Out:', style: kCaptionTextStyle.copyWith(color: kBrown)),
 											],
 										),
 										Text(
@@ -127,8 +127,8 @@ class CheckInOutCard extends ConsumerWidget {
 								),
 								ElevatedButton.icon(
 									style: ElevatedButton.styleFrom(
-										backgroundColor: attendance.checkIn != null && attendance.checkOut == null ? kDarkGrey : kWhiteGrey,
-										foregroundColor: attendance.checkIn != null && attendance.checkOut == null ? kWhite : kGrey,
+										backgroundColor: attendance.checkIn != null && attendance.checkOut == null ? kPink : kWhiteGrey,
+										foregroundColor: attendance.checkIn != null && attendance.checkOut == null ? kWhite : kPink,
 										minimumSize: const Size(120, 48),
 										padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 										shape: RoundedRectangleBorder(

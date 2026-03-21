@@ -25,7 +25,7 @@ class LoginScreen extends ConsumerWidget {
 								const SizedBox(height: 24),
 								Text('Ready to jump into your activity hub?', style: kHeaderTextStyle.copyWith(color: kBlack)),
 								const SizedBox(height: 8),
-								Text('Welcome back! Please login to continue.', style: kTaglineTextStyle.copyWith(color: kGrey)),
+								Text('Welcome back! Please login to continue.', style: kTaglineTextStyle.copyWith(color: kBrown)),
 								const SizedBox(height: 20),
 								Container(
 									decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class LoginScreen extends ConsumerWidget {
 										keyboardType: TextInputType.phone,
 										style: const TextStyle(color: kBlack),
 										decoration: InputDecoration(
-											prefixIcon: const Icon(Iconsax.call, color: kDarkGrey),
+											prefixIcon: const Icon(Iconsax.call, color: kBrown),
 											hintText: 'Phone Number',
 											border: InputBorder.none,
 											filled: true,
@@ -57,7 +57,7 @@ class LoginScreen extends ConsumerWidget {
 										obscureText: true,
 										style: const TextStyle(color: kBlack),
 										decoration: InputDecoration(
-											prefixIcon: const Icon(Iconsax.lock, color: kDarkGrey),
+											prefixIcon: const Icon(Iconsax.lock, color: kBrown),
 											hintText: 'Password',
 											border: InputBorder.none,
 											filled: true,
@@ -71,7 +71,7 @@ class LoginScreen extends ConsumerWidget {
 									alignment: Alignment.centerRight,
 									child: TextButton(
 										onPressed: () {},
-										child: Text('Forgot Password?', style: kCaptionTextStyle.copyWith(color: kDarkGrey)),
+										child: Text('Forgot Password?', style: kCaptionTextStyle.copyWith(color: kerror)),
 									),
 								),
 								const SizedBox(height: 6),
@@ -94,7 +94,7 @@ class LoginScreen extends ConsumerWidget {
 								Padding(
 									padding: const EdgeInsets.symmetric(vertical: 8.0),
 									child: Divider(
-										color: kGrey.withAlpha(40),
+										color: kBrown.withAlpha(40),
 										thickness: 1.2,
 									),
 								),
@@ -102,7 +102,7 @@ class LoginScreen extends ConsumerWidget {
 									child: RichText(
 										text: TextSpan(
 											text: "Don't have an account? ",
-											style: kCaptionTextStyle.copyWith(color: kGrey),
+											style: kCaptionTextStyle.copyWith(color: kBrown),
 											children: [
 												WidgetSpan(
 													child: GestureDetector(
@@ -110,12 +110,12 @@ class LoginScreen extends ConsumerWidget {
 														child: Row(
 															mainAxisSize: MainAxisSize.min,
 															children: [
-																Icon(Iconsax.user_add, color: kDarkGrey, size: 20),
+																Icon(Iconsax.user_add, color: kPink, size: 20),
 																const SizedBox(width: 4),
 																Text(
 																	"Sign up now",
 																	style: kTaglineTextStyle.copyWith(
-																		color: kDarkGrey,
+																		color: kPink,
 																		fontWeight: FontWeight.bold,
 																		decoration: TextDecoration.underline,
 																	),

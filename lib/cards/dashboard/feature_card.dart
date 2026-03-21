@@ -4,7 +4,7 @@ import '../../theme/app_theme.dart';
 
 class FeatureCard extends StatelessWidget {
 	final Color cardColor;
-	const FeatureCard({this.cardColor = kDarkGrey, super.key});
+	const FeatureCard({this.cardColor = kBrown, super.key});
 
 	@override
 	Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class FeatureCard extends StatelessWidget {
 					children: [
 						Container(
 							decoration: BoxDecoration(
-								color: kDarkGrey,
+								color: kBrown,
 								borderRadius: BorderRadius.circular(12),
 							),
 							padding: const EdgeInsets.all(10),
@@ -39,12 +39,12 @@ class FeatureCard extends StatelessWidget {
 											Row(
 												crossAxisAlignment: CrossAxisAlignment.start,
 												children: [
-													const Icon(Iconsax.location, color: kDarkGrey, size: 20),
+													const Icon(Iconsax.location, color: kBrown, size: 20),
 													const SizedBox(width: 8),
 													Expanded(
 														child: Text(
 															'Check In and Check Out record your attendance with your location.',
-															style: kDescriptionTextStyle.copyWith(color: kGrey),
+															style: kDescriptionTextStyle.copyWith(color: kBrown),
 														),
 													),
 												],
@@ -53,12 +53,12 @@ class FeatureCard extends StatelessWidget {
 											Row(
 												crossAxisAlignment: CrossAxisAlignment.start,
 												children: [
-													const Icon(Iconsax.calendar, color: kDarkGrey, size: 20),
+													const Icon(Iconsax.calendar, color: kBrown, size: 20),
 													const SizedBox(width: 8),
 													Expanded(
 														child: Text(
 															'Holiday list is available in the app.',
-															style: kDescriptionTextStyle.copyWith(color: kGrey),
+															style: kDescriptionTextStyle.copyWith(color: kBrown),
 														),
 													),
 												],
@@ -67,12 +67,12 @@ class FeatureCard extends StatelessWidget {
 											Row(
 												crossAxisAlignment: CrossAxisAlignment.start,
 												children: [
-													const Icon(Iconsax.document, color: kDarkGrey, size: 20),
+													const Icon(Iconsax.document, color: kBrown, size: 20),
 													const SizedBox(width: 8),
 													Expanded(
 														child: Text(
 															'Attendance records are securely stored and accessible anytime.',
-															style: kDescriptionTextStyle.copyWith(color: kGrey),
+															style: kDescriptionTextStyle.copyWith(color: kBrown),
 														),
 													),
 												],

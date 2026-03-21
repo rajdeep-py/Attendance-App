@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-// Color palette
-const Color kBlack = Color(0xFF181818);
-const Color kDarkGrey = Color(0xFF232323);
-const Color kGrey = Color(0xFF3A3A3A);
-const Color kWhiteGrey = Color(0xFFF5F5F7);
-const Color kWhite = Color(0xFFFFFFFF);
+// Color palette (updated)
+const Color kBlack = Colors.black;
+const Color kBrown = Color(0xFF554E3E); // new brown shade
+const Color kGreen = Color(0xFF8EB041); // new green shade
+const Color kPink = Color(0xFFD65570); // new pink shade
+const Color kWhite = Colors.white;
+const Color kWhiteGrey = Color(0xFFF5F5F7); // keep for backgrounds if needed
+const Color kerror = Color.fromARGB(255, 186, 14, 14); // Error Color
 
 // Extreme minimum screen padding for modern Android smartphones
 const double kScreenPadding = 8.0;
@@ -13,52 +15,52 @@ const double kScreenPadding = 8.0;
 // Font family from pubspec.yaml
 const String kFontFamily = 'BricolageGrotesque';
 
-// Text styles
+// Text styles (updated for new palette)
 const TextStyle kHeaderTextStyle = TextStyle(
-	fontFamily: kFontFamily,
-	fontSize: 28,
-	fontWeight: FontWeight.bold,
-	color: kWhite,
-	letterSpacing: 0.5,
+  fontFamily: kFontFamily,
+  fontSize: 28,
+  fontWeight: FontWeight.bold,
+  color: kBrown,
+  letterSpacing: 0.5,
 );
 
 const TextStyle kTaglineTextStyle = TextStyle(
-	fontFamily: kFontFamily,
-	fontSize: 18,
-	fontWeight: FontWeight.w500,
-	color: kWhiteGrey,
-	letterSpacing: 0.2,
+  fontFamily: kFontFamily,
+  fontSize: 18,
+  fontWeight: FontWeight.w500,
+  color: kGreen,
+  letterSpacing: 0.2,
 );
 
 const TextStyle kCaptionTextStyle = TextStyle(
-	fontFamily: kFontFamily,
-	fontSize: 14,
-	fontWeight: FontWeight.w400,
-	color: kGrey,
+  fontFamily: kFontFamily,
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kBrown,
 );
 
 const TextStyle kDescriptionTextStyle = TextStyle(
-	fontFamily: kFontFamily,
-	fontSize: 16,
-	fontWeight: FontWeight.w400,
-	color: kWhiteGrey,
+  fontFamily: kFontFamily,
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: kPink,
 );
 
-// Button style
+// Button style (updated)
 final ButtonStyle kPremiumButtonStyle = ElevatedButton.styleFrom(
-	backgroundColor: kDarkGrey,
-	foregroundColor: kWhite,
-	minimumSize: const Size(120, 48),
-	padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-	shape: RoundedRectangleBorder(
-		borderRadius: BorderRadius.circular(16),
-	),
-	textStyle: const TextStyle(
-		fontFamily: kFontFamily,
-		fontWeight: FontWeight.bold,
-		fontSize: 16,
-	),
-	elevation: 4,
+  backgroundColor: kGreen,
+  foregroundColor: kWhite,
+  minimumSize: const Size(120, 48),
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(16),
+  ),
+  textStyle: const TextStyle(
+    fontFamily: kFontFamily,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  ),
+  elevation: 4,
 );
 
 // App logo widget (example)
@@ -85,7 +87,7 @@ class AppLogo extends StatelessWidget {
 				),
 				boxShadow: [
 					BoxShadow(
-						color: kGrey.withAlpha(51),
+						color: kWhiteGrey.withAlpha(51),
 						blurRadius: 8,
 						offset: const Offset(0, 4),
 					),
@@ -103,41 +105,41 @@ class AppLogo extends StatelessWidget {
 	}
 }
 
-// ThemeData
+// ThemeData (updated)
 final ThemeData appTheme = ThemeData(
-	fontFamily: kFontFamily,
-	scaffoldBackgroundColor: kBlack,
-	colorScheme: ColorScheme(
-		brightness: Brightness.dark,
-		primary: kDarkGrey,
-		onPrimary: kWhite,
-		secondary: kGrey,
-		onSecondary: kWhiteGrey,
-		surface: kDarkGrey,
-		onSurface: kWhiteGrey,
-		error: Colors.red,
-		onError: kWhite,
-	),
-	textTheme: TextTheme(
-		displayLarge: kHeaderTextStyle,
-		titleLarge: kTaglineTextStyle,
-		bodySmall: kCaptionTextStyle,
-		bodyMedium: kDescriptionTextStyle,
-	),
-	elevatedButtonTheme: ElevatedButtonThemeData(
-		style: kPremiumButtonStyle,
-	),
-	inputDecorationTheme: InputDecorationTheme(
-		filled: true,
-		fillColor: kDarkGrey.withAlpha((0.08 * 255).toInt()),
-		border: OutlineInputBorder(
-			borderRadius: BorderRadius.circular(12),
-			borderSide: BorderSide.none,
-		),
-		contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-		hintStyle: TextStyle(
-			color: kGrey,
-			fontFamily: kFontFamily,
-		),
-	),
+  fontFamily: kFontFamily,
+  scaffoldBackgroundColor: kWhite,
+  colorScheme: ColorScheme(
+    brightness: Brightness.light,
+    primary: kBrown,
+    onPrimary: kWhite,
+    secondary: kGreen,
+    onSecondary: kWhite,
+    surface: kWhiteGrey,
+    onSurface: kBrown,
+    error: kPink,
+    onError: kWhite,
+  ),
+  textTheme: TextTheme(
+    displayLarge: kHeaderTextStyle,
+    titleLarge: kTaglineTextStyle,
+    bodySmall: kCaptionTextStyle,
+    bodyMedium: kDescriptionTextStyle,
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: kPremiumButtonStyle,
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    filled: true,
+    fillColor: kWhiteGrey,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none,
+    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    hintStyle: TextStyle(
+      color: kBrown,
+      fontFamily: kFontFamily,
+    ),
+  ),
 );

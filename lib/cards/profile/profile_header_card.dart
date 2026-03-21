@@ -15,7 +15,7 @@ class ProfileHeaderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: kDarkGrey.withAlpha((0.08 * 255).toInt()),
+            color: kBrown.withAlpha((0.08 * 255).toInt()),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -32,7 +32,7 @@ class ProfileHeaderCard extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(16),
-              child: const Icon(Iconsax.user, color: kDarkGrey, size: 36),
+              child: const Icon(Iconsax.user, color: kBrown, size: 36),
             ),
             const SizedBox(width: 20),
             Column(
@@ -50,7 +50,7 @@ class ProfileHeaderCard extends StatelessWidget {
                 Text(
                   user.phone,
                   style: TextStyle(
-                    color: kGrey,
+                    color: kBrown,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),

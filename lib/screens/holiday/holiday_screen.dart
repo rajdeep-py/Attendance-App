@@ -74,7 +74,7 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
         onPressed: () {
           GoRouter.of(context).go('/request-holiday');
         },
-        backgroundColor: kDarkGrey,
+        backgroundColor: kBrown,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         tooltip: 'Request Holiday',
         elevation: 8,

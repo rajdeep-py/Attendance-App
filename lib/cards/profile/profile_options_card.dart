@@ -50,7 +50,7 @@ class ProfileOptionsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: kDarkGrey.withAlpha((0.08 * 255).toInt()),
+            color: kBrown.withAlpha((0.08 * 255).toInt()),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -71,10 +71,10 @@ class ProfileOptionsCard extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(10),
-              child: Icon(option['icon'] as IconData, color: kDarkGrey, size: 24),
+              child: Icon(option['icon'] as IconData, color: kBrown, size: 24),
             ),
             title: Text(option['title'] as String, style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
-            subtitle: Text(option['subtitle'] as String, style: TextStyle(color: kGrey)),
+            subtitle: Text(option['subtitle'] as String, style: TextStyle(color: kBrown)),
             onTap: () {},
           );
         },

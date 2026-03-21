@@ -56,13 +56,13 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
 						Text(title, style: kHeaderTextStyle.copyWith(color: kBlack, fontSize: 20)),
-						Text(subtitle, style: kTaglineTextStyle.copyWith(color: kGrey, fontSize: 14)),
+						Text(subtitle, style: kTaglineTextStyle.copyWith(color: kBrown, fontSize: 14)),
 					],
 				),
 			),
 			actions: actions ?? [
 				IconButton(
-					icon: const Icon(Iconsax.notification, color: kBlack, size: 28),
+					icon: const Icon(Iconsax.notification, color: kPink, size: 28),
 					onPressed: () {},
 					tooltip: 'Notifications',
 				),

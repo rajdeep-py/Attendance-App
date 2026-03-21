@@ -31,10 +31,10 @@ class HolidayCalendarCard extends ConsumerWidget {
           todayDecoration: BoxDecoration(
             color: kWhiteGrey,
             shape: BoxShape.circle,
-            border: Border.all(color: kDarkGrey, width: 2),
+            border: Border.all(color: kBrown, width: 2),
           ),
           selectedDecoration: BoxDecoration(
-            color: kDarkGrey,
+            color: kBrown,
             shape: BoxShape.circle,
             border: Border.all(color: kBlack, width: 2),
           ),
@@ -44,9 +44,9 @@ class HolidayCalendarCard extends ConsumerWidget {
           ),
           markersMaxCount: 1,
           outsideDaysVisible: false,
-          todayTextStyle: TextStyle(color: kDarkGrey, fontWeight: FontWeight.bold),
+          todayTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.bold),
           selectedTextStyle: TextStyle(color: kWhite, fontWeight: FontWeight.bold),
-          weekendTextStyle: TextStyle(color: kGrey),
+          weekendTextStyle: TextStyle(color: kBrown),
           defaultTextStyle: TextStyle(color: kBlack),
         ),
         headerStyle: HeaderStyle(
@@ -54,11 +54,11 @@ class HolidayCalendarCard extends ConsumerWidget {
           formatButtonDecoration: BoxDecoration(
             color: kWhiteGrey,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kDarkGrey),
+            border: Border.all(color: kBrown),
           ),
-          formatButtonTextStyle: TextStyle(color: kDarkGrey, fontWeight: FontWeight.w600),
-          leftChevronIcon: const Icon(Iconsax.arrow_left, color: kDarkGrey, size: 20),
-          rightChevronIcon: const Icon(Iconsax.arrow_right, color: kDarkGrey, size: 20),
+          formatButtonTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.w600),
+          leftChevronIcon: const Icon(Iconsax.arrow_left, color: kBrown, size: 20),
+          rightChevronIcon: const Icon(Iconsax.arrow_right, color: kBrown, size: 20),
         ),
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, date, events) {
@@ -84,7 +84,7 @@ class HolidayCalendarCard extends ConsumerWidget {
           selectedBuilder: (context, date, _) {
             return Container(
               decoration: BoxDecoration(
-                color: kDarkGrey,
+                color: kBrown,
                 shape: BoxShape.circle,
                 border: Border.all(color: kBlack, width: 2),
               ),
@@ -98,10 +98,10 @@ class HolidayCalendarCard extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: kWhiteGrey,
                 shape: BoxShape.circle,
-                border: Border.all(color: kDarkGrey, width: 2),
+                border: Border.all(color: kBrown, width: 2),
               ),
               child: Center(
-                child: Icon(Iconsax.calendar, color: kDarkGrey, size: 18),
+                child: Icon(Iconsax.calendar, color: kBrown, size: 18),
               ),
             );
           },

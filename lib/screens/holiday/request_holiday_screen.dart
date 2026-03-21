@@ -62,14 +62,14 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
               child: Theme(
                 data: Theme.of(context).copyWith(
                   colorScheme: ColorScheme.light(
-                    primary: kDarkGrey, // selected day
+                    primary: kPink, // selected day
                     onPrimary: kWhite, // selected day text
                     surface: kWhiteGrey, // calendar background
                     onSurface: kBlack, // default text
                   ),
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
-                      foregroundColor: kDarkGrey,
+                      foregroundColor: kBrown,
                     ),
                   ),
                 ),
@@ -87,7 +87,7 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
               style: kCaptionTextStyle.copyWith(color: kBlack),
               decoration: InputDecoration(
                 labelText: 'Reason',
-                labelStyle: kDescriptionTextStyle.copyWith(color: kGrey),
+                labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
                 border: const OutlineInputBorder(),
               ),
             ),
@@ -97,7 +97,7 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
               style: kCaptionTextStyle.copyWith(color: kBlack),
               decoration: InputDecoration(
                 labelText: 'Message',
-                labelStyle: kDescriptionTextStyle.copyWith(color: kGrey),
+                labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
                 border: const OutlineInputBorder(),
               ),
               maxLines: 3,
