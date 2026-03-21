@@ -58,24 +58,24 @@ class CheckInOutCard extends ConsumerWidget {
 										),
 									],
 								),
-								ElevatedButton.icon(
-									style: ElevatedButton.styleFrom(
-										backgroundColor: attendance.checkIn == null ? kBrown : kWhiteGrey,
-										foregroundColor: attendance.checkIn == null ? kWhite : kBrown,
-										minimumSize: const Size(120, 48),
-										padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-										shape: RoundedRectangleBorder(
-											borderRadius: BorderRadius.circular(16),
-										),
-										textStyle: const TextStyle(
-											fontFamily: kFontFamily,
-											fontWeight: FontWeight.bold,
-											fontSize: 16,
-										),
-										elevation: 6,
-									),
-									onPressed: attendance.checkIn == null
-										? () async {
+										ElevatedButton.icon(
+											style: ElevatedButton.styleFrom(
+												backgroundColor: kPink,
+												foregroundColor: kWhite,
+												minimumSize: const Size(120, 48),
+												padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+												shape: RoundedRectangleBorder(
+													borderRadius: BorderRadius.circular(16),
+												),
+												textStyle: const TextStyle(
+													fontFamily: kFontFamily,
+													fontWeight: FontWeight.bold,
+													fontSize: 16,
+												),
+												elevation: 6,
+											),
+											onPressed: attendance.checkIn == null
+													? () async {
 											// Location
 											bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 											if (!serviceEnabled) {
@@ -125,24 +125,24 @@ class CheckInOutCard extends ConsumerWidget {
 										),
 									],
 								),
-								ElevatedButton.icon(
-									style: ElevatedButton.styleFrom(
-										backgroundColor: attendance.checkIn != null && attendance.checkOut == null ? kPink : kWhiteGrey,
-										foregroundColor: attendance.checkIn != null && attendance.checkOut == null ? kWhite : kPink,
-										minimumSize: const Size(120, 48),
-										padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-										shape: RoundedRectangleBorder(
-											borderRadius: BorderRadius.circular(16),
-										),
-										textStyle: const TextStyle(
-											fontFamily: kFontFamily,
-											fontWeight: FontWeight.bold,
-											fontSize: 16,
-										),
-										elevation: 6,
-									),
-									onPressed: attendance.checkIn != null && attendance.checkOut == null
-										? () async {
+										ElevatedButton.icon(
+											style: ElevatedButton.styleFrom(
+												backgroundColor: kPink,
+												foregroundColor: kWhite,
+												minimumSize: const Size(120, 48),
+												padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+												shape: RoundedRectangleBorder(
+													borderRadius: BorderRadius.circular(16),
+												),
+												textStyle: const TextStyle(
+													fontFamily: kFontFamily,
+													fontWeight: FontWeight.bold,
+													fontSize: 16,
+												),
+												elevation: 6,
+											),
+											onPressed: attendance.checkIn != null && attendance.checkOut == null
+													? () async {
 											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
 											if (selfie == null) return;
 											ref.read(dashboardProvider.notifier).checkOut(DateTime.now(), selfie.path);

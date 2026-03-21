@@ -48,7 +48,7 @@ class BottomNavBar extends StatelessWidget {
 							boxShadow: currentIndex == 0
 									? [
 											BoxShadow(
-												color: kGreen.withOpacity(0.4),
+												color: kGreen.withAlpha(40),
 												blurRadius: 16,
 												offset: Offset(0, 4),
 											),
@@ -68,7 +68,7 @@ class BottomNavBar extends StatelessWidget {
 							boxShadow: currentIndex == 1
 									? [
 											BoxShadow(
-												color: kGreen.withOpacity(0.4),
+												color: kGreen.withAlpha(40),
 												blurRadius: 16,
 												offset: Offset(0, 4),
 											),
@@ -88,7 +88,7 @@ class BottomNavBar extends StatelessWidget {
 							boxShadow: currentIndex == 2
 									? [
 											BoxShadow(
-												color: kGreen.withOpacity(0.4),
+												color: kGreen.withAlpha(40),
 												blurRadius: 16,
 												offset: Offset(0, 4),
 											),
@@ -108,7 +108,7 @@ class BottomNavBar extends StatelessWidget {
 							boxShadow: currentIndex == 3
 									? [
 											BoxShadow(
-												color: kGreen.withOpacity(0.4),
+												color: kGreen.withAlpha(40),
 												blurRadius: 16,
 												offset: Offset(0, 4),
 											),
