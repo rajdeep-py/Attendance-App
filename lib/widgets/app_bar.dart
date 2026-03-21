@@ -61,11 +61,15 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 				),
 			),
 			actions: actions ?? [
-				IconButton(
-					icon: const Icon(Iconsax.notification, color: kPink, size: 28),
-					onPressed: () {},
-					tooltip: 'Notifications',
-				),
+							 Builder(
+								 builder: (context) => IconButton(
+									 icon: const Icon(Iconsax.notification, color: kPink, size: 28),
+									 onPressed: () {
+										 GoRouter.of(context).go('/notifications');
+									 },
+									 tooltip: 'Notifications',
+								 ),
+							 ),
 			],
 		);
 	}

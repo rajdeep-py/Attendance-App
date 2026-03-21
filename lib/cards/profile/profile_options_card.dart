@@ -79,7 +79,7 @@ class ProfileOptionsCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: isLogout
-                            ? [kerror.withOpacity(0.8), kPink]
+                            ? [kerror.withOpacity(0.8), kerror]
                             : [kGreen, kGreen],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
