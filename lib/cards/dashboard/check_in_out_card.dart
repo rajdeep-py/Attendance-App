@@ -92,7 +92,9 @@ class CheckInOutCard extends ConsumerWidget {
 											if (permission == LocationPermission.deniedForever) {
 												return;
 											}
-											Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+											Position position = await Geolocator.getCurrentPosition(
+												locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+											);
 											String location = '${position.latitude}, ${position.longitude}';
 											// Selfie
 											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
