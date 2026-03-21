@@ -23,81 +23,104 @@ class ContactCard extends StatelessWidget {
           ),
         ],
       ),
-      child: GridView.count(
-        crossAxisCount: 3,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _iconButton(Iconsax.call, () => _launch('tel:${aboutUs.phone}')),
-          _iconButton(Iconsax.sms, () => _launch('mailto:${aboutUs.email}')),
-          _iconButton(Iconsax.location, () => _launchMap(aboutUs.address)),
-          _iconButton(Iconsax.global, () => _launch(aboutUs.website)),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Icon(Iconsax.user, color: Colors.black, size: 28),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Contact Us',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(color: Color(0xFFE0E0E0), thickness: 1),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _iconButton(
+                Iconsax.call,
+                'Call',
+                () => _launch('tel:${aboutUs.phone}'),
+                Colors.black,
+              ),
+              _iconButton(
+                Iconsax.sms,
+                'Email',
+                () => _launch('mailto:${aboutUs.email}'),
+                Colors.black,
+              ),
+              _iconButton(
+                Iconsax.location,
+                'Location',
+                () => _launchMap(aboutUs.address),
+                Colors.black,
+              ),
+              _iconButton(
+                Iconsax.global,
+                'Website',
+                () => _launch(aboutUs.website),
+                Colors.black,
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _iconButton(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: Icon(icon, size: 28, color: Colors.black87),
-      ),
+  Widget _iconButton(
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+    Color color,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: Icon(icon, size: 28, color: Colors.black),
+          ),
+        ),
+        const SizedBox(height: 6),
+         Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
   Future<void> _launch(String url) async {
     Uri uri = Uri.parse(url);
-    // YouTube
-    if (url.contains('youtube.com') || url.contains('youtu.be')) {
-      final youtubeAppUri = Uri.parse(
-        url.replaceFirst('https://', 'vnd.youtube://'),
-      );
-      if (await canLaunchUrl(youtubeAppUri)) {
-        await launchUrl(youtubeAppUri, mode: LaunchMode.externalApplication);
-        return;
-      }
-    }
-    // Facebook
-    if (url.contains('facebook.com')) {
-      final fbAppUri = Uri.parse('fb://facewebmodal/f?href=$url');
-      if (await canLaunchUrl(fbAppUri)) {
-        await launchUrl(fbAppUri, mode: LaunchMode.externalApplication);
-        return;
-      }
-    }
-    // LinkedIn
-    if (url.contains('linkedin.com')) {
-      final linkedInAppUri = Uri.parse('linkedin://company/naiyo24');
-      if (await canLaunchUrl(linkedInAppUri)) {
-        await launchUrl(linkedInAppUri, mode: LaunchMode.externalApplication);
-        return;
-      }
-    }
-    // Instagram
-    if (url.contains('instagram.com')) {
-      final instaAppUri = Uri.parse(
-        'instagram://user?username=${url.split("/").last}',
-      );
-      if (await canLaunchUrl(instaAppUri)) {
-        await launchUrl(instaAppUri, mode: LaunchMode.externalApplication);
-        return;
-      }
-    }
-    // X (Twitter)
-    if (url.contains('x.com') || url.contains('twitter.com')) {
-      final xAppUri = Uri.parse(
-        'twitter://user?screen_name=${url.split("/").last}',
-      );
-      if (await canLaunchUrl(xAppUri)) {
-        await launchUrl(xAppUri, mode: LaunchMode.externalApplication);
-        return;
-      }
-    }
+
     // Chrome
     if (url.contains('http') || url.contains('https')) {
       final chromeUri = Uri.parse('googlechrome://$url');
