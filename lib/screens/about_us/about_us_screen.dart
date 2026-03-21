@@ -20,6 +20,7 @@ class AboutUsScreen extends ConsumerWidget {
         subtitle: 'Learn more about us',
         logoAssetPath: '',
         showBackIcon: true,
+        actions: [],
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
