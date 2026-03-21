@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -70,7 +71,13 @@ class ProfileOptionsCard extends StatelessWidget {
           final isLogout = option['title'] == 'Log Out';
           return InkWell(
             borderRadius: BorderRadius.circular(18),
-            onTap: () {},
+            onTap: () {
+              if (option['title'] == 'My Holidays') {
+                // Use GoRouter for navigation
+                // ignore: use_build_context_synchronously
+                GoRouter.of(context).go('/my-holidays');
+              }
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               child: Row(

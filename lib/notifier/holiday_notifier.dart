@@ -3,7 +3,23 @@ import '../models/holiday.dart';
 import '../models/holiday_request.dart';
 
 class HolidayNotifier extends StateNotifier<Map<DateTime, Holiday>> {
-  List<HolidayRequest> requests = [];
+  List<HolidayRequest> requests = [
+    HolidayRequest(
+      date: DateTime(2026, 3, 22),
+      reason: 'Family Function',
+      message: 'Need leave for a family event.',
+    ),
+    HolidayRequest(
+      date: DateTime(2026, 4, 10),
+      reason: 'Medical',
+      message: 'Doctor appointment.',
+    ),
+    HolidayRequest(
+      date: DateTime(2026, 5, 2),
+      reason: 'Personal',
+      message: 'Personal work.',
+    ),
+  ];
 
   HolidayNotifier()
       : super({

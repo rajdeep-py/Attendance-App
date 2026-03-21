@@ -38,6 +38,8 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 									onPressed: () {
 										if (Navigator.of(context).canPop()) {
 											context.pop();
+										} else {
+											GoRouter.of(context).go('/dashboard');
 										}
 									},
 									tooltip: 'Back',

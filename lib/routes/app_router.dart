@@ -5,6 +5,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/attendance/my_attendance_screen.dart';
 import '../screens/holiday/holiday_screen.dart';
+import '../screens/holiday/my_holiday_screen.dart';
 import '../screens/holiday/request_holiday_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/profile/profile_screen.dart';
@@ -12,7 +13,17 @@ import '../screens/profile/profile_screen.dart';
 final GoRouter appRouter = GoRouter(
 	initialLocation: '/splash',
 	routes: [
-		  GoRoute(
+		   
+						   GoRoute(
+							   path: '/my-holidays',
+							   pageBuilder: (context, state) => CustomTransitionPage(
+								   child: const MyHolidayScreen(),
+								   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+									   return FadeTransition(opacity: animation, child: child);
+								   },
+							   ),
+						   ),
+               GoRoute(
 				path: '/notifications',
 				pageBuilder: (context, state) => CustomTransitionPage(
 				child: const NotificationScreen(),
