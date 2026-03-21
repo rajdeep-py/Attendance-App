@@ -10,10 +10,7 @@ class AboutUs {
   final String email;
   final String address;
   final String website;
-  final String instagram;
-  final String facebook;
-  final String youtube;
-  final String x;
+
 
   AboutUs({
     required this.companyName,
@@ -27,9 +24,6 @@ class AboutUs {
     required this.email,
     required this.address,
     required this.website,
-    required this.instagram,
-    required this.facebook,
-    required this.youtube,
-    required this.x,
+
   });
 }

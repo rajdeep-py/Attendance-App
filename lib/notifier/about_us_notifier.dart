@@ -16,10 +16,6 @@ class AboutUsNotifier extends StateNotifier<AboutUs> {
             email: 'info@naiyo24.com',
             address: '123, Digital Health Park, Kolkata, India',
             website: 'https://naiyo24.com',
-            instagram: 'https://instagram.com/naiyo24',
-            facebook: 'https://facebook.com/naiyo24',
-            youtube: 'https://youtube.com/naiyo24',
-            x: 'https://x.com/naiyo24',
           ),
         );
 }

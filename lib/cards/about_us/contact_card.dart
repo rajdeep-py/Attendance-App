@@ -32,12 +32,7 @@ class ContactCard extends StatelessWidget {
           _iconButton('assets/logo/logocall_logo.jpg', () => _launch('tel:${aboutUs.phone}')),
           _iconButton('assets/logo/email_logo.jpg', () => _launch('mailto:${aboutUs.email}')),
           _iconButton('assets/logo/location_logo.jpg', () => _launchMap(aboutUs.address)),
-          _iconButton('assets/logo/linkedin_logo.png', () => _launch('https://linkedin.com/company/naiyo24')),
-          _iconButton('assets/logo/youtube_logo.png', () => _launch(aboutUs.youtube)),
-          _iconButton('assets/logo/x_logo.png', () => _launch(aboutUs.x)),
-          _iconButton('assets/logo/insta_logo.jpeg', () => _launch(aboutUs.instagram)),
           _iconButton('assets/logo/website_logo.png', () => _launch(aboutUs.website)),
-          _iconButton('assets/logo/fb_logo.png', () => _launch(aboutUs.facebook)),
         ],
       ),
     );
