@@ -12,50 +12,88 @@ class ProfileHeaderCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: kBrown.withAlpha((0.08 * 255).toInt()),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            color: kBlack.withOpacity(0.10),
+            blurRadius: 28,
+            offset: const Offset(0, 10),
           ),
         ],
         color: kWhite,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               decoration: BoxDecoration(
-                color: kWhiteGrey,
+                gradient: LinearGradient(
+                  colors: [kPink, kBrown],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: kBlack.withOpacity(0.18),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              padding: const EdgeInsets.all(16),
-              child: const Icon(Iconsax.user, color: kBrown, size: 36),
+              padding: const EdgeInsets.all(20),
+              child: const Icon(Iconsax.user, color: Colors.white, size: 40),
             ),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.name,
-                  style: TextStyle(
-                    color: kBlack,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+            const SizedBox(width: 24),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        user.name,
+                        style: kHeaderTextStyle.copyWith(
+                          fontSize: 22,
+                          color: kBrown,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Iconsax.verify5, color: kGreen, size: 22),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  user.phone,
-                  style: TextStyle(
-                    color: kBrown,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Iconsax.call, color: kPink, size: 18),
+                      const SizedBox(width: 6),
+                      Text(
+                        user.phone,
+                        style: TextStyle(
+                          color: kBrown,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: kFontFamily,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+            // Optionally, add a settings or edit icon for more premium feel
+            const SizedBox(width: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: kWhiteGrey,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Icon(Iconsax.edit, color: kBrown, size: 22),
             ),
           ],
         ),
