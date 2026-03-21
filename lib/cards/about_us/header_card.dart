@@ -15,7 +15,7 @@ class HeaderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withAlpha((0.06 * 255).toInt()),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

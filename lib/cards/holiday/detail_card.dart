@@ -18,7 +18,7 @@ class HolidayDetailCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: kPink.withOpacity(0.13),
+            color: kPink.withAlpha((0.13 * 255).toInt()),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -37,7 +37,7 @@ class HolidayDetailCard extends StatelessWidget {
               color: kGreen,
               boxShadow: [
                 BoxShadow(
-                  color: kPink.withOpacity(0.18),
+                  color: kPink.withAlpha((0.18 * 255).toInt()),
                   blurRadius: 12,
                   offset: const Offset(0, 2),
                 ),
@@ -51,7 +51,7 @@ class HolidayDetailCard extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: kPink.withOpacity(0.15),
+                        color: kPink.withAlpha((0.15 * 255).toInt()),
                         blurRadius: 8,
                       ),
                     ],

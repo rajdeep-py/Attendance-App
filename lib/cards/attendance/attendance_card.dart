@@ -24,7 +24,7 @@ class AttendanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: statusColor.withOpacity(0.13),
+            color: statusColor.withAlpha((0.13 * 255).toInt()),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -43,7 +43,7 @@ class AttendanceCard extends StatelessWidget {
               color: statusColor,
               boxShadow: [
                 BoxShadow(
-                  color: statusColor.withOpacity(0.18),
+                  color: statusColor.withAlpha((0.18 * 255).toInt()),
                   blurRadius: 12,
                   offset: const Offset(0, 2),
                 ),
@@ -57,7 +57,7 @@ class AttendanceCard extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: statusColor.withOpacity(0.15),
+                        color: statusColor.withAlpha((0.15 * 255).toInt()),
                         blurRadius: 8,
                       ),
                     ],

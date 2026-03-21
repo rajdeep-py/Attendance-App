@@ -15,7 +15,7 @@ class ProfileHeaderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: kBlack.withOpacity(0.10),
+            color: kBlack.withAlpha((0.10 * 255).toInt()),
             blurRadius: 28,
             offset: const Offset(0, 10),
           ),
@@ -37,7 +37,7 @@ class ProfileHeaderCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: kBlack.withOpacity(0.18),
+                    color: kBlack.withAlpha((0.18 * 255).toInt()),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),

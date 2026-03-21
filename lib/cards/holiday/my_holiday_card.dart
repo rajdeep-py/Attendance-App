@@ -17,7 +17,7 @@ class MyHolidayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: kGreen.withOpacity(0.08),
+            color: kGreen.withAlpha((0.08 * 255).toInt()),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -49,7 +49,7 @@ class MyHolidayCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: kGreen.withOpacity(0.15),
+                        color: kGreen.withAlpha((0.15 * 255).toInt()),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -83,7 +83,7 @@ class MyHolidayCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   request.message,
-                  style: kDescriptionTextStyle.copyWith(color: kBlack.withOpacity(0.85), fontSize: 14),
+                  style: kDescriptionTextStyle.copyWith(color: kBlack.withAlpha((0.85 * 255).toInt()), fontSize: 14),
                 ),
               ],
             ),

@@ -47,7 +47,7 @@ class ProfileOptionsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: kPink.withOpacity(0.10),
+            color: kPink.withAlpha((0.10 * 255).toInt()),
             blurRadius: 28,
             offset: const Offset(0, 10),
           ),
@@ -60,7 +60,7 @@ class ProfileOptionsCard extends StatelessWidget {
         itemCount: options.length,
         separatorBuilder: (_, _) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: Divider(height: 1, color: kWhiteGrey.withOpacity(0.8)),
+          child: Divider(height: 1, color: kWhiteGrey.withAlpha((0.8 * 255).toInt())),
         ),
         itemBuilder: (context, index) {
           final option = options[index];
@@ -82,7 +82,7 @@ class ProfileOptionsCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: isLogout
-                            ? [kerror.withOpacity(0.8), kerror]
+                            ? [kerror.withAlpha((0.8 * 255).toInt()), kerror]
                             : [kGreen, kGreen],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -90,7 +90,7 @@ class ProfileOptionsCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: kPink.withOpacity(0.13),
+                          color: kPink.withAlpha((0.13 * 255).toInt()),
                           blurRadius: 8,
                         ),
                       ],
@@ -116,7 +116,7 @@ class ProfileOptionsCard extends StatelessWidget {
                         Text(
                           option['subtitle'] as String,
                           style: TextStyle(
-                            color: kBrown.withOpacity(0.85),
+                            color: kBrown.withAlpha((0.85 * 255).toInt()),
                             fontWeight: FontWeight.w400,
                             fontFamily: kFontFamily,
                             fontSize: 14,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/about_us.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactCard extends StatelessWidget {
@@ -16,7 +17,7 @@ class ContactCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha((0.05 * 255).toInt()),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -29,22 +30,22 @@ class ContactCard extends StatelessWidget {
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         children: [
-          _iconButton('assets/logo/logocall_logo.jpg', () => _launch('tel:${aboutUs.phone}')),
-          _iconButton('assets/logo/email_logo.jpg', () => _launch('mailto:${aboutUs.email}')),
-          _iconButton('assets/logo/location_logo.jpg', () => _launchMap(aboutUs.address)),
-          _iconButton('assets/logo/website_logo.png', () => _launch(aboutUs.website)),
+          _iconButton(Iconsax.call, () => _launch('tel:${aboutUs.phone}')),
+          _iconButton(Iconsax.sms, () => _launch('mailto:${aboutUs.email}')),
+          _iconButton(Iconsax.location, () => _launchMap(aboutUs.address)),
+          _iconButton(Iconsax.global, () => _launch(aboutUs.website)),
         ],
       ),
     );
   }
 
-  Widget _iconButton(String assetPath, VoidCallback onTap) {
+  Widget _iconButton(IconData icon, VoidCallback onTap) {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(6.0),
-        child: Image.asset(assetPath, width: 8, height: 8, fit: BoxFit.contain),
+        child: Icon(icon, size: 28, color: Colors.black87),
       ),
     );
   }
@@ -53,7 +54,9 @@ class ContactCard extends StatelessWidget {
     Uri uri = Uri.parse(url);
     // YouTube
     if (url.contains('youtube.com') || url.contains('youtu.be')) {
-      final youtubeAppUri = Uri.parse(url.replaceFirst('https://', 'vnd.youtube://'));
+      final youtubeAppUri = Uri.parse(
+        url.replaceFirst('https://', 'vnd.youtube://'),
+      );
       if (await canLaunchUrl(youtubeAppUri)) {
         await launchUrl(youtubeAppUri, mode: LaunchMode.externalApplication);
         return;
@@ -77,7 +80,9 @@ class ContactCard extends StatelessWidget {
     }
     // Instagram
     if (url.contains('instagram.com')) {
-      final instaAppUri = Uri.parse('instagram://user?username=${url.split("/").last}');
+      final instaAppUri = Uri.parse(
+        'instagram://user?username=${url.split("/").last}',
+      );
       if (await canLaunchUrl(instaAppUri)) {
         await launchUrl(instaAppUri, mode: LaunchMode.externalApplication);
         return;
@@ -85,7 +90,9 @@ class ContactCard extends StatelessWidget {
     }
     // X (Twitter)
     if (url.contains('x.com') || url.contains('twitter.com')) {
-      final xAppUri = Uri.parse('twitter://user?screen_name=${url.split("/").last}');
+      final xAppUri = Uri.parse(
+        'twitter://user?screen_name=${url.split("/").last}',
+      );
       if (await canLaunchUrl(xAppUri)) {
         await launchUrl(xAppUri, mode: LaunchMode.externalApplication);
         return;
@@ -122,7 +129,8 @@ class ContactCard extends StatelessWidget {
   Future<void> _launchMap(String address) async {
     final encoded = Uri.encodeComponent(address);
     final googleMapsUrl = 'geo:0,0?q=$encoded';
-    final googleMapsWebUrl = 'https://www.google.com/maps/search/?api=1&query=$encoded';
+    final googleMapsWebUrl =
+        'https://www.google.com/maps/search/?api=1&query=$encoded';
     final geoUri = Uri.parse(googleMapsUrl);
     if (await canLaunchUrl(geoUri)) {
       await launchUrl(geoUri, mode: LaunchMode.externalApplication);

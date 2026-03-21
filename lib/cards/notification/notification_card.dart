@@ -17,11 +17,11 @@ class NotificationCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: notification.isRead ? kWhiteGrey : kPink.withOpacity(0.08),
+          color: notification.isRead ? kWhiteGrey : kPink.withAlpha((0.08 * 255).toInt()),
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: kPink.withOpacity(0.07),
+              color: kPink.withAlpha((0.07 * 255).toInt()),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -59,14 +59,14 @@ class NotificationCard extends StatelessWidget {
                   Text(
                     notification.message,
                     style: kDescriptionTextStyle.copyWith(
-                      color: kBlack.withOpacity(0.85),
+                      color: kBlack.withAlpha((0.85 * 255).toInt()),
                       fontSize: 15,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     _formatDate(notification.date),
-                    style: kCaptionTextStyle.copyWith(fontSize: 13, color: kBrown.withOpacity(0.7)),
+                                       style: kCaptionTextStyle.copyWith(fontSize: 13, color: kBrown.withAlpha((0.7 * 255).toInt())),
                   ),
                 ],
               ),

@@ -24,7 +24,7 @@ class CalendarCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: kBrown.withOpacity(0.07),
+            color: kBrown.withAlpha((0.07 * 255).toInt()),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -71,7 +71,7 @@ class CalendarCard extends ConsumerWidget {
               border: Border.all(color: kBrown, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: kPink.withOpacity(0.2),
+                  color: kPink.withAlpha(20),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -124,7 +124,7 @@ class CalendarCard extends ConsumerWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: (isPresent ? kGreen : kerror).withOpacity(0.3),
+                            color: (isPresent ? kGreen : kerror).withAlpha((0.3 * 255).toInt()),
                             blurRadius: 4,
                           ),
                         ],
@@ -143,7 +143,7 @@ class CalendarCard extends ConsumerWidget {
                   border: Border.all(color: kBrown, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: kPink.withOpacity(0.2),
+                      color: kPink.withAlpha((0.2 * 255).toInt()),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
