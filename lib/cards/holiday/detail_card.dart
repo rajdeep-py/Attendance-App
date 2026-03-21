@@ -15,11 +15,11 @@ class HolidayDetailCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: kBrown.withAlpha((0.08 * 255).toInt()),
-            blurRadius: 16,
+            color: kPink.withOpacity(0.13),
+            blurRadius: 24,
             offset: const Offset(0, 8),
           ),
         ],
@@ -28,35 +28,47 @@ class HolidayDetailCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Sleek header
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              gradient: LinearGradient(
-                colors: [Colors.redAccent, kBrown],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              color: kGreen,
+              boxShadow: [
+                BoxShadow(
+                  color: kPink.withOpacity(0.18),
+                  blurRadius: 12,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Row(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: kWhiteGrey,
+                    color: kWhite,
                     shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: kPink.withOpacity(0.15),
+                        blurRadius: 8,
+                      ),
+                    ],
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: const Icon(Iconsax.calendar, color: Colors.redAccent, size: 24),
+                  child: const Icon(Iconsax.calendar, color: kPink, size: 24),
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  holiday!.name,
-                  style: TextStyle(
-                    color: kWhite,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    letterSpacing: 0.5,
+                Expanded(
+                  child: Text(
+                    holiday!.name,
+                    style: kHeaderTextStyle.copyWith(
+                      color: kWhite,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -69,14 +81,14 @@ class HolidayDetailCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Iconsax.info_circle, color: kBrown, size: 20),
+                    Icon(Iconsax.info_circle, color: kPink, size: 20),
                     const SizedBox(width: 10),
-                    Text('Occasion:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
+                    Text('Occasion:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600, fontFamily: kFontFamily)),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         holiday!.occasion,
-                        style: TextStyle(color: kBrown, fontWeight: FontWeight.w500),
+                        style: TextStyle(color: kBrown, fontWeight: FontWeight.w500, fontFamily: kFontFamily),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -85,13 +97,13 @@ class HolidayDetailCard extends StatelessWidget {
                 const SizedBox(height: 14),
                 Row(
                   children: [
-                    const Icon(Iconsax.calendar, color: kBrown, size: 20),
+                    Icon(Iconsax.calendar, color: kPink, size: 20),
                     const SizedBox(width: 10),
-                    Text('Date:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600)),
+                    Text('Date:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600, fontFamily: kFontFamily)),
                     const SizedBox(width: 8),
                     Text(
                       '${holiday!.date.day}/${holiday!.date.month}/${holiday!.date.year}',
-                      style: TextStyle(color: kBrown, fontWeight: FontWeight.w500),
+                      style: TextStyle(color: kBrown, fontWeight: FontWeight.w500, fontFamily: kFontFamily),
                     ),
                   ],
                 ),
