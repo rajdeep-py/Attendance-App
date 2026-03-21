@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../screens/about_us/about_us_screen.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
@@ -14,7 +15,17 @@ final GoRouter appRouter = GoRouter(
 	initialLocation: '/splash',
 	routes: [
 		   
-						   GoRoute(
+						   
+									   GoRoute(
+										   path: '/about-us',
+										   pageBuilder: (context, state) => CustomTransitionPage(
+											   child: const AboutUsScreen(),
+											   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+												   return FadeTransition(opacity: animation, child: child);
+											   },
+										   ),
+									   ),
+                     GoRoute(
 							   path: '/my-holidays',
 							   pageBuilder: (context, state) => CustomTransitionPage(
 								   child: const MyHolidayScreen(),

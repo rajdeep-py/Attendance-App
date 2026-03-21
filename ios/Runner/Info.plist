@@ -12,6 +12,21 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<!-- url_launcher permissions -->
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>tel</string>
+			<string>mailto</string>
+			<string>http</string>
+			<string>https</string>
+			<string>maps</string>
+			<string>googlemaps</string>
+			<string>fb</string>
+			<string>instagram</string>
+			<string>linkedin</string>
+			<string>youtube</string>
+			<string>x</string>
+		</array>
 	<key>CFBundleDisplayName</key>
 	<string>MMS Attendance App</string>
 	<key>CFBundleExecutable</key>

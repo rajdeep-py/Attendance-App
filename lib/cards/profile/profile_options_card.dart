@@ -9,11 +9,7 @@ class ProfileOptionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = [
-      {
-        'icon': Iconsax.edit,
-        'title': 'Update Profile',
-        'subtitle': 'Edit your personal information',
-      },
+      
       {
         'icon': Iconsax.document,
         'title': 'Download Salary Slip',
@@ -73,9 +69,9 @@ class ProfileOptionsCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             onTap: () {
               if (option['title'] == 'My Holidays') {
-                // Use GoRouter for navigation
-                // ignore: use_build_context_synchronously
                 GoRouter.of(context).go('/my-holidays');
+              } else if (option['title'] == 'About Us') {
+                GoRouter.of(context).go('/about-us');
               }
             },
             child: Padding(
