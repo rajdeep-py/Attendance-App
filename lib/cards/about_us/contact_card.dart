@@ -30,7 +30,7 @@ class ContactCard extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withAlpha(5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.all(8),
@@ -98,7 +98,7 @@ class ContactCard extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(5),
               borderRadius: BorderRadius.circular(16),
             ),
             padding: const EdgeInsets.all(10),

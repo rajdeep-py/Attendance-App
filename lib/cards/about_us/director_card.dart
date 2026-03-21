@@ -29,7 +29,7 @@ class DirectorCard extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withAlpha(5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.all(8),
