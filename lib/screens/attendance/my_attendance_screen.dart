@@ -67,6 +67,7 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
             onDateSelected: _onDateSelected,
           ),
           AttendanceCard(attendance: attendance),
+          
         ],
       ),
       bottomNavigationBar: BottomNavBar(

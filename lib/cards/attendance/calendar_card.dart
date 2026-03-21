@@ -17,94 +17,156 @@ class CalendarCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attendanceMap = ref.watch(attendanceProvider);
-    return Card(
-      color: kWhite,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: TableCalendar(
-        focusedDay: selectedDate,
-        firstDay: DateTime.utc(2020, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        selectedDayPredicate: (day) => isSameDay(day, selectedDate),
-        onDaySelected: (selected, _) => onDateSelected(selected),
-        calendarStyle: CalendarStyle(
-          todayDecoration: BoxDecoration(
-            color: kWhiteGrey,
-            shape: BoxShape.circle,
-            border: Border.all(color: kBrown, width: 2),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+      decoration: BoxDecoration(
+        color: kWhite,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: kBrown.withOpacity(0.07),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
           ),
-          selectedDecoration: BoxDecoration(
-            color: kBrown,
-            shape: BoxShape.circle,
-            border: Border.all(color: kBlack, width: 2),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TableCalendar(
+          focusedDay: selectedDate,
+          firstDay: DateTime.utc(2020, 1, 1),
+          lastDay: DateTime.utc(2030, 12, 31),
+          selectedDayPredicate: (day) => isSameDay(day, selectedDate),
+          onDaySelected: (selected, _) => onDateSelected(selected),
+          daysOfWeekHeight: 32,
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekdayStyle: TextStyle(
+              color: kBrown,
+              fontWeight: FontWeight.w600,
+              fontFamily: kFontFamily,
+              fontSize: 14,
+              height: 1.2,
+            ),
+            weekendStyle: TextStyle(
+              color: kPink,
+              fontWeight: FontWeight.w600,
+              fontFamily: kFontFamily,
+              fontSize: 14,
+              height: 1.2,
+            ),
+            decoration: BoxDecoration(
+              color: kWhiteGrey,
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
-          markerDecoration: BoxDecoration(
-            color: kBlack,
-            shape: BoxShape.circle,
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: kWhiteGrey,
+              shape: BoxShape.circle,
+              border: Border.all(color: kBrown, width: 2),
+            ),
+            selectedDecoration: BoxDecoration(
+              color: kPink,
+              shape: BoxShape.circle,
+              border: Border.all(color: kBrown, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: kPink.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            markerDecoration: BoxDecoration(
+              color: kBlack,
+              shape: BoxShape.circle,
+            ),
+            markersMaxCount: 1,
+            outsideDaysVisible: false,
+            todayTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.bold, fontFamily: kFontFamily),
+            selectedTextStyle: TextStyle(color: kWhite, fontWeight: FontWeight.bold, fontFamily: kFontFamily),
+            weekendTextStyle: TextStyle(color: kPink, fontFamily: kFontFamily),
+            defaultTextStyle: TextStyle(color: kBlack, fontFamily: kFontFamily),
+            withinRangeTextStyle: TextStyle(color: kBrown, fontFamily: kFontFamily),
+            disabledTextStyle: TextStyle(color: kWhiteGrey, fontFamily: kFontFamily),
           ),
-          markersMaxCount: 1,
-          outsideDaysVisible: false,
-          todayTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.bold),
-          selectedTextStyle: TextStyle(color: kWhite, fontWeight: FontWeight.bold),
-          weekendTextStyle: TextStyle(color: kBrown),
-          defaultTextStyle: TextStyle(color: kBlack),
-        ),
-        headerStyle: HeaderStyle(
-          titleTextStyle: TextStyle(color: kBlack, fontWeight: FontWeight.bold, fontSize: 16),
-          formatButtonDecoration: BoxDecoration(
-            color: kWhiteGrey,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kBrown),
+          headerStyle: HeaderStyle(
+            titleTextStyle: TextStyle(color: kBlack, fontWeight: FontWeight.bold, fontSize: 18, fontFamily: kFontFamily),
+            formatButtonDecoration: BoxDecoration(
+              color: kWhiteGrey,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: kBrown),
+            ),
+            formatButtonTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.w600, fontFamily: kFontFamily),
+            leftChevronIcon: const Icon(Iconsax.arrow_left, color: kBrown, size: 20),
+            rightChevronIcon: const Icon(Iconsax.arrow_right, color: kBrown, size: 20),
+            headerPadding: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              color: kWhiteGrey,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
           ),
-          formatButtonTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.w600),
-          leftChevronIcon: const Icon(Iconsax.arrow_left, color: kBrown, size: 20),
-          rightChevronIcon: const Icon(Iconsax.arrow_right, color: kBrown, size: 20),
-        ),
-        calendarBuilders: CalendarBuilders(
-          markerBuilder: (context, date, events) {
-            final normalizedDate = DateTime(date.year, date.month, date.day);
-            if (attendanceMap[normalizedDate] != null) {
-              return Positioned.fill(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.only(bottom: 2),
-                    decoration: BoxDecoration(
-                      color: kBlack,
-                      shape: BoxShape.circle,
+          calendarBuilders: CalendarBuilders(
+            markerBuilder: (context, date, events) {
+              final normalizedDate = DateTime(date.year, date.month, date.day);
+              if (attendanceMap[normalizedDate] != null) {
+                // Present or absent
+                final isPresent = attendanceMap[normalizedDate]?.checkIn != null;
+                return Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      margin: const EdgeInsets.only(bottom: 2),
+                      decoration: BoxDecoration(
+                        color: isPresent ? kGreen : kerror,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: (isPresent ? kGreen : kerror).withOpacity(0.3),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                );
+              }
+              return null;
+            },
+            selectedBuilder: (context, date, _) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: kPink,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: kBrown, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: kPink.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(Iconsax.tick_circle, color: kWhite, size: 18),
                 ),
               );
-            }
-            return null;
-          },
-          selectedBuilder: (context, date, _) {
-            return Container(
-              decoration: BoxDecoration(
-                color: kBrown,
-                shape: BoxShape.circle,
-                border: Border.all(color: kBlack, width: 2),
-              ),
-              child: Center(
-                child: Icon(Iconsax.tick_circle, color: kWhite, size: 18),
-              ),
-            );
-          },
-          todayBuilder: (context, date, _) {
-            return Container(
-              decoration: BoxDecoration(
-                color: kWhiteGrey,
-                shape: BoxShape.circle,
-                border: Border.all(color: kBrown, width: 2),
-              ),
-              child: Center(
-                child: Icon(Iconsax.calendar, color: kBrown, size: 18),
-              ),
-            );
-          },
+            },
+            todayBuilder: (context, date, _) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: kWhiteGrey,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: kBrown, width: 2),
+                ),
+                child: Center(
+                  child: Icon(Iconsax.calendar, color: kBrown, size: 18),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
