@@ -70,15 +70,32 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
           HolidayDetailCard(holiday: holiday),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          GoRouter.of(context).go('/request-holiday');
-        },
-        backgroundColor: kBrown,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        tooltip: 'Request Holiday',
-        elevation: 8,
-        child: const Icon(Iconsax.add, color: Colors.white, size: 32),
+      floatingActionButton: SizedBox(
+        height: 56,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            GoRouter.of(context).go('/request-holiday');
+          },
+          backgroundColor: kPink,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          icon: const Icon(Iconsax.logout, color: Colors.white, size: 28),
+          label: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              'Request Leave',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: kFontFamily,
+                fontSize: 18,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
+        ),
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
