@@ -33,13 +33,15 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 					mainAxisSize: MainAxisSize.min,
 					children: [
 						if (showBackIcon)
-							IconButton(
-								icon: const Icon(Iconsax.arrow_left, color: kBlack, size: 24),
-								onPressed: () {
-									context.pop();
-								},
-								tooltip: 'Back',
-							),
+								IconButton(
+									icon: const Icon(Iconsax.arrow_left, color: kBlack, size: 24),
+									onPressed: () {
+										if (Navigator.of(context).canPop()) {
+											context.pop();
+										}
+									},
+									tooltip: 'Back',
+								),
 						if (logoAssetPath.isNotEmpty)
 							Padding(
 								padding: const EdgeInsets.all(8.0),
