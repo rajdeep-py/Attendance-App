@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import '../../cards/dashboard/welcome_card.dart';
+import '../../provider/profile_provider.dart';
 import '../../cards/dashboard/check_in_out_card.dart';
 import '../../cards/dashboard/feature_card.dart';
 import '../../cards/dashboard/footer_card.dart';
@@ -42,6 +43,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		final user = ref.watch(profileProvider);
 		return Scaffold(
 			backgroundColor: kWhite,
 			appBar: const PremiumAppBar(
@@ -54,7 +56,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						WelcomeCard(userName: 'User', cardColor: kWhite),
+						WelcomeCard(userName: user?.fullName ?? 'User', cardColor: kWhite),
 						const CheckInOutCard(cardColor: kWhite),
 						const FeatureCard(cardColor: kWhite),
 						const SizedBox(height: 16),
