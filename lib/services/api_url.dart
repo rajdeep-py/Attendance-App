@@ -11,4 +11,6 @@ class ApiUrl {
 	static const String createLeaveRequest = '/create/leave_requests/';
 	static const String getLeaveRequestsByEmployee = '/get-all/leave_requests/employee/'; // Usage: /get-all/leave_requests/employee/{employee_id}
 	static const String deleteLeaveRequest = '/delete/leave_requests/'; // Usage: /delete/leave_requests/{leave_id}
+
+	static const String getSalarySlipsByEmployee = '/salary_slip/employee/'; // Usage: /salary_slip/employee/{employee_id}
 }

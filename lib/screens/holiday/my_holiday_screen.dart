@@ -50,7 +50,7 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
           : error != null
               ? Center(
                   child: Text(
-                    'Error: ' + error,
+                    'Error: $error',
                     style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 18),
                   ),
                 )

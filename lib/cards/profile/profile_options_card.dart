@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../services/salary_slip_services.dart';
+import '../../provider/profile_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileOptionsCard extends StatelessWidget {
+class ProfileOptionsCard extends ConsumerWidget {
   const ProfileOptionsCard({super.key});
 
+  Future<void> _downloadSalarySlip(BuildContext context, WidgetRef ref) async {
+    final user = ref.read(profileProvider);
+    if (user?.employeeId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User info missing')));
+      return;
+    }
+    try {
+      final slips = await SalarySlipServices().getSalarySlipsByEmployee(user!.employeeId!);
+      if (slips.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No salary slips found.')));
+        return;
+      }
+      final slip = slips.last; // Open the latest slip
+      final url = slip.fileUrl.startsWith('http') ? slip.fileUrl : '${ApiUrl.baseUrl}/${slip.fileUrl}';
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open salary slip.')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final options = [
       
       {
@@ -68,7 +97,9 @@ class ProfileOptionsCard extends StatelessWidget {
           return InkWell(
             borderRadius: BorderRadius.circular(18),
             onTap: () {
-              if (option['title'] == 'My Holidays') {
+              if (option['title'] == 'Download Salary Slip') {
+                _downloadSalarySlip(context, ref);
+              } else if (option['title'] == 'My Holidays') {
                 GoRouter.of(context).go('/my-holidays');
               } else if (option['title'] == 'About Us') {
                 GoRouter.of(context).go('/about-us');
