@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 // Color palette (updated)
 const Color kBlack = Colors.black;
 const Color kBrown = Color(0xFF554E3E); // new brown shade
-const Color kGreen = Color(0xFF8EB041); // new green shade
-const Color kPink = Color(0xFFD65570); // new pink shade
+const Color kGreen = Color.fromARGB(255, 61, 61, 60); // new green shade
+const Color kPink = Color.fromARGB(255, 0, 0, 0); // new pink shade
 const Color kWhite = Colors.white;
 const Color kWhiteGrey = Color(0xFFF5F5F7); // keep for backgrounds if needed
 const Color kerror = Color.fromARGB(255, 186, 14, 14); // Error Color

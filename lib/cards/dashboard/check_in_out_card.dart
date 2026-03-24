@@ -80,33 +80,51 @@ class CheckInOutCard extends ConsumerWidget {
 											),
 											elevation: 6,
 										),
-										onPressed: () async {
-											bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-											if (!serviceEnabled) {
-												await Geolocator.openLocationSettings();
-												return;
-											}
-											LocationPermission permission = await Geolocator.checkPermission();
-											if (permission == LocationPermission.denied) {
-												permission = await Geolocator.requestPermission();
-												if (permission == LocationPermission.denied) {
-													return;
+											onPressed: () async {
+												try {
+													bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+													if (!serviceEnabled) {
+														await Geolocator.openLocationSettings();
+														return;
+													}
+													LocationPermission permission = await Geolocator.checkPermission();
+													if (permission == LocationPermission.denied) {
+														permission = await Geolocator.requestPermission();
+														if (permission == LocationPermission.denied) {
+															return;
+														}
+													}
+													if (permission == LocationPermission.deniedForever) {
+														return;
+													}
+													Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+													final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+													if (selfie == null) return;
+													try {
+														await ref.read(dashboardProvider.notifier).checkIn(
+															employeeId: user!.employeeId!,
+															latitude: position.latitude,
+															longitude: position.longitude,
+															photoPath: selfie.path,
+														);
+													} on DioException catch (e) {
+														if (e.response?.statusCode == 403 &&
+																(e.response?.data['detail'] != null)) {
+															await AttendancePopup.show(context, message: e.response?.data['detail'].toString() ?? 'Current location not allowed for check-in.');
+														} else {
+															rethrow;
+														}
+													}
+												} on PermissionDeniedException {
+													await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check in.');
+												} catch (e) {
+													if (e.toString().contains('denied')) {
+														await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check in.');
+													} else {
+														rethrow;
+													}
 												}
-											}
-											if (permission == LocationPermission.deniedForever) {
-												return;
-											}
-											Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-											if (selfie == null) return;
-											await ref.read(dashboardProvider.notifier).checkIn(
-												employeeId: user!.employeeId!,
-												latitude: position.latitude,
-												longitude: position.longitude,
-												photoPath: selfie.path,
-											);
-											// Optionally, refresh attendance state here
-										},
+											},
 										icon: const Icon(Iconsax.login, size: 20),
 										label: const Text('Check In'),
 									),
@@ -149,27 +167,35 @@ class CheckInOutCard extends ConsumerWidget {
 											),
 											elevation: 6,
 										),
-										onPressed: () async {
-											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-											if (selfie == null) return;
-											Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-											try {
-												await ref.read(dashboardProvider.notifier).checkOut(
-													employeeId: user!.employeeId!,
-													latitude: position.latitude,
-													longitude: position.longitude,
-													photoPath: selfie.path,
-												);
-											} on DioException catch (e) {
-												if (e.response?.statusCode == 403 &&
-														(e.response?.data['detail']?.toString().contains('location') ?? false)) {
-													await AttendancePopup.show(context, message: 'Current location not allowed for check-out. Please go to the office to check out.');
-												} else {
-													rethrow;
+											onPressed: () async {
+												try {
+													final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+													if (selfie == null) return;
+													Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+													await ref.read(dashboardProvider.notifier).checkOut(
+														employeeId: user!.employeeId!,
+														latitude: position.latitude,
+														longitude: position.longitude,
+														photoPath: selfie.path,
+													);
+												} on DioException catch (e) {
+													if (e.response?.statusCode == 403 &&
+															(e.response?.data['detail']?.toString().contains('location') ?? false)) {
+														await AttendancePopup.show(context, message: 'Current location not allowed for check-out. Please go to the office to check out.');
+													} else {
+														rethrow;
+													}
+												} on PermissionDeniedException {
+													await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check out.');
+												} catch (e) {
+													if (e.toString().contains('denied')) {
+														await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check out.');
+													} else {
+														rethrow;
+													}
 												}
-											}
-											// Optionally, refresh attendance state here
-										},
+												// Optionally, refresh attendance state here
+											},
 										icon: const Icon(Iconsax.logout, size: 20),
 										label: const Text('Check Out'),
 									),
