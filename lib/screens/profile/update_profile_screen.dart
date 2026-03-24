@@ -5,6 +5,7 @@ import '../../provider/profile_provider.dart';
 import '../../models/user.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import 'package:iconsax/iconsax.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
 	const UpdateProfileScreen({super.key});
@@ -109,63 +110,113 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 		}
 		return Scaffold(
 			appBar: const PremiumAppBar(
-        title: 'Manage Profile',
-        subtitle: 'View and manage your account',
-        logoAssetPath: '',
-        actions: [],
-        showBackIcon: true,
-      ),
+				title: 'Manage Profile',
+				subtitle: 'View and manage your account',
+				logoAssetPath: '',
+				actions: [],
+				showBackIcon: true,
+			),
 			body: SingleChildScrollView(
 				padding: const EdgeInsets.all(16),
 				child: Form(
 					key: _formKey,
 					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.start,
 						children: [
-							TextFormField(
+							Center(
+								child: Container(
+									margin: const EdgeInsets.only(bottom: 24),
+									decoration: BoxDecoration(
+										shape: BoxShape.circle,
+										gradient: LinearGradient(
+											colors: [kPink, kBrown],
+											begin: Alignment.topLeft,
+											end: Alignment.bottomRight,
+										),
+										boxShadow: [
+											BoxShadow(
+												color: kBlack.withAlpha((0.18 * 255).toInt()),
+												blurRadius: 16,
+												offset: const Offset(0, 4),
+											),
+										],
+									),
+									padding: const EdgeInsets.all(24),
+									child: const Icon(Iconsax.user, color: Colors.white, size: 48),
+								),
+							),
+							Text('Personal Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
+							const SizedBox(height: 12),
+							_ModernTextField(
 								controller: _fullNameController,
-								decoration: const InputDecoration(labelText: 'Full Name'),
+								label: 'Full Name',
+								icon: Iconsax.user,
 								validator: (v) => v == null || v.isEmpty ? 'Required' : null,
 							),
-							TextFormField(
+							const SizedBox(height: 12),
+							_ModernTextField(
 								controller: _phoneController,
-								decoration: const InputDecoration(labelText: 'Phone Number'),
+								label: 'Phone Number',
+								icon: Iconsax.call,
+								keyboardType: TextInputType.phone,
 								validator: (v) => v == null || v.isEmpty ? 'Required' : null,
 							),
-							TextFormField(
+							const SizedBox(height: 12),
+							_ModernTextField(
 								controller: _emailController,
-								decoration: const InputDecoration(labelText: 'Email'),
+								label: 'Email',
+								icon: Iconsax.sms,
+								keyboardType: TextInputType.emailAddress,
 								validator: (v) => v == null || v.isEmpty ? 'Required' : null,
 							),
-							TextFormField(
+							const SizedBox(height: 12),
+							_ModernTextField(
 								controller: _addressController,
-								decoration: const InputDecoration(labelText: 'Address'),
+								label: 'Address',
+								icon: Iconsax.location,
 							),
-							TextFormField(
+							const SizedBox(height: 12),
+							_ModernTextField(
 								controller: _designationController,
-								decoration: const InputDecoration(labelText: 'Designation'),
-							),
-							TextFormField(
-								controller: _passwordController,
-								decoration: const InputDecoration(labelText: 'Password'),
-								obscureText: true,
-							),
-							TextFormField(
-								controller: _bankAccountController,
-								decoration: const InputDecoration(labelText: 'Bank Account No'),
-							),
-							TextFormField(
-								controller: _bankNameController,
-								decoration: const InputDecoration(labelText: 'Bank Name'),
-							),
-							TextFormField(
-								controller: _branchNameController,
-								decoration: const InputDecoration(labelText: 'Branch Name'),
-							),
-							TextFormField(
-								controller: _ifscController,
-								decoration: const InputDecoration(labelText: 'IFSC Code'),
+								label: 'Designation',
+								icon: Iconsax.briefcase,
 							),
 							const SizedBox(height: 24),
+							Text('Security', style: kHeaderTextStyle.copyWith(fontSize: 20)),
+							const SizedBox(height: 12),
+							_ModernTextField(
+								controller: _passwordController,
+								label: 'Password',
+								icon: Iconsax.lock,
+								obscureText: true,
+							),
+							const SizedBox(height: 24),
+							Text('Bank Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
+							const SizedBox(height: 12),
+							_ModernTextField(
+								controller: _bankAccountController,
+								label: 'Bank Account No',
+								icon: Iconsax.card,
+							),
+							const SizedBox(height: 12),
+							_ModernTextField(
+								controller: _bankNameController,
+								label: 'Bank Name',
+								icon: Iconsax.bank,
+							),
+							const SizedBox(height: 12),
+							_ModernTextField(
+								controller: _branchNameController,
+								label: 'Branch Name',
+								icon: Iconsax.building,
+							),
+							const SizedBox(height: 12),
+							_ModernTextField(
+								controller: _ifscController,
+								label: 'IFSC Code',
+								icon: Iconsax.code,
+							),
+							const SizedBox(height: 32),
 							SizedBox(
 								width: double.infinity,
 								child: ElevatedButton(
@@ -176,7 +227,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 														_handleUpdateProfile();
 													}
 												},
-									style: ElevatedButton.styleFrom(backgroundColor: kBrown),
+									style: kPremiumButtonStyle,
 									child: _loading
 											? const CircularProgressIndicator(color: Colors.white)
 											: const Text('Update'),
@@ -188,4 +239,56 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 			),
 		);
 	}
+
 }
+
+class _ModernTextField extends StatelessWidget {
+	final TextEditingController controller;
+	final String label;
+	final IconData icon;
+	final bool obscureText;
+	final TextInputType? keyboardType;
+	final String? Function(String?)? validator;
+
+	const _ModernTextField({
+		required this.controller,
+		required this.label,
+		required this.icon,
+		this.obscureText = false,
+		this.keyboardType,
+		this.validator,
+	});
+
+	@override
+	Widget build(BuildContext context) {
+		return Container(
+			decoration: BoxDecoration(
+				color: kWhiteGrey,
+				borderRadius: BorderRadius.circular(16),
+				boxShadow: [
+					BoxShadow(
+						color: kBrown.withAlpha(18),
+						blurRadius: 8,
+						offset: const Offset(0, 2),
+					),
+				],
+			),
+			child: TextFormField(
+				controller: controller,
+				obscureText: obscureText,
+				keyboardType: keyboardType,
+				validator: validator,
+				style: const TextStyle(color: kBrown, fontWeight: FontWeight.w500),
+				decoration: InputDecoration(
+					prefixIcon: Icon(icon, color: kPink),
+					labelText: label,
+					labelStyle: kTaglineTextStyle.copyWith(color: kBrown),
+					border: InputBorder.none,
+					filled: true,
+					fillColor: kWhiteGrey,
+				),
+			),
+		);
+	}
+}
+
