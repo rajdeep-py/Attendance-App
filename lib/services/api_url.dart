@@ -14,4 +14,7 @@ class ApiUrl {
 
 	static const String getSalarySlipsByEmployee = '/salary_slip/employee/'; // Usage: /salary_slip/employee/{employee_id}
 	static const String getSalarySlipPdf = '/salary_slip/pdf/'; // Usage: /salary_slip/pdf/{employee_id}/{slip_id}
+
+  static const String getHolidaysByAdmin = '/get-holidays/admin/'; // Usage: /get-holidays/admin/{admin_id}
+	static const String getHolidayByAdminAndId = '/get-holidays/'; // Usage: /get-holidays/{holiday_id}/admin/{admin_id}
 }

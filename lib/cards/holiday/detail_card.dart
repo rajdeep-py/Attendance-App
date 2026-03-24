@@ -62,7 +62,7 @@ class HolidayDetailCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    holiday!.name,
+                    holiday!.title,
                     style: kHeaderTextStyle.copyWith(
                       color: kWhite,
                       fontSize: 22,
@@ -83,11 +83,11 @@ class HolidayDetailCard extends StatelessWidget {
                   children: [
                     Icon(Iconsax.info_circle, color: kPink, size: 20),
                     const SizedBox(width: 10),
-                    Text('Occasion:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600, fontFamily: kFontFamily)),
+                    Text('Remarks:', style: TextStyle(color: kBlack, fontWeight: FontWeight.w600, fontFamily: kFontFamily)),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        holiday!.occasion,
+                        holiday!.remarks ?? '-',
                         style: TextStyle(color: kBrown, fontWeight: FontWeight.w500, fontFamily: kFontFamily),
                         overflow: TextOverflow.ellipsis,
                       ),

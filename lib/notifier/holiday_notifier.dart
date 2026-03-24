@@ -2,9 +2,11 @@ import 'package:flutter_riverpod/legacy.dart';
 import '../models/holiday.dart';
 import '../models/holiday_request.dart';
 import '../services/leave_request_services.dart';
+import '../services/holiday_services.dart';
 
 class HolidayNotifier extends StateNotifier<Map<DateTime, Holiday>> {
   final LeaveRequestServices _leaveRequestServices = LeaveRequestServices();
+  final HolidayServices _holidayServices = HolidayServices();
   List<HolidayRequest> _requests = [];
   bool _loading = false;
   String? _error;
@@ -13,24 +15,22 @@ class HolidayNotifier extends StateNotifier<Map<DateTime, Holiday>> {
   bool get loading => _loading;
   String? get error => _error;
 
-  HolidayNotifier()
-      : super({
-          _dateOnly(DateTime(2026, 3, 25)): Holiday(
-            date: DateTime(2026, 3, 25),
-            name: 'Holi',
-            occasion: 'Festival of Colors',
-          ),
-          _dateOnly(DateTime(2026, 4, 14)): Holiday(
-            date: DateTime(2026, 4, 14),
-            name: 'Ambedkar Jayanti',
-            occasion: 'Birth anniversary of Dr. B.R. Ambedkar',
-          ),
-          _dateOnly(DateTime(2026, 5, 1)): Holiday(
-            date: DateTime(2026, 5, 1),
-            name: 'May Day',
-            occasion: 'International Workers Day',
-          ),
-        });
+  HolidayNotifier() : super({});
+
+  Future<void> fetchHolidaysByAdmin(int adminId) async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      final holidays = await _holidayServices.getHolidaysByAdmin(adminId);
+      final holidayMap = {for (var h in holidays) _dateOnly(h.date): h};
+      state = holidayMap;
+    } catch (e) {
+      _error = e.toString();
+    }
+    _loading = false;
+    notifyListeners();
+  }
 
   Future<void> fetchRequests(int employeeId) async {
     _loading = true;
