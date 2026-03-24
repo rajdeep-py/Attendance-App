@@ -35,7 +35,7 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
       return;
     }
     try {
-      await ref.read(holidayNotifierProvider).createRequest(
+      await ref.read(holidayProvider.notifier).createRequest(
         adminId: user!.adminId!,
         employeeId: user.employeeId!,
         date: _selectedDate!,

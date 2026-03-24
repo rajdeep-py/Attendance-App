@@ -25,13 +25,13 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
   Future<void> _fetchRequests() async {
     final user = ref.read(authProvider);
     if (user?.employeeId != null) {
-      await ref.read(holidayNotifierProvider).fetchRequests(user!.employeeId!);
+      await ref.read(holidayProvider.notifier).fetchRequests(user!.employeeId!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.watch(holidayNotifierProvider);
+    final notifier = ref.watch(holidayProvider.notifier);
     final requests = notifier.requests;
     final loading = notifier.loading;
     final error = notifier.error;
