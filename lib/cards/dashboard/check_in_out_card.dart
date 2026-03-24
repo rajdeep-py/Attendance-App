@@ -60,54 +60,53 @@ class CheckInOutCard extends ConsumerWidget {
 										),
 									],
 								),
-										ElevatedButton.icon(
-											style: ElevatedButton.styleFrom(
-												backgroundColor: kPink,
-												foregroundColor: kWhite,
-												minimumSize: const Size(120, 48),
-												padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-												shape: RoundedRectangleBorder(
-													borderRadius: BorderRadius.circular(16),
-												),
-												textStyle: const TextStyle(
-													fontFamily: kFontFamily,
-													fontWeight: FontWeight.bold,
-													fontSize: 16,
-												),
-												elevation: 6,
+								if (attendance.checkIn == null && user?.employeeId != null)
+									ElevatedButton.icon(
+										style: ElevatedButton.styleFrom(
+											backgroundColor: kPink,
+											foregroundColor: kWhite,
+											minimumSize: const Size(120, 48),
+											padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+											shape: RoundedRectangleBorder(
+												borderRadius: BorderRadius.circular(16),
 											),
-											onPressed: attendance.checkIn == null && user?.employeeId != null
-													? () async {
-															bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-															if (!serviceEnabled) {
-																await Geolocator.openLocationSettings();
-																return;
-															}
-															LocationPermission permission = await Geolocator.checkPermission();
-															if (permission == LocationPermission.denied) {
-																permission = await Geolocator.requestPermission();
-																if (permission == LocationPermission.denied) {
-																	return;
-																}
-															}
-															if (permission == LocationPermission.deniedForever) {
-																return;
-															}
-															Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-															final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-															if (selfie == null) return;
-															await ref.read(dashboardProvider.notifier).checkIn(
-																employeeId: user!.employeeId!,
-																latitude: position.latitude,
-																longitude: position.longitude,
-																photoPath: selfie.path,
-															);
-															// Optionally, refresh attendance state here
-														}
-													: null,
-											icon: const Icon(Iconsax.login, size: 20),
-											label: const Text('Check In'),
+											textStyle: const TextStyle(
+												fontFamily: kFontFamily,
+												fontWeight: FontWeight.bold,
+												fontSize: 16,
+											),
+											elevation: 6,
 										),
+										onPressed: () async {
+											bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+											if (!serviceEnabled) {
+												await Geolocator.openLocationSettings();
+												return;
+											}
+											LocationPermission permission = await Geolocator.checkPermission();
+											if (permission == LocationPermission.denied) {
+												permission = await Geolocator.requestPermission();
+												if (permission == LocationPermission.denied) {
+													return;
+												}
+											}
+											if (permission == LocationPermission.deniedForever) {
+												return;
+											}
+											Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+											if (selfie == null) return;
+											await ref.read(dashboardProvider.notifier).checkIn(
+												employeeId: user!.employeeId!,
+												latitude: position.latitude,
+												longitude: position.longitude,
+												photoPath: selfie.path,
+											);
+											// Optionally, refresh attendance state here
+										},
+										icon: const Icon(Iconsax.login, size: 20),
+										label: const Text('Check In'),
+									),
 							],
 						),
 						const SizedBox(height: 18),
@@ -130,39 +129,38 @@ class CheckInOutCard extends ConsumerWidget {
 										),
 									],
 								),
-										ElevatedButton.icon(
-											style: ElevatedButton.styleFrom(
-												backgroundColor: kPink,
-												foregroundColor: kWhite,
-												minimumSize: const Size(120, 48),
-												padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-												shape: RoundedRectangleBorder(
-													borderRadius: BorderRadius.circular(16),
-												),
-												textStyle: const TextStyle(
-													fontFamily: kFontFamily,
-													fontWeight: FontWeight.bold,
-													fontSize: 16,
-												),
-												elevation: 6,
+								if (attendance.checkIn != null && attendance.checkOut == null && user?.employeeId != null)
+									ElevatedButton.icon(
+										style: ElevatedButton.styleFrom(
+											backgroundColor: kPink,
+											foregroundColor: kWhite,
+											minimumSize: const Size(120, 48),
+											padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+											shape: RoundedRectangleBorder(
+												borderRadius: BorderRadius.circular(16),
 											),
-											onPressed: attendance.checkIn != null && attendance.checkOut == null && user?.employeeId != null
-													? () async {
-															final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-															if (selfie == null) return;
-															Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-															await ref.read(dashboardProvider.notifier).checkOut(
-																employeeId: user!.employeeId!,
-																latitude: position.latitude,
-																longitude: position.longitude,
-																photoPath: selfie.path,
-															);
-															// Optionally, refresh attendance state here
-														}
-													: null,
-											icon: const Icon(Iconsax.logout, size: 20),
-											label: const Text('Check Out'),
+											textStyle: const TextStyle(
+												fontFamily: kFontFamily,
+												fontWeight: FontWeight.bold,
+												fontSize: 16,
+											),
+											elevation: 6,
 										),
+										onPressed: () async {
+											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+											if (selfie == null) return;
+											Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+											await ref.read(dashboardProvider.notifier).checkOut(
+												employeeId: user!.employeeId!,
+												latitude: position.latitude,
+												longitude: position.longitude,
+												photoPath: selfie.path,
+											);
+											// Optionally, refresh attendance state here
+										},
+										icon: const Icon(Iconsax.logout, size: 20),
+										label: const Text('Check Out'),
+									),
 							],
 						),
 					],

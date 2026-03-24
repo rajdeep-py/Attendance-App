@@ -92,7 +92,7 @@ class AttendanceCard extends StatelessWidget {
               ],
             ),
           ),
-          Divider(height: 1, color: kGrey.withOpacity(0.2)),
+          Divider(height: 1, color: kGrey.withAlpha(2)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(

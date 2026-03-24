@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../provider/dashboard_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import '../../cards/dashboard/welcome_card.dart';
@@ -18,6 +19,17 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+		@override
+		void initState() {
+			super.initState();
+			// Fetch latest attendance for dashboard on load
+			Future.microtask(() {
+				final user = ref.read(profileProvider);
+				if (user?.employeeId != null) {
+					ref.read(dashboardProvider.notifier).fetchLatestAttendance(user!.employeeId!);
+				}
+			});
+		}
 	int _currentIndex = 0;
 
 	void _onNavTap(int index) {
