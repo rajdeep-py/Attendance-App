@@ -13,6 +13,26 @@ class AppNotification {
     this.isRead = false,
   });
 
+  factory AppNotification.fromJson(Map<String, dynamic> json) {
+    return AppNotification(
+      id: json['notification_id']?.toString() ?? json['id']?.toString() ?? '',
+      title: json['title'] ?? '',
+      message: json['subtitle'] ?? json['message'] ?? '',
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      isRead: json['is_read'] ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'notification_id': id,
+      'title': title,
+      'subtitle': message,
+      'date': date.toIso8601String(),
+      'is_read': isRead,
+    };
+  }
+
   AppNotification copyWith({
     String? id,
     String? title,

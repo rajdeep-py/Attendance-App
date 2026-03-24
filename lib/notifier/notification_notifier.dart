@@ -1,32 +1,21 @@
 import 'package:flutter_riverpod/legacy.dart';
-
 import '../models/notification.dart';
+import '../services/notification_services.dart';
 
 class NotificationNotifier extends StateNotifier<List<AppNotification>> {
-  NotificationNotifier()
-      : super([
-          AppNotification(
-            id: '1',
-            title: 'Welcome to MMS Attendance!',
-            message: 'Thank you for joining. Start recording your attendance today.',
-            date: DateTime.now().subtract(const Duration(hours: 1)),
-            isRead: false,
-          ),
-          AppNotification(
-            id: '2',
-            title: 'Leave Approved',
-            message: 'Your leave request for 22 Mar 2026 has been approved.',
-            date: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-            isRead: true,
-          ),
-          AppNotification(
-            id: '3',
-            title: 'New Holiday Added',
-            message: 'Holi has been added to the holiday calendar on 25 Mar 2026.',
-            date: DateTime.now().subtract(const Duration(days: 2, hours: 3)),
-            isRead: false,
-          ),
-        ]);
+  final NotificationServices _notificationServices = NotificationServices();
+
+  NotificationNotifier() : super([]);
+
+  Future<void> fetchNotificationsForEmployee(int employeeId) async {
+    try {
+      final notifications = await _notificationServices.getNotificationsForEmployee(employeeId);
+      state = notifications;
+    } catch (e) {
+      // Optionally handle error
+      state = [];
+    }
+  }
 
   void addNotification(AppNotification notification) {
     state = [...state, notification];

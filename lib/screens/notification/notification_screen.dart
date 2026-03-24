@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../widgets/app_bar.dart';
 import '../../cards/notification/notification_card.dart';
 import '../../provider/notification_provider.dart';
+import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 
-class NotificationScreen extends ConsumerWidget {
+class NotificationScreen extends ConsumerStatefulWidget {
   const NotificationScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
+  bool _fetched = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_fetched) {
+      final user = ref.read(profileProvider);
+      if (user != null && user.employeeId != null) {
+        ref.read(notificationProvider.notifier).fetchNotificationsForEmployee(user.employeeId!);
+        _fetched = true;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final notifications = ref.watch(notificationProvider);
     return Scaffold(
       backgroundColor: kWhite,
