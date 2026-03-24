@@ -1,3 +1,6 @@
+import 'package:dio/dio.dart';
+
+import '../../widgets/attendance_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
@@ -150,12 +153,21 @@ class CheckInOutCard extends ConsumerWidget {
 											final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
 											if (selfie == null) return;
 											Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-											await ref.read(dashboardProvider.notifier).checkOut(
-												employeeId: user!.employeeId!,
-												latitude: position.latitude,
-												longitude: position.longitude,
-												photoPath: selfie.path,
-											);
+											try {
+												await ref.read(dashboardProvider.notifier).checkOut(
+													employeeId: user!.employeeId!,
+													latitude: position.latitude,
+													longitude: position.longitude,
+													photoPath: selfie.path,
+												);
+											} on DioException catch (e) {
+												if (e.response?.statusCode == 403 &&
+														(e.response?.data['detail']?.toString().contains('location') ?? false)) {
+													await AttendancePopup.show(context, message: 'Current location not allowed for check-out. Please go to the office to check out.');
+												} else {
+													rethrow;
+												}
+											}
 											// Optionally, refresh attendance state here
 										},
 										icon: const Icon(Iconsax.logout, size: 20),
