@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 
 import 'package:go_router/go_router.dart';
 import '../../models/user.dart';
+import '../../services/api_url.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
   final User user;
@@ -45,8 +46,20 @@ class ProfileHeaderCard extends StatelessWidget {
                   ),
                 ],
               ),
-              padding: const EdgeInsets.all(20),
-              child: const Icon(Iconsax.user, color: Colors.white, size: 40),
+              padding: const EdgeInsets.all(2),
+              child: user.profilePhoto != null && user.profilePhoto!.isNotEmpty
+                  ? ClipOval(
+                      child: Image.network(
+                        user.profilePhoto!.startsWith('http')
+                            ? user.profilePhoto!
+                            : '${ApiUrl.baseUrl}/${user.profilePhoto!}',
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => const Icon(Iconsax.user, color: Colors.white, size: 40),
+                      ),
+                    )
+                  : const Icon(Iconsax.user, color: Colors.white, size: 40),
             ),
             const SizedBox(width: 24),
             Expanded(

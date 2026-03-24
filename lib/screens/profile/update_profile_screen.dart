@@ -10,6 +10,7 @@ import '../../models/user.dart';
 import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../services/api_url.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
 	const UpdateProfileScreen({super.key});
@@ -193,7 +194,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 												),
 											],
 										),
-										padding: const EdgeInsets.all(24),
+										padding: const EdgeInsets.all(2),
 										child: _profileImage != null
 												? ClipOval(
 														child: Image.file(
@@ -203,7 +204,19 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 															fit: BoxFit.cover,
 														),
 													)
-												: const Icon(Iconsax.user, color: Colors.white, size: 48),
+												: (user.profilePhoto != null && user.profilePhoto!.isNotEmpty
+														? ClipOval(
+																child: Image.network(
+																	user.profilePhoto!.startsWith('http')
+																			? user.profilePhoto!
+																			: '${ApiUrl.baseUrl}/${user.profilePhoto!}',
+																	width: 80,
+																	height: 80,
+																	fit: BoxFit.cover,
+																	errorBuilder: (context, error, stackTrace) => const Icon(Iconsax.user, color: Colors.white, size: 48),
+																),
+															)
+														: const Icon(Iconsax.user, color: Colors.white, size: 48)),
 									),
 								),
 							),
