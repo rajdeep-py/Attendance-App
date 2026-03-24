@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,11 +23,15 @@ class ProfileOptionsCard extends ConsumerWidget {
         return;
       }
       final slip = slips.last; // Open the latest slip
-      final url = slip.fileUrl.startsWith('http') ? slip.fileUrl : '${ApiUrl.baseUrl}/${slip.fileUrl}';
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      // Use the new endpoint to get the PDF URL
+      final pdfUrl = await SalarySlipServices().getSalarySlipPdfUrl(
+        employeeId: user.employeeId!,
+        slipId: slip.slipId,
+      );
+      if (await canLaunchUrl(Uri.parse(pdfUrl))) {
+        await launchUrl(Uri.parse(pdfUrl), mode: LaunchMode.externalApplication);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open salary slip.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open salary slip PDF.')));
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

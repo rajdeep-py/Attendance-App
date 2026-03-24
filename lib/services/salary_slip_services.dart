@@ -21,4 +21,15 @@ class SalarySlipServices {
       throw Exception('Failed to fetch salary slips');
     }
   }
+
+  /// Returns the direct PDF URL for a salary slip (calls the new backend endpoint)
+  Future<String> getSalarySlipPdfUrl({
+    required int employeeId,
+    required int slipId,
+  }) async {
+    final url = '${ApiUrl.getSalarySlipPdf}$employeeId/$slipId';
+    // This endpoint returns the PDF file directly, so we just build the URL
+    // If you want to check if the file exists, you could do a HEAD request, but for now just return the URL
+    return ApiUrl.baseUrl + url;
+  }
 }

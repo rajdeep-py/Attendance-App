@@ -13,4 +13,5 @@ class ApiUrl {
 	static const String deleteLeaveRequest = '/delete/leave_requests/'; // Usage: /delete/leave_requests/{leave_id}
 
 	static const String getSalarySlipsByEmployee = '/salary_slip/employee/'; // Usage: /salary_slip/employee/{employee_id}
+	static const String getSalarySlipPdf = '/salary_slip/pdf/'; // Usage: /salary_slip/pdf/{employee_id}/{slip_id}
 }
