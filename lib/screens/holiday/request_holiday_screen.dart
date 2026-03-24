@@ -5,6 +5,7 @@ import '../../provider/auth_provider.dart';
 import '../../provider/holiday_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/leave_request_success_popup.dart';
 class RequestHolidayScreen extends ConsumerStatefulWidget {
   const RequestHolidayScreen({super.key});
 
@@ -41,8 +42,12 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
         reason: _reasonController.text,
       );
       if (!mounted) return;
-      Navigator.of(context).pop();
-      // Do not call setState after pop, as widget may be disposed
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LeaveRequestSuccessPopup(),
+      );
+      // Do not call setState after dialog, as widget may be disposed
     } catch (e) {
       if (!mounted) return;
       setState(() {
