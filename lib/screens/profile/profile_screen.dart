@@ -15,33 +15,40 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(profileProvider);
     return Scaffold(
-          appBar: const PremiumAppBar(
-            title: 'Profile',
-            subtitle: 'View and manage your account',
-            logoAssetPath: '',
-            actions: [],
-            showBackIcon: false,
-          ),
-      backgroundColor: kWhiteGrey,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            ProfileHeaderCard(user: user),
-            const SizedBox(height: 2),
-            const ProfileOptionsCard(),
-            const SizedBox(height: 2),
-            const HomeFooter()
-          ],
-        ),
+      appBar: const PremiumAppBar(
+        title: 'Profile',
+        subtitle: 'View and manage your account',
+        logoAssetPath: '',
+        actions: [],
+        showBackIcon: false,
       ),
-          bottomNavigationBar: BottomNavBar(
-            currentIndex: 3,
-            onTap: (index) {
-              // Add navigation logic if needed
-            },
-          ),
+      backgroundColor: kWhiteGrey,
+      body: Builder(
+        builder: (context) {
+          if (user == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                ProfileHeaderCard(user: user),
+                const SizedBox(height: 2),
+                const ProfileOptionsCard(),
+                const SizedBox(height: 2),
+                const HomeFooter()
+              ],
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 3,
+        onTap: (index) {
+          // Add navigation logic if needed
+        },
+      ),
     );
   }
 }

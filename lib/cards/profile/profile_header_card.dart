@@ -54,7 +54,7 @@ class ProfileHeaderCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        user.name,
+                        user.fullName,
                         style: kHeaderTextStyle.copyWith(
                           fontSize: 22,
                           color: kBrown,
@@ -72,7 +72,7 @@ class ProfileHeaderCard extends StatelessWidget {
                       Icon(Iconsax.call, color: kPink, size: 18),
                       const SizedBox(width: 6),
                       Text(
-                        user.phone,
+                        user.phoneNo,
                         style: TextStyle(
                           color: kBrown,
                           fontWeight: FontWeight.w500,

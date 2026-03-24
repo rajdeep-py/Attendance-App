@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/auth_provider.dart';
 
@@ -12,6 +13,31 @@ class LoginScreen extends ConsumerWidget {
 	Widget build(BuildContext context, WidgetRef ref) {
 		final phoneController = TextEditingController();
 		final passwordController = TextEditingController();
+		final isLoading = ValueNotifier(false);
+
+		Future<void> handleLogin() async {
+			isLoading.value = true;
+			try {
+				await ref.read(authProvider.notifier).login(
+					phoneController.text,
+					passwordController.text,
+				);
+				final user = ref.read(authProvider);
+				if (user != null && user.employeeId != null) {
+					// Fetch profile after login
+					await ref.read(profileProvider.notifier).fetchProfile(user.employeeId!);
+					context.go('/dashboard');
+				} else {
+					throw Exception('Invalid user data');
+				}
+			} catch (e) {
+				ScaffoldMessenger.of(context).showSnackBar(
+					SnackBar(content: Text('Login failed: ${e.toString()}')),
+				);
+			} finally {
+				isLoading.value = false;
+			}
+		}
 
 		return Scaffold(
 			backgroundColor: kWhite,
@@ -75,20 +101,24 @@ class LoginScreen extends ConsumerWidget {
 									),
 								),
 								const SizedBox(height: 6),
-								SizedBox(
-									width: double.infinity,
-									child: ElevatedButton(
-										style: kPremiumButtonStyle,
-										onPressed: () {
-											ref.read(authProvider.notifier).login(
-												phoneController.text,
-												passwordController.text,
-											);
-											// Use GoRouter for navigation
-											context.go('/dashboard');
-										},
-										child: const Text('Login'),
-									),
+								ValueListenableBuilder<bool>(
+									valueListenable: isLoading,
+									builder: (context, loading, child) {
+										return SizedBox(
+											width: double.infinity,
+											child: ElevatedButton(
+												style: kPremiumButtonStyle,
+												onPressed: loading ? null : handleLogin,
+												child: loading
+														? const SizedBox(
+																width: 24,
+																height: 24,
+																child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+															)
+														: const Text('Login'),
+											),
+										);
+									},
 								),
 								const SizedBox(height: 12),
 								Padding(
