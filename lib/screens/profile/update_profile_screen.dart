@@ -1,11 +1,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../provider/profile_provider.dart';
+import 'package:iconsax/iconsax.dart';
+
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
 import '../../models/user.dart';
+import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
-import 'package:iconsax/iconsax.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
 	const UpdateProfileScreen({super.key});
@@ -28,6 +32,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 	final _ifscController = TextEditingController();
 
 	bool _loading = false;
+	File? _profileImage;
 
 	@override
 	void dispose() {
@@ -55,6 +60,50 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 		_bankNameController.text = user.bankName;
 		_branchNameController.text = user.branchName;
 		_ifscController.text = user.ifscCode;
+		// Optionally, show existing profile photo if available
+		// (for now, only new uploads are previewed)
+	}
+
+	Future<void> _pickImage(ImageSource source) async {
+		final picker = ImagePicker();
+		final pickedFile = await picker.pickImage(source: source, imageQuality: 80);
+		if (pickedFile != null) {
+			setState(() {
+				_profileImage = File(pickedFile.path);
+			});
+		}
+	}
+
+	void _showImagePickerSheet() {
+		showModalBottomSheet(
+			context: context,
+			shape: const RoundedRectangleBorder(
+				borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+			),
+			builder: (context) => SafeArea(
+				child: Column(
+					mainAxisSize: MainAxisSize.min,
+					children: [
+						ListTile(
+							leading: const Icon(Iconsax.camera, color: kBrown),
+							title: const Text('Take Photo'),
+							onTap: () {
+								Navigator.pop(context);
+								_pickImage(ImageSource.camera);
+							},
+						),
+						ListTile(
+							leading: const Icon(Iconsax.gallery, color: kBrown),
+							title: const Text('Choose from Gallery'),
+							onTap: () {
+								Navigator.pop(context);
+								_pickImage(ImageSource.gallery);
+							},
+						),
+					],
+				),
+			),
+		);
 	}
 
 	@override
@@ -83,6 +132,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 				bankName: _bankNameController.text,
 				branchName: _branchNameController.text,
 				ifscCode: _ifscController.text,
+				profilePhotoPath: _profileImage?.path,
 			);
 			if (mounted) {
 				ScaffoldMessenger.of(context).showSnackBar(
@@ -124,25 +174,37 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: [
 							Center(
-								child: Container(
-									margin: const EdgeInsets.only(bottom: 24),
-									decoration: BoxDecoration(
-										shape: BoxShape.circle,
-										gradient: LinearGradient(
-											colors: [kPink, kBrown],
-											begin: Alignment.topLeft,
-											end: Alignment.bottomRight,
-										),
-										boxShadow: [
-											BoxShadow(
-												color: kBlack.withAlpha((0.18 * 255).toInt()),
-												blurRadius: 16,
-												offset: const Offset(0, 4),
+								child: GestureDetector(
+									onTap: _showImagePickerSheet,
+									child: Container(
+										margin: const EdgeInsets.only(bottom: 24),
+										decoration: BoxDecoration(
+											shape: BoxShape.circle,
+											gradient: LinearGradient(
+												colors: [kPink, kBrown],
+												begin: Alignment.topLeft,
+												end: Alignment.bottomRight,
 											),
-										],
+											boxShadow: [
+												BoxShadow(
+													color: kBlack.withAlpha((0.18 * 255).toInt()),
+													blurRadius: 16,
+													offset: const Offset(0, 4),
+												),
+											],
+										),
+										padding: const EdgeInsets.all(24),
+										child: _profileImage != null
+												? ClipOval(
+														child: Image.file(
+															_profileImage!,
+															width: 80,
+															height: 80,
+															fit: BoxFit.cover,
+														),
+													)
+												: const Icon(Iconsax.user, color: Colors.white, size: 48),
 									),
-									padding: const EdgeInsets.all(24),
-									child: const Icon(Iconsax.user, color: Colors.white, size: 48),
 								),
 							),
 							Text('Personal Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
