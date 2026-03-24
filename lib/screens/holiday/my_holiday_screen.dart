@@ -3,14 +3,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/holiday/my_holiday_card.dart';
 import '../../provider/holiday_provider.dart';
+import '../../provider/auth_provider.dart';
 import '../../theme/app_theme.dart';
 
-class MyHolidayScreen extends ConsumerWidget {
+class MyHolidayScreen extends ConsumerStatefulWidget {
   const MyHolidayScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final requests = ref.watch(holidayRequestProvider);
+  ConsumerState<MyHolidayScreen> createState() => _MyHolidayScreenState();
+}
+
+class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _fetchRequests();
+  }
+
+  Future<void> _fetchRequests() async {
+    final user = ref.read(authProvider);
+    if (user?.employeeId != null) {
+      await ref.read(holidayNotifierProvider).fetchRequests(user!.employeeId!);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final notifier = ref.watch(holidayNotifierProvider);
+    final requests = notifier.requests;
+    final loading = notifier.loading;
+    final error = notifier.error;
+
     return Scaffold(
       backgroundColor: kWhite,
       appBar: const PremiumAppBar(
@@ -20,21 +43,30 @@ class MyHolidayScreen extends ConsumerWidget {
         showBackIcon: true,
         actions: [],
       ),
-      body: requests.isEmpty
-          ? Center(
-              child: Text(
-                'No holiday requests yet',
-                style: kDescriptionTextStyle.copyWith(color: kBrown, fontSize: 18),
-              ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.only(top: 12, bottom: 24),
-              itemCount: requests.length,
-              itemBuilder: (context, index) {
-                final request = requests[index];
-                return MyHolidayCard(request: request);
-              },
-            ),
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : error != null
+              ? Center(
+                  child: Text(
+                    'Error: ' + error,
+                    style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 18),
+                  ),
+                )
+              : requests.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No holiday requests yet',
+                        style: kDescriptionTextStyle.copyWith(color: kBrown, fontSize: 18),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.only(top: 12, bottom: 24),
+                      itemCount: requests.length,
+                      itemBuilder: (context, index) {
+                        final request = requests[index];
+                        return MyHolidayCard(request: request);
+                      },
+                    ),
     );
   }
 }

@@ -7,4 +7,8 @@ class ApiUrl {
 	static const String updateEmployeeById = '/update/employees/'; // Usage: /update/employees/{employee_id}
 
 	static const String getNotificationsForEmployee = '/notifications/employee/'; // Usage: /notifications/employee/{employee_id}
+
+	static const String createLeaveRequest = '/create/leave_requests/';
+	static const String getLeaveRequestsByEmployee = '/get-all/leave_requests/employee/'; // Usage: /get-all/leave_requests/employee/{employee_id}
+	static const String deleteLeaveRequest = '/delete/leave_requests/'; // Usage: /delete/leave_requests/{leave_id}
 }

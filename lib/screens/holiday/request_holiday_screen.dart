@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../widgets/app_bar.dart';
-import '../../provider/holiday_provider.dart';
-import '../../models/holiday_request.dart';
-import '../../theme/app_theme.dart';
 
+import '../../provider/auth_provider.dart';
+import '../../provider/holiday_provider.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/app_bar.dart';
 class RequestHolidayScreen extends ConsumerStatefulWidget {
   const RequestHolidayScreen({super.key});
 
@@ -16,16 +16,40 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
   DateTime? _selectedDate;
   final _reasonController = TextEditingController();
   final _messageController = TextEditingController();
+  bool _submitting = false;
+  String? _error;
 
-  void _submit() {
-    if (_selectedDate == null || _reasonController.text.isEmpty || _messageController.text.isEmpty) return;
-    final request = HolidayRequest(
-      date: _selectedDate!,
-      reason: _reasonController.text,
-      message: _messageController.text,
-    );
-    ref.read(holidayProvider.notifier).addRequest(request);
-    Navigator.of(context).pop();
+  Future<void> _submit() async {
+    if (_selectedDate == null || _reasonController.text.isEmpty) return;
+    setState(() {
+      _submitting = true;
+      _error = null;
+    });
+    final user = ref.read(authProvider);
+    if (user?.employeeId == null || user?.adminId == null) {
+      setState(() {
+        _error = 'User info missing';
+        _submitting = false;
+      });
+      return;
+    }
+    try {
+      await ref.read(holidayNotifierProvider).createRequest(
+        adminId: user!.adminId!,
+        employeeId: user.employeeId!,
+        date: _selectedDate!,
+        reason: _reasonController.text,
+      );
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      // Do not call setState after pop, as widget may be disposed
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+        _submitting = false;
+      });
+    }
   }
 
   @override
@@ -103,11 +127,24 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
               maxLines: 3,
             ),
             const SizedBox(height: 24),
+            if (_error != null)
+              Center(
+                child: Text(
+                  _error!,
+                  style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 16),
+                ),
+              ),
             Center(
               child: ElevatedButton(
-                onPressed: _submit,
+                onPressed: _submitting ? null : _submit,
                 style: kPremiumButtonStyle,
-                child: const Text('Submit Request'),
+                child: _submitting
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
+                      )
+                    : const Text('Submit Request'),
               ),
             ),
           ],
@@ -116,3 +153,5 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
     );
   }
 }
+           
+
