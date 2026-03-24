@@ -1,25 +1,22 @@
 import 'package:flutter_riverpod/legacy.dart';
 import '../models/attendance.dart';
+import '../services/attendance_services.dart';
 
 class AttendanceNotifier extends StateNotifier<Map<DateTime, Attendance>> {
-  AttendanceNotifier()
-      : super({
-          _dateOnly(DateTime(2026, 3, 18)): Attendance(
-            checkIn: DateTime(2026, 3, 18, 9, 15),
-            checkOut: DateTime(2026, 3, 18, 18, 0),
-            location: 'Office HQ',
-          ),
-          _dateOnly(DateTime(2026, 3, 19)): Attendance(
-            checkIn: DateTime(2026, 3, 19, 9, 30),
-            checkOut: DateTime(2026, 3, 19, 17, 45),
-            location: 'Remote',
-          ),
-          _dateOnly(DateTime(2026, 3, 20)): Attendance(
-            checkIn: DateTime(2026, 3, 20, 10, 0),
-            checkOut: DateTime(2026, 3, 20, 16, 30),
-            location: 'Office HQ',
-          ),
-        });
+
+
+  final AttendanceServices _attendanceServices = AttendanceServices();
+  AttendanceNotifier() : super({});
+
+  Future<void> fetchAttendanceByEmployee(int employeeId) async {
+    final records = await _attendanceServices.getAttendanceByEmployee(employeeId);
+    if (records.isEmpty) {
+      state = {};
+    } else {
+      final map = {for (var a in records) _dateOnly(a.checkIn ?? DateTime.now()): a};
+      state = map;
+    }
+  }
 
   static DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 

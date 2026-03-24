@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax/iconsax.dart';
+import '../../provider/auth_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/attendance/calendar_card.dart';
 import '../../cards/attendance/attendance_card.dart';
@@ -15,6 +17,12 @@ class MyAttendanceScreen extends ConsumerStatefulWidget {
 }
 
 class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
+    Future<void> _refreshAttendance() async {
+      final user = ref.read(authProvider);
+      if (user?.employeeId != null) {
+        await ref.read(attendanceProvider.notifier).fetchAttendanceByEmployee(user!.employeeId!);
+      }
+    }
   DateTime _selectedDate = DateTime.now();
   int _currentIndex = 1;
 
@@ -53,11 +61,17 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
     final attendance = attendanceMap[normalizedDate];
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PremiumAppBar(
+      appBar: PremiumAppBar(
         title: 'My Attendance',
         subtitle: 'View your daily records',
         logoAssetPath: '',
-        actions: [],
+        actions: [
+          IconButton(
+            icon: const Icon(Iconsax.refresh, color: Colors.black),
+            onPressed: _refreshAttendance,
+            tooltip: 'Refresh',
+          ),
+        ],
         showBackIcon: false,
       ),
       body: Column(
@@ -65,9 +79,9 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
           CalendarCard(
             selectedDate: _selectedDate,
             onDateSelected: _onDateSelected,
+            onRefresh: _refreshAttendance,
           ),
           AttendanceCard(attendance: attendance),
-          
         ],
       ),
       bottomNavigationBar: BottomNavBar(

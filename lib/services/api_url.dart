@@ -1,6 +1,7 @@
 
 class ApiUrl {
-	static const String baseUrl = 'http://10.0.2.2:8000'; // TODO: Replace with your backend URL
+
+	static const String baseUrl = 'http://192.168.0.124:8000'; // Replace with your backend URL
 
 	static const String loginEmployee = '/login/employees/';
 	static const String getEmployeeById = '/get-by/employees/'; // Usage: /get-by/employees/{employee_id}
@@ -17,4 +18,9 @@ class ApiUrl {
 
   static const String getHolidaysByAdmin = '/get-holidays/admin/'; // Usage: /get-holidays/admin/{admin_id}
 	static const String getHolidayByAdminAndId = '/get-holidays/'; // Usage: /get-holidays/{holiday_id}/admin/{admin_id}
+
+  static const String attendanceCheckIn = '/attendance/check-in/'; // Usage: /attendance/check-in/{employee_id}
+	static const String attendanceCheckOut = '/attendance/check-out/'; // Usage: /attendance/check-out/{employee_id}
+	static const String getAttendanceByEmployee = '/attendance/employee/'; // Usage: /attendance/employee/{employee_id}
+  static const String getAttendanceByAdminAndEmployee = '/attendance/admin/'; // Usage: /attendance/admin/{admin_id}/employee/{employee_id}
 }

@@ -13,6 +13,26 @@ class Attendance {
 		this.checkOutSelfie,
 	});
 
+	factory Attendance.fromJson(Map<String, dynamic> json) {
+		return Attendance(
+			checkIn: json['check_in_time'] != null ? DateTime.tryParse(json['check_in_time']) : null,
+			checkOut: json['check_out_time'] != null ? DateTime.tryParse(json['check_out_time']) : null,
+			location: json['location'] ?? '',
+			checkInSelfie: json['check_in_photo'],
+			checkOutSelfie: json['check_out_photo'],
+		);
+	}
+
+	Map<String, dynamic> toJson() {
+		return {
+			'check_in_time': checkIn?.toIso8601String(),
+			'check_out_time': checkOut?.toIso8601String(),
+			'location': location,
+			'check_in_photo': checkInSelfie,
+			'check_out_photo': checkOutSelfie,
+		};
+	}
+
 	Attendance copyWith({
 		DateTime? checkIn,
 		DateTime? checkOut,

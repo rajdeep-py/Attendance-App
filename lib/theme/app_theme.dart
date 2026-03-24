@@ -9,6 +9,11 @@ const Color kWhite = Colors.white;
 const Color kWhiteGrey = Color(0xFFF5F5F7); // keep for backgrounds if needed
 const Color kerror = Color.fromARGB(255, 186, 14, 14); // Error Color
 
+// Additional colors for UI consistency
+const Color kPrimary = Color(0xFF3B82F6); // Example blue primary
+const Color kGrey = Color(0xFFB0B0B0); // Neutral grey
+const Color kText = Color(0xFF222222); // Main text color
+
 // Extreme minimum screen padding for modern Android smartphones
 const double kScreenPadding = 8.0;
 
@@ -37,6 +42,14 @@ const TextStyle kCaptionTextStyle = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w400,
   color: kBrown,
+);
+
+// Body text style for cards and details
+const TextStyle kBodyTextStyle = TextStyle(
+  fontFamily: kFontFamily,
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: kText,
 );
 
 const TextStyle kDescriptionTextStyle = TextStyle(

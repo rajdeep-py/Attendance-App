@@ -8,31 +8,44 @@ import 'package:iconsax/iconsax.dart';
 class CalendarCard extends ConsumerWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
+  final Future<void> Function()? onRefresh;
   const CalendarCard({
     required this.selectedDate,
     required this.onDateSelected,
+    this.onRefresh,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attendanceMap = ref.watch(attendanceProvider);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-      decoration: BoxDecoration(
-        color: kWhite,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: kBrown.withAlpha((0.07 * 255).toInt()),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
+    return Column(
+      children: [
+        if (onRefresh != null)
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: const Icon(Iconsax.refresh, color: kBrown),
+              onPressed: onRefresh,
+              tooltip: 'Refresh Attendance',
+            ),
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TableCalendar(
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+          decoration: BoxDecoration(
+            color: kWhite,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: kBrown.withAlpha((0.07 * 255).toInt()),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TableCalendar(
           focusedDay: selectedDate,
           firstDay: DateTime.utc(2020, 1, 1),
           lastDay: DateTime.utc(2030, 12, 31),
@@ -169,6 +182,8 @@ class CalendarCard extends ConsumerWidget {
           ),
         ),
       ),
+    ),
+      ],
     );
   }
 }
