@@ -31,13 +31,14 @@ class LeaveRequestSuccessPopup extends StatelessWidget {
 						const SizedBox(height: 24),
 						SizedBox(
 							width: double.infinity,
-							child: ElevatedButton(
-								style: kPremiumButtonStyle,
-								onPressed: () {
-									context.go('/dashboard');
-								},
-								child: const Text('Okay'),
-							),
+								child: ElevatedButton(
+									style: kPremiumButtonStyle,
+									onPressed: () {
+										Navigator.of(context).pop(); // Dismiss the dialog first
+										context.go('/dashboard');
+									},
+									child: const Text('Okay'),
+								),
 						),
 					],
 				),
