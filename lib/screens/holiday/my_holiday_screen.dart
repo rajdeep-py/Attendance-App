@@ -17,7 +17,9 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchRequests();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchRequests();
+    });
   }
 
   Future<void> _fetchRequests() async {

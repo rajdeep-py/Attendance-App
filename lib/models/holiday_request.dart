@@ -18,10 +18,17 @@ class HolidayRequest {
   });
 
   factory HolidayRequest.fromJson(Map<String, dynamic> json) {
+    // Handle date as either full ISO or just yyyy-MM-dd
+    DateTime parsedDate;
+    try {
+      parsedDate = DateTime.parse(json['date']);
+    } catch (_) {
+      parsedDate = DateTime.now();
+    }
     return HolidayRequest(
-      date: DateTime.parse(json['date']),
+      date: parsedDate,
       reason: json['reason'] ?? '',
-      message: json['message'] ?? json['subtitle'] ?? '',
+      message: json['message'] ?? json['reason'] ?? json['subtitle'] ?? '',
       leaveId: json['leave_id'],
       adminId: json['admin_id'],
       employeeId: json['employee_id'],
