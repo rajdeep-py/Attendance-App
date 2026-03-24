@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
+
+import 'package:go_router/go_router.dart';
 import '../../models/user.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
@@ -85,15 +87,20 @@ class ProfileHeaderCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Optionally, add a settings or edit icon for more premium feel
             const SizedBox(width: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: kWhiteGrey,
-                borderRadius: BorderRadius.circular(12),
+            GestureDetector(
+              onTap: () {
+                // Use GoRouter to navigate to update profile
+                context.go('/update-profile');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: kWhiteGrey,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Icon(Iconsax.edit, color: kBrown, size: 22),
               ),
-              padding: const EdgeInsets.all(8),
-              child: Icon(Iconsax.edit, color: kBrown, size: 22),
             ),
           ],
         ),

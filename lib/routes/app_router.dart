@@ -10,6 +10,7 @@ import '../screens/holiday/my_holiday_screen.dart';
 import '../screens/holiday/request_holiday_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/profile/update_profile_screen.dart';
 
 final GoRouter appRouter = GoRouter(
 	initialLocation: '/splash',
@@ -107,6 +108,15 @@ final GoRouter appRouter = GoRouter(
 			path: '/profile',
 			pageBuilder: (context, state) => CustomTransitionPage(
 				child: const ProfileScreen(),
+				transitionsBuilder: (context, animation, secondaryAnimation, child) {
+					return FadeTransition(opacity: animation, child: child);
+				},
+			),
+		),
+		GoRoute(
+			path: '/update-profile',
+			pageBuilder: (context, state) => CustomTransitionPage(
+				child: const UpdateProfileScreen(),
 				transitionsBuilder: (context, animation, secondaryAnimation, child) {
 					return FadeTransition(opacity: animation, child: child);
 				},
