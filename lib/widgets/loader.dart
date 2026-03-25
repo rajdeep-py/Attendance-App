@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class AppLoader extends StatelessWidget {
 	final String subText;
@@ -14,7 +15,7 @@ class AppLoader extends StatelessWidget {
 				// Transparent dark overlay
 				Positioned.fill(
 					child: Container(
-						color: Colors.black.withAlpha(35),
+						color: kBlack.withAlpha((0.28 * 255).toInt()),
 					),
 				),
 				// Centered loader content
@@ -29,13 +30,13 @@ class AppLoader extends StatelessWidget {
 									shape: BoxShape.circle,
 									boxShadow: [
 										BoxShadow(
-											color: Colors.black.withAlpha(46),
+											color: kBlack.withAlpha((0.18 * 255).toInt()),
 											blurRadius: 24,
 											spreadRadius: 2,
 										),
 									],
 									gradient: const LinearGradient(
-										colors: [Color.fromARGB(255, 143, 142, 142), Color.fromARGB(255, 212, 212, 212)],
+										colors: [kWhiteGrey, kWhite],
 										begin: Alignment.topLeft,
 										end: Alignment.bottomRight,
 									),
@@ -49,23 +50,23 @@ class AppLoader extends StatelessWidget {
 								),
 							),
 							const SizedBox(height: 28),
-							const CircularProgressIndicator(
-								valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 29, 28, 27)),
+							CircularProgressIndicator(
+								valueColor: const AlwaysStoppedAnimation<Color>(kBrown),
 								strokeWidth: 4.5,
-								backgroundColor: Colors.white24,
+								backgroundColor: kWhiteGrey.withAlpha((0.18 * 255).toInt()),
 							),
 							const SizedBox(height: 24),
 							Text(
 								subText,
-								style: const TextStyle(
-									color: Colors.white,
-									fontSize: 18,
-									fontWeight: FontWeight.w600,
+								style: kHeaderTextStyle.copyWith(
+									color: kWhite,
+									fontSize: 10,
+									fontWeight: FontWeight.w900,
 									letterSpacing: 0.2,
 									shadows: [
 										Shadow(
-											color: Colors.black38,
-											blurRadius: 8,
+											color: kBlack.withAlpha((0.18 * 255).toInt()),
+											blurRadius: 4,
 										),
 									],
 								),
