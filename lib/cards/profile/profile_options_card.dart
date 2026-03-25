@@ -49,11 +49,15 @@ class ProfileOptionsCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final options = [
-      
       {
         'icon': Iconsax.document,
         'title': 'Download Salary Slip',
         'subtitle': 'Get your monthly salary slip',
+      },
+      {
+        'icon': Iconsax.map,
+        'title': 'View My Store Locations',
+        'subtitle': 'See all your store locations on map',
       },
       {
         'icon': Iconsax.calendar,
@@ -110,6 +114,10 @@ class ProfileOptionsCard extends ConsumerWidget {
             onTap: () async {
               if (option['title'] == 'Download Salary Slip') {
                 await _downloadSalarySlip(context, ref);
+              } else if (option['title'] == 'View My Store Locations') {
+                if (context.mounted) {
+                  GoRouter.of(context).go('/map');
+                }
               } else if (option['title'] == 'My Holidays') {
                 if (context.mounted) {
                   GoRouter.of(context).go('/my-holidays');

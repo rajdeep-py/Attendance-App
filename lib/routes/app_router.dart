@@ -1,3 +1,5 @@
+import '../screens/attendance/map_screen.dart';
+		
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/about_us/about_us_screen.dart';
@@ -15,6 +17,15 @@ import '../screens/profile/update_profile_screen.dart';
 final GoRouter appRouter = GoRouter(
 	initialLocation: '/splash',
 	routes: [
+    GoRoute(
+			path: '/map',
+			pageBuilder: (context, state) => CustomTransitionPage(
+				child: const MapScreen(),
+				transitionsBuilder: (context, animation, secondaryAnimation, child) {
+					return FadeTransition(opacity: animation, child: child);
+				},
+			),
+		),
 		   
 						   
 									   GoRoute(

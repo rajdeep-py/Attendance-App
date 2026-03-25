@@ -5,6 +5,24 @@ import '../models/attendance.dart';
 import 'api_url.dart';
 
 class AttendanceServices {
+
+    Future<List<Map<String, dynamic>>> getLocationMatrixByAdmin(int adminId) async {
+      try {
+        final response = await _dio.get('${ApiUrl.getLocationMatrixByAdmin}$adminId');
+        if (response.statusCode == 200 && response.data != null) {
+          final data = response.data as List;
+          // Each item is a location matrix object (Map)
+          return data.cast<Map<String, dynamic>>();
+        } else {
+          return [];
+        }
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 404) {
+          return [];
+        }
+        rethrow;
+      }
+    }
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiUrl.baseUrl,
