@@ -10,16 +10,28 @@ import '../../provider/dashboard_provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
+
+typedef LoaderCallback = void Function(bool isLoading);
+typedef RefreshCallback = Future<void> Function();
+
 class CheckInOutCard extends ConsumerWidget {
+  
 	final Color cardColor;
-	const CheckInOutCard({this.cardColor = kBrown, super.key});
+	final LoaderCallback? onLoading;
+	final RefreshCallback? onRefresh;
+	const CheckInOutCard({
+		this.cardColor = kBrown,
+		this.onLoading,
+		this.onRefresh,
+		super.key,
+	});
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
 		final ImagePicker picker = ImagePicker();
 		final attendance = ref.watch(dashboardProvider);
 		final user = ref.watch(authProvider);
-		return Card(
+    return Card(
 			color: cardColor,
 			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 			elevation: 2,
@@ -64,76 +76,88 @@ class CheckInOutCard extends ConsumerWidget {
 									],
 								),
 								if (attendance.checkIn == null && user?.employeeId != null)
-									ElevatedButton.icon(
-										style: ElevatedButton.styleFrom(
-											backgroundColor: kPink,
-											foregroundColor: kWhite,
-											minimumSize: const Size(120, 48),
-											padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-											shape: RoundedRectangleBorder(
-												borderRadius: BorderRadius.circular(16),
-											),
-											textStyle: const TextStyle(
-												fontFamily: kFontFamily,
-												fontWeight: FontWeight.bold,
-												fontSize: 16,
-											),
-											elevation: 6,
-										),
-											onPressed: () async {
-												try {
-													bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-													if (!serviceEnabled) {
-														await Geolocator.openLocationSettings();
-														return;
-													}
-													LocationPermission permission = await Geolocator.checkPermission();
-													if (permission == LocationPermission.denied) {
-														permission = await Geolocator.requestPermission();
-														if (permission == LocationPermission.denied) {
-															return;
-														}
-													}
-													if (permission == LocationPermission.deniedForever) {
-														return;
-													}
-													Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-													final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-													if (selfie == null) return;
-													try {
-														await ref.read(dashboardProvider.notifier).checkIn(
-															employeeId: user!.employeeId!,
-															latitude: position.latitude,
-															longitude: position.longitude,
-															photoPath: selfie.path,
-														);
-														if (context.mounted) {
-															// Optionally show a success message or navigate
-														}
-													} on DioException catch (e) {
-														if (e.response?.statusCode == 403 &&
-															(e.response?.data['detail'] != null)) {
-															if (context.mounted) {
-																await AttendancePopup.show(context, message: e.response?.data['detail'].toString() ?? 'Current location not allowed for check-in.');
-															}
-														} else {
-															rethrow;
-														}
-													}
-												} on PermissionDeniedException {
-													if (context.mounted) {
-														await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check in.');
-													}
-												} catch (e) {
-													if (e.toString().contains('denied')) {
-														if (context.mounted) {
-															await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check in.');
-														}
-													} else {
-														rethrow;
-													}
-												}
-											},
+																					ElevatedButton.icon(
+																						style: ElevatedButton.styleFrom(
+																							backgroundColor: kPink,
+																							foregroundColor: kWhite,
+																							minimumSize: const Size(120, 48),
+																							padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+																							shape: RoundedRectangleBorder(
+																								borderRadius: BorderRadius.circular(16),
+																							),
+																							textStyle: const TextStyle(
+																								fontFamily: kFontFamily,
+																								fontWeight: FontWeight.bold,
+																								fontSize: 16,
+																							),
+																							elevation: 6,
+																						),
+																						onPressed: () async {
+																							if (onLoading != null) onLoading!(true);
+																							try {
+																								bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+																								if (!serviceEnabled) {
+																									await Geolocator.openLocationSettings();
+																									return;
+																								}
+																								LocationPermission permission = await Geolocator.checkPermission();
+																								if (permission == LocationPermission.denied) {
+																									permission = await Geolocator.requestPermission();
+																									if (permission == LocationPermission.denied) {
+																										if (context.mounted) {
+																											await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check in.');
+																										}
+																										return;
+																									}
+																								}
+																								if (permission == LocationPermission.deniedForever) {
+																									if (context.mounted) {
+																										await AttendancePopup.show(context, message: 'Location permission permanently denied. Please enable it from settings.');
+																									}
+																									return;
+																								}
+																								Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+																								final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+																								if (selfie == null) return;
+																								try {
+																									await ref.read(dashboardProvider.notifier).checkIn(
+																										employeeId: user!.employeeId!,
+																										latitude: position.latitude,
+																										longitude: position.longitude,
+																										photoPath: selfie.path,
+																									);
+																									if (onRefresh != null) await onRefresh!();
+																									if (context.mounted) {
+																										await AttendancePopup.show(context, message: 'Check-in successful!');
+																									}
+																								} on DioException catch (e) {
+																									if (e.response?.statusCode == 403 &&
+																											(e.response?.data['detail']?.toString().contains('location') ?? false)) {
+																										if (context.mounted) {
+																											await AttendancePopup.show(context, message: 'You are not at the allowed location for check-in.');
+																										}
+																									} else {
+																										if (context.mounted) {
+																											await AttendancePopup.show(context, message: 'Check-in failed. Please try again.');
+																										}
+																									}
+																								}
+																							} on PermissionDeniedException {
+																								if (context.mounted) {
+																									await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check in.');
+																								}
+																							} catch (e) {
+																								if (e.toString().contains('denied')) {
+																									if (context.mounted) {
+																										await AttendancePopup.show(context, message: 'Location permission denied.');
+																									}
+																								} else {
+																									rethrow;
+																								}
+																							} finally {
+																								if (onLoading != null) onLoading!(false);
+																							}
+																						},
 										icon: const Icon(Iconsax.login, size: 20),
 										label: const Text('Check In'),
 									),
@@ -160,60 +184,65 @@ class CheckInOutCard extends ConsumerWidget {
 									],
 								),
 								if (attendance.checkIn != null && attendance.checkOut == null && user?.employeeId != null)
-									ElevatedButton.icon(
-										style: ElevatedButton.styleFrom(
-											backgroundColor: kPink,
-											foregroundColor: kWhite,
-											minimumSize: const Size(120, 48),
-											padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-											shape: RoundedRectangleBorder(
-												borderRadius: BorderRadius.circular(16),
-											),
-											textStyle: const TextStyle(
-												fontFamily: kFontFamily,
-												fontWeight: FontWeight.bold,
-												fontSize: 16,
-											),
-											elevation: 6,
-										),
-											onPressed: () async {
-												try {
-													final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
-													if (selfie == null) return;
-													Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-													await ref.read(dashboardProvider.notifier).checkOut(
-														employeeId: user!.employeeId!,
-														latitude: position.latitude,
-														longitude: position.longitude,
-														photoPath: selfie.path,
-													);
-													if (context.mounted) {
-														// Optionally show a success message or navigate
-													}
-												} on DioException catch (e) {
-													if (e.response?.statusCode == 403 &&
-														(e.response?.data['detail']?.toString().contains('location') ?? false)) {
-														if (context.mounted) {
-															await AttendancePopup.show(context, message: 'Current location not allowed for check-out. Please go to the office to check out.');
-														}
-													} else {
-														rethrow;
-													}
-												} on PermissionDeniedException {
-													if (context.mounted) {
-														await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check out.');
-													}
-												} catch (e) {
-													if (e.toString().contains('denied')) {
-														if (context.mounted) {
-															await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check out.');
-														}
-													} else {
-														rethrow;
-													}
-												}
-												// Optionally, refresh attendance state here
-											},
+																					ElevatedButton.icon(
+																						style: ElevatedButton.styleFrom(
+																							backgroundColor: kPink,
+																							foregroundColor: kWhite,
+																							minimumSize: const Size(120, 48),
+																							padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+																							shape: RoundedRectangleBorder(
+																								borderRadius: BorderRadius.circular(16),
+																							),
+																							textStyle: const TextStyle(
+																								fontFamily: kFontFamily,
+																								fontWeight: FontWeight.bold,
+																								fontSize: 16,
+																							),
+																							elevation: 6,
+																						),
+																						onPressed: () async {
+																							if (onLoading != null) onLoading!(true);
+																							try {
+																								final XFile? selfie = await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+																								if (selfie == null) return;
+																								Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+																								await ref.read(dashboardProvider.notifier).checkOut(
+																									employeeId: user!.employeeId!,
+																									latitude: position.latitude,
+																									longitude: position.longitude,
+																									photoPath: selfie.path,
+																								);
+																								if (onRefresh != null) await onRefresh!();
+																								if (context.mounted) {
+																									await AttendancePopup.show(context, message: 'Check-out successful!');
+																								}
+																							} on DioException catch (e) {
+																								if (e.response?.statusCode == 403 &&
+																										(e.response?.data['detail']?.toString().contains('location') ?? false)) {
+																									if (context.mounted) {
+																										await AttendancePopup.show(context, message: 'You are not at the allowed location for check-out.');
+																									}
+																								} else {
+																									if (context.mounted) {
+																										await AttendancePopup.show(context, message: 'Check-out failed. Please try again.');
+																									}
+																								}
+																							} on PermissionDeniedException {
+																								if (context.mounted) {
+																									await AttendancePopup.show(context, message: 'Location permission denied. Please allow location access to check out.');
+																								}
+																							} catch (e) {
+																								if (e.toString().contains('denied')) {
+																									if (context.mounted) {
+																										await AttendancePopup.show(context, message: 'Location permission denied.');
+																									}
+																								} else {
+																									rethrow;
+																								}
+																							} finally {
+																								if (onLoading != null) onLoading!(false);
+																							}
+																						},
 										icon: const Icon(Iconsax.logout, size: 20),
 										label: const Text('Check Out'),
 									),
