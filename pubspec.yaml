@@ -101,4 +101,4 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/attendx24_logo.jpeg"
+  image_path: "assets/logo/A24.png"

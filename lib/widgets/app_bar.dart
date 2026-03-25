@@ -13,7 +13,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 	const PremiumAppBar({
 		required this.title,
 		required this.subtitle,
-		this.logoAssetPath = 'assets/logo/attendx24_logo.jpeg',
+		this.logoAssetPath = 'assets/logo/A24.png',
 		this.logoSize = 40,
 		this.actions,
 		this.showBackIcon = false,

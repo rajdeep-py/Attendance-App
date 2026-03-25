@@ -44,7 +44,7 @@ class AppLoader extends StatelessWidget {
 								child: Padding(
 									padding: const EdgeInsets.all(16.0),
 									child: Image.asset(
-										'assets/logo/attendx24_logo.jpeg',
+										'assets/logo/A24.png',
 										fit: BoxFit.contain,
 									),
 								),

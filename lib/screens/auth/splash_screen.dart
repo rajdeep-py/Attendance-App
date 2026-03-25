@@ -109,7 +109,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 										child: Padding(
 											padding: const EdgeInsets.all(32.0),
 											child: Image.asset(
-												'assets/logo/attendx24_logo.jpeg',
+												'assets/logo/A24.png',
 												width: 180,
 												height: 180,
 											),

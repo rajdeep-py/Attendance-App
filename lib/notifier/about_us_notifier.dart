@@ -7,7 +7,7 @@ class AboutUsNotifier extends StateNotifier<AboutUs> {
           AboutUs(
             companyName: 'Attendx24',
             tagline: 'Where Innovation meets Business!',
-            logoPath: 'assets/logo/attendx24_logo.jpeg',
+            logoPath: 'assets/logo/A24.png',
             description: 'We are a startup based in Kolkata, focused on providing innovative solutions for modern medical needs. Our mission is to make HRMS accessible, efficient, and reliable for everyone. We combine technology and compassion to deliver the best experience to our clients and partners.',
             directorName: 'Mr. Debasish Baidya',
             directorMessage: 'At Attendx24, we believe in the power of technology to transform lives. Our commitment is to bring the best HRMS solutions to your fingertips, ensuring quality and care in every interaction.',

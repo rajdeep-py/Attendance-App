@@ -69,7 +69,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 					appBar: const PremiumAppBar(
 						title: 'Dashboard',
 						subtitle: 'Record your attendance easily',
-						logoAssetPath: 'assets/logo/attendx24_logo.jpeg',
+						logoAssetPath: 'assets/logo/A24.png',
 					),
 					body: SingleChildScrollView(
 						padding: const EdgeInsets.all(kScreenPadding),
