@@ -6,6 +6,7 @@ import '../../provider/holiday_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/leave_request_success_popup.dart';
+import 'package:iconsax/iconsax.dart';
 class RequestHolidayScreen extends ConsumerStatefulWidget {
   const RequestHolidayScreen({super.key});
 
@@ -116,9 +117,26 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                 controller: _reasonController,
                 style: kCaptionTextStyle.copyWith(color: kBlack),
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Iconsax.note_2, color: kBrown, size: 22),
                   labelText: 'Reason',
                   labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
-                  border: const OutlineInputBorder(),
+                  hintText: 'E.g. Family function, health, etc.',
+                  hintStyle: kDescriptionTextStyle.copyWith(color: kGrey),
+                  filled: true,
+                  fillColor: kWhite,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: kPink, width: 1.5),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
                 ),
               ),
               const SizedBox(height: 16),
@@ -126,9 +144,26 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                 controller: _messageController,
                 style: kCaptionTextStyle.copyWith(color: kBlack),
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Iconsax.message, color: kBrown, size: 22),
                   labelText: 'Message',
                   labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
-                  border: const OutlineInputBorder(),
+                  hintText: 'Add any extra details (optional)',
+                  hintStyle: kDescriptionTextStyle.copyWith(color: kGrey),
+                  filled: true,
+                  fillColor: kWhite,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: kPink, width: 1.5),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
                 ),
                 maxLines: 3,
               ),
@@ -141,16 +176,31 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                   ),
                 ),
               Center(
-                child: ElevatedButton(
-                  onPressed: _submitting ? null : _submit,
-                  style: kPremiumButtonStyle,
-                  child: _submitting
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
-                        )
-                      : const Text('Submit Request'),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _submitting ? null : _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kPink,
+                      foregroundColor: kWhite,
+                      elevation: 8,
+                      minimumSize: const Size(0, 54),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      textStyle: kHeaderTextStyle.copyWith(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
+                    icon: _submitting
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
+                          )
+                        : const Icon(Iconsax.send_2, size: 22),
+                    label: _submitting
+                        ? const Text('Submitting...')
+                        : const Text('Submit Request'),
+                  ),
                 ),
               ),
             ],
