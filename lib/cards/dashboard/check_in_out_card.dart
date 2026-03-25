@@ -45,11 +45,11 @@ class CheckInOutCard extends ConsumerWidget {
 							children: [
 								Container(
 									decoration: BoxDecoration(
-										color: kGreen,
+										color: kBlack,
 										borderRadius: BorderRadius.circular(12),
 									),
 									padding: const EdgeInsets.all(8),
-									child: const Icon(Iconsax.clock, color: kWhiteGrey, size: 28),
+									child: const Icon(Iconsax.clock, color: kGreen, size: 28),
 								),
 								const SizedBox(width: 12),
 								Text('Attendance', style: kHeaderTextStyle.copyWith(color: kBlack, fontSize: 22)),

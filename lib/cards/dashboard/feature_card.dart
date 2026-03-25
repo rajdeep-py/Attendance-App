@@ -27,7 +27,7 @@ class FeatureCard extends StatelessWidget {
 										borderRadius: BorderRadius.circular(12),
 									),
 									padding: const EdgeInsets.all(10),
-									child: const Icon(Iconsax.info_circle, color: kWhite, size: 32),
+									child: const Icon(Iconsax.info_circle, color: kGreen, size: 32),
 								),
 								const SizedBox(width: 18),
 								Text('App Features', style: kHeaderTextStyle.copyWith(color: kBrown, fontSize: 22)),

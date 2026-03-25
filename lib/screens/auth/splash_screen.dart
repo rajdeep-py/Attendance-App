@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 											),
 											boxShadow: [
 												BoxShadow(
-													color: kBrown.withAlpha(30),
+													color: kGreen.withAlpha(30),
 													blurRadius: 32,
 													offset: const Offset(0, 8),
 												),
@@ -102,14 +102,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 								),
 							),
 							child: Text(
-								'MMS Attendance',
+								'Attendx24',
 								style: kHeaderTextStyle.copyWith(
 									color: kBlack,
 									fontSize: 32,
 									letterSpacing: 1.2,
 									shadows: [
 										Shadow(
-											color: kBrown.withAlpha(40),
+											color: kGreen.withAlpha(40),
 											blurRadius: 12,
 											offset: const Offset(0, 2),
 										),

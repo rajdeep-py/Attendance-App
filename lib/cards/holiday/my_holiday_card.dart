@@ -28,11 +28,11 @@ class MyHolidayCard extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: kGreen,
+              color: kBlack,
               shape: BoxShape.circle,
             ),
             padding: const EdgeInsets.all(10),
-            child: const Icon(Iconsax.calendar, color: Colors.white, size: 24),
+            child: const Icon(Iconsax.calendar, color: Colors.green, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(

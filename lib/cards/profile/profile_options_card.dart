@@ -129,7 +129,7 @@ class ProfileOptionsCard extends ConsumerWidget {
                       gradient: LinearGradient(
                         colors: isLogout
                             ? [kerror.withAlpha((0.8 * 255).toInt()), kerror]
-                            : [kGreen, kGreen],
+                            : [kBlack, kGreen],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),

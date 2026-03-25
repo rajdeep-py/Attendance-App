@@ -63,40 +63,49 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
     final attendanceMap = ref.watch(attendanceProvider);
     final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     final attendance = attendanceMap[normalizedDate];
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: Colors.white,
-          appBar: PremiumAppBar(
-            title: 'My Attendance',
-            subtitle: 'View your daily records',
-            logoAssetPath: '',
-            actions: [
-              IconButton(
-                icon: const Icon(Iconsax.refresh, color: Colors.black),
-                onPressed: _refreshAttendance,
-                tooltip: 'Refresh',
-              ),
-            ],
-            showBackIcon: false,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          final router = GoRouter.of(context);
+          router.go('/dashboard');
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.white,
+            appBar: PremiumAppBar(
+              title: 'My Attendance',
+              subtitle: 'View your daily records',
+              logoAssetPath: '',
+              actions: [
+                IconButton(
+                  icon: const Icon(Iconsax.refresh, color: Colors.black),
+                  onPressed: _refreshAttendance,
+                  tooltip: 'Refresh',
+                ),
+              ],
+              showBackIcon: false,
+            ),
+            body: Column(
+              children: [
+                CalendarCard(
+                  selectedDate: _selectedDate,
+                  onDateSelected: _onDateSelected,
+                  onRefresh: _refreshAttendance,
+                ),
+                AttendanceCard(attendance: attendance),
+              ],
+            ),
+            bottomNavigationBar: BottomNavBar(
+              currentIndex: _currentIndex,
+              onTap: _onNavTap,
+            ),
           ),
-          body: Column(
-            children: [
-              CalendarCard(
-                selectedDate: _selectedDate,
-                onDateSelected: _onDateSelected,
-                onRefresh: _refreshAttendance,
-              ),
-              AttendanceCard(attendance: attendance),
-            ],
-          ),
-          bottomNavigationBar: BottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: _onNavTap,
-          ),
-        ),
-        if (_isLoading) const AppLoader(subText: 'Loading attendance...'),
-      ],
+          if (_isLoading) const AppLoader(subText: 'Loading attendance...'),
+        ],
+      ),
     );
   }
 }

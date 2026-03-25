@@ -54,60 +54,69 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
     final holidayMap = ref.watch(holidayProvider);
     final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     final holiday = holidayMap[normalizedDate];
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: kWhite,
-          appBar: const PremiumAppBar(
-            title: 'Holidays',
-            subtitle: 'View upcoming holidays',
-            logoAssetPath: '',
-            actions: [],
-            showBackIcon: false,
-          ),
-          body: Column(
-            children: [
-              HolidayCalendarCard(
-                selectedDate: _selectedDate,
-                onDateSelected: _onDateSelected,
-              ),
-              HolidayDetailCard(holiday: holiday),
-            ],
-          ),
-          floatingActionButton: SizedBox(
-            height: 56,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                GoRouter.of(context).go('/request-holiday');
-              },
-              backgroundColor: kPink,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-              icon: const Icon(Iconsax.logout, color: Colors.white, size: 28),
-              label: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  'Request Leave',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: kFontFamily,
-                    fontSize: 18,
-                    letterSpacing: 0.2,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          final router = GoRouter.of(context);
+          router.go('/dashboard');
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: kWhite,
+            appBar: const PremiumAppBar(
+              title: 'Holidays',
+              subtitle: 'View upcoming holidays',
+              logoAssetPath: '',
+              actions: [],
+              showBackIcon: false,
+            ),
+            body: Column(
+              children: [
+                HolidayCalendarCard(
+                  selectedDate: _selectedDate,
+                  onDateSelected: _onDateSelected,
+                ),
+                HolidayDetailCard(holiday: holiday),
+              ],
+            ),
+            floatingActionButton: SizedBox(
+              height: 56,
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  GoRouter.of(context).go('/request-holiday');
+                },
+                backgroundColor: kPink,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                icon: const Icon(Iconsax.logout, color: Colors.white, size: 28),
+                label: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    'Request Leave',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: kFontFamily,
+                      fontSize: 18,
+                      letterSpacing: 0.2,
+                    ),
                   ),
                 ),
               ),
             ),
+            bottomNavigationBar: BottomNavBar(
+              currentIndex: _currentIndex,
+              onTap: _onNavTap,
+            ),
           ),
-          bottomNavigationBar: BottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: _onNavTap,
-          ),
-        ),
-        if (_isLoading) const AppLoader(subText: 'Loading holidays...'),
-      ],
+          if (_isLoading) const AppLoader(subText: 'Loading holidays...'),
+        ],
+      ),
     );
   }
 }
