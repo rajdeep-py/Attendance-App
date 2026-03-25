@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
 	const SplashScreen({super.key});
 
 	@override
-	State<SplashScreen> createState() => _SplashScreenState();
+	ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
 	late AnimationController _controller;
 	late Animation<double> _logoScale;
 	late Animation<double> _logoFade;
@@ -36,11 +39,25 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 			CurvedAnimation(parent: _controller, curve: const Interval(0.55, 1.0, curve: Curves.easeOut)),
 		);
 		_controller.forward();
-		Future.delayed(const Duration(milliseconds: 2500), () {
-			if (mounted) {
-				context.go('/login');
+		_checkLoginAndNavigate();
+	}
+
+	Future<void> _checkLoginAndNavigate() async {
+		await Future.delayed(const Duration(milliseconds: 2500));
+		final prefs = await SharedPreferences.getInstance();
+		final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+		if (!mounted) return;
+		if (isLoggedIn) {
+			final employeeId = prefs.getInt('employee_id');
+			if (employeeId != null) {
+				// Fetch user profile before navigating to dashboard
+				await ref.read(profileProvider.notifier).fetchProfile(employeeId);
 			}
-		});
+			if (!mounted) return;
+			context.go('/dashboard');
+		} else {
+			context.go('/login');
+		}
 	}
 
 	@override

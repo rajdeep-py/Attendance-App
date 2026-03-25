@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/auth_provider.dart';
@@ -26,6 +27,10 @@ class LoginScreen extends ConsumerWidget {
 				if (user != null && user.employeeId != null) {
 					// Fetch profile after login
 					await ref.read(profileProvider.notifier).fetchProfile(user.employeeId!);
+					// Save login state
+					final prefs = await SharedPreferences.getInstance();
+					await prefs.setBool('is_logged_in', true);
+					await prefs.setInt('employee_id', user.employeeId!);
 					if (context.mounted) {
 						context.go('/dashboard');
 					}
