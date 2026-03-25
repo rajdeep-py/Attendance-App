@@ -68,91 +68,93 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
         actions: [],
       ),
       backgroundColor: kWhiteGrey,
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            Text('Select Date', style: kHeaderTextStyle.copyWith(fontSize: 18, color: kBlack)),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: kWhite,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: ColorScheme.light(
-                    primary: kPink, // selected day
-                    onPrimary: kWhite, // selected day text
-                    surface: kWhiteGrey, // calendar background
-                    onSurface: kBlack, // default text
-                  ),
-                  textButtonTheme: TextButtonThemeData(
-                    style: TextButton.styleFrom(
-                      foregroundColor: kBrown,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Text('Select Date', style: kHeaderTextStyle.copyWith(fontSize: 18, color: kBlack)),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: kWhite,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: kPink, // selected day
+                      onPrimary: kWhite, // selected day text
+                      surface: kWhiteGrey, // calendar background
+                      onSurface: kBlack, // default text
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: TextButton.styleFrom(
+                        foregroundColor: kBrown,
+                      ),
                     ),
                   ),
+                  child: CalendarDatePicker(
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now().subtract(const Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                    onDateChanged: (date) => setState(() => _selectedDate = date),
+                  ),
                 ),
-                child: CalendarDatePicker(
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now().subtract(const Duration(days: 365)),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                  onDateChanged: (date) => setState(() => _selectedDate = date),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _reasonController,
+                style: kCaptionTextStyle.copyWith(color: kBlack),
+                decoration: InputDecoration(
+                  labelText: 'Reason',
+                  labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
+                  border: const OutlineInputBorder(),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _reasonController,
-              style: kCaptionTextStyle.copyWith(color: kBlack),
-              decoration: InputDecoration(
-                labelText: 'Reason',
-                labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
-                border: const OutlineInputBorder(),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _messageController,
+                style: kCaptionTextStyle.copyWith(color: kBlack),
+                decoration: InputDecoration(
+                  labelText: 'Message',
+                  labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
+                  border: const OutlineInputBorder(),
+                ),
+                maxLines: 3,
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _messageController,
-              style: kCaptionTextStyle.copyWith(color: kBlack),
-              decoration: InputDecoration(
-                labelText: 'Message',
-                labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
-                border: const OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 24),
-            if (_error != null)
+              const SizedBox(height: 24),
+              if (_error != null)
+                Center(
+                  child: Text(
+                    _error!,
+                    style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 16),
+                  ),
+                ),
               Center(
-                child: Text(
-                  _error!,
-                  style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 16),
+                child: ElevatedButton(
+                  onPressed: _submitting ? null : _submit,
+                  style: kPremiumButtonStyle,
+                  child: _submitting
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
+                        )
+                      : const Text('Submit Request'),
                 ),
               ),
-            Center(
-              child: ElevatedButton(
-                onPressed: _submitting ? null : _submit,
-                style: kPremiumButtonStyle,
-                child: _submitting
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
-                      )
-                    : const Text('Submit Request'),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
