@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/holiday/my_holiday_card.dart';
 import '../../provider/holiday_provider.dart';
@@ -36,39 +37,48 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
     final loading = notifier.loading;
     final error = notifier.error;
 
-    return Scaffold(
-      backgroundColor: kWhite,
-      appBar: const PremiumAppBar(
-        title: 'My Holidays',
-        subtitle: 'Your holiday requests',
-        logoAssetPath: '',
-        showBackIcon: true,
-        actions: [],
-      ),
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : error != null
-              ? Center(
-                  child: Text(
-                    'Error: $error',
-                    style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 18),
-                  ),
-                )
-              : requests.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No holiday requests yet',
-                        style: kDescriptionTextStyle.copyWith(color: kBrown, fontSize: 18),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.only(top: 12, bottom: 24),
-                      itemCount: requests.length,
-                      itemBuilder: (context, index) {
-                        final request = requests[index];
-                        return MyHolidayCard(request: request);
-                      },
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          final router = GoRouter.of(context);
+          router.go('/holidays');
+        }
+      },
+      child: Scaffold(
+        backgroundColor: kWhite,
+        appBar: const PremiumAppBar(
+          title: 'My Holidays',
+          subtitle: 'Your holiday requests',
+          logoAssetPath: '',
+          showBackIcon: true,
+          actions: [],
+        ),
+        body: loading
+            ? const Center(child: CircularProgressIndicator())
+            : error != null
+                ? Center(
+                    child: Text(
+                      'Error: $error',
+                      style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 18),
                     ),
+                  )
+                : requests.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No holiday requests yet',
+                          style: kDescriptionTextStyle.copyWith(color: kBrown, fontSize: 18),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.only(top: 12, bottom: 24),
+                        itemCount: requests.length,
+                        itemBuilder: (context, index) {
+                          final request = requests[index];
+                          return MyHolidayCard(request: request);
+                        },
+                      ),
+      ),
     );
   }
 }
