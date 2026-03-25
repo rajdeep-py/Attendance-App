@@ -20,7 +20,7 @@ class AttendancePopup {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: kerror.withOpacity(0.08),
+                    color: kerror.withAlpha(8),
                     shape: BoxShape.circle,
                   ),
                   padding: const EdgeInsets.all(16),

@@ -13,13 +13,17 @@ class ProfileOptionsCard extends ConsumerWidget {
   Future<void> _downloadSalarySlip(BuildContext context, WidgetRef ref) async {
     final user = ref.read(profileProvider);
     if (user?.employeeId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User info missing')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User info missing')));
+      }
       return;
     }
     try {
       final slips = await SalarySlipServices().getSalarySlipsByEmployee(user!.employeeId!);
       if (slips.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No salary slips found.')));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No salary slips found.')));
+        }
         return;
       }
       final slip = slips.last; // Open the latest slip
@@ -31,10 +35,14 @@ class ProfileOptionsCard extends ConsumerWidget {
       if (await canLaunchUrl(Uri.parse(pdfUrl))) {
         await launchUrl(Uri.parse(pdfUrl), mode: LaunchMode.externalApplication);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open salary slip PDF.')));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open salary slip PDF.')));
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 
@@ -99,13 +107,17 @@ class ProfileOptionsCard extends ConsumerWidget {
           final isLogout = option['title'] == 'Log Out';
           return InkWell(
             borderRadius: BorderRadius.circular(18),
-            onTap: () {
+            onTap: () async {
               if (option['title'] == 'Download Salary Slip') {
-                _downloadSalarySlip(context, ref);
+                await _downloadSalarySlip(context, ref);
               } else if (option['title'] == 'My Holidays') {
-                GoRouter.of(context).go('/my-holidays');
+                if (context.mounted) {
+                  GoRouter.of(context).go('/my-holidays');
+                }
               } else if (option['title'] == 'About Us') {
-                GoRouter.of(context).go('/about-us');
+                if (context.mounted) {
+                  GoRouter.of(context).go('/about-us');
+                }
               }
             },
             child: Padding(

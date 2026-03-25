@@ -26,14 +26,18 @@ class LoginScreen extends ConsumerWidget {
 				if (user != null && user.employeeId != null) {
 					// Fetch profile after login
 					await ref.read(profileProvider.notifier).fetchProfile(user.employeeId!);
-					context.go('/dashboard');
+					if (context.mounted) {
+						context.go('/dashboard');
+					}
 				} else {
 					throw Exception('Invalid user data');
 				}
 			} catch (e) {
-				ScaffoldMessenger.of(context).showSnackBar(
-					SnackBar(content: Text('Login failed: ${e.toString()}')),
-				);
+				if (context.mounted) {
+					ScaffoldMessenger.of(context).showSnackBar(
+						SnackBar(content: Text('Login failed!')),
+					);
+				}
 			} finally {
 				isLoading.value = false;
 			}
