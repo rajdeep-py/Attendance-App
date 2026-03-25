@@ -26,27 +26,25 @@ final GoRouter appRouter = GoRouter(
 				},
 			),
 		),
-		   
-						   
-									   GoRoute(
-										   path: '/about-us',
-										   pageBuilder: (context, state) => CustomTransitionPage(
-											   child: const AboutUsScreen(),
-											   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-												   return FadeTransition(opacity: animation, child: child);
-											   },
-										   ),
-									   ),
-                     GoRoute(
-							   path: '/my-holidays',
-							   pageBuilder: (context, state) => CustomTransitionPage(
-								   child: const MyHolidayScreen(),
-								   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-									   return FadeTransition(opacity: animation, child: child);
-								   },
-							   ),
-						   ),
-               GoRoute(
+		GoRoute(
+		  path: '/about-us',
+			pageBuilder: (context, state) => CustomTransitionPage(
+			child: const AboutUsScreen(),
+			transitionsBuilder: (context, animation, secondaryAnimation, child) {
+				return FadeTransition(opacity: animation, child: child);
+			  },
+		  ),
+		),
+    GoRoute(
+			path: '/my-holidays',
+			pageBuilder: (context, state) => CustomTransitionPage(
+				child: const MyHolidayScreen(),
+				transitionsBuilder: (context, animation, secondaryAnimation, child) {
+					return FadeTransition(opacity: animation, child: child);
+				},
+			),
+		),
+     GoRoute(
 				path: '/notifications',
 				pageBuilder: (context, state) => CustomTransitionPage(
 				child: const NotificationScreen(),

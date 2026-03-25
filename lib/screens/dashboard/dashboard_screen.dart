@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../cards/dashboard/quit_app_bottomsheet.dart';
 import '../../provider/dashboard_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/bottom_nav_bar.dart';
@@ -62,41 +63,57 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 	@override
 	Widget build(BuildContext context) {
 		final user = ref.watch(profileProvider);
-		return Stack(
-			children: [
-				Scaffold(
-					backgroundColor: kWhite,
-					appBar: const PremiumAppBar(
-						title: 'Dashboard',
-						subtitle: 'Record your attendance easily',
-						logoAssetPath: 'assets/logo/A24.png',
-					),
-					body: SingleChildScrollView(
-						padding: const EdgeInsets.all(kScreenPadding),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: [
-								WelcomeCard(userName: user?.fullName ?? 'User', cardColor: kWhite),
-								CheckInOutCard(
-									cardColor: kWhite,
-									onLoading: (loading) {
-										if (mounted) setState(() => _isLoading = loading);
-									},
-									onRefresh: _fetchAttendance,
-								),
-								const FeatureCard(cardColor: kWhite),
-								const SizedBox(height: 16),
-								const HomeFooter(),
-							],
+		return PopScope(
+			canPop: false,
+			onPopInvoked: (didPop) async {
+				final shouldExit = await showModalBottomSheet<bool>(
+					context: context,
+					isScrollControlled: true,
+					backgroundColor: Colors.transparent,
+					builder: (context) => const QuitAppBottomSheet(),
+				);
+				if (shouldExit == true) {
+					// Exit the app
+					// ignore: use_build_context_synchronously
+					Navigator.of(context).pop();
+				}
+			},
+			child: Stack(
+				children: [
+					Scaffold(
+						backgroundColor: kWhite,
+						appBar: const PremiumAppBar(
+							title: 'Dashboard',
+							subtitle: 'Record your attendance easily',
+							logoAssetPath: 'assets/logo/A24.png',
+						),
+						body: SingleChildScrollView(
+							padding: const EdgeInsets.all(kScreenPadding),
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									WelcomeCard(userName: user?.fullName ?? 'User', cardColor: kWhite),
+									CheckInOutCard(
+										cardColor: kWhite,
+										onLoading: (loading) {
+											if (mounted) setState(() => _isLoading = loading);
+										},
+										onRefresh: _fetchAttendance,
+									),
+									const FeatureCard(cardColor: kWhite),
+									const SizedBox(height: 16),
+									const HomeFooter(),
+								],
+							),
+						),
+						bottomNavigationBar: BottomNavBar(
+							currentIndex: _currentIndex,
+							onTap: _onNavTap,
 						),
 					),
-					bottomNavigationBar: BottomNavBar(
-						currentIndex: _currentIndex,
-						onTap: _onNavTap,
-					),
-				),
-				if (_isLoading) const AppLoader(subText: 'Syncing attendance...'),
-			],
+					if (_isLoading) const AppLoader(subText: 'Syncing attendance...'),
+				],
+			),
 		);
 	}
 }

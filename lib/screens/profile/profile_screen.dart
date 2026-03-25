@@ -18,7 +18,6 @@ class ProfileScreen extends ConsumerWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
           context.go('/dashboard');
         },
       child: Scaffold(
