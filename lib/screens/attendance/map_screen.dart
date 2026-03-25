@@ -18,7 +18,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   List<Map<String, dynamic>>? _locationMatrices;
   bool _isLoading = false;
   String? _error;
-  LatLng? _pointerLatLng;
 
   @override
   void initState() {
@@ -77,84 +76,49 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     // Default center: India
     final defaultCenter = LatLng(22.9734, 78.6569);
     final markers = <Marker>[];
+    final circles = <CircleMarker>[];
     if (_locationMatrices != null) {
       for (final matrix in _locationMatrices!) {
         if (matrix['latitude'] != null && matrix['longitude'] != null) {
+          final latLng = LatLng(
+            (matrix['latitude'] as num).toDouble(),
+            (matrix['longitude'] as num).toDouble(),
+          );
           markers.add(
             Marker(
               width: 40,
               height: 40,
-              point: LatLng(
-                (matrix['latitude'] as num).toDouble(),
-                (matrix['longitude'] as num).toDouble(),
-              ),
+              point: latLng,
               child: const Icon(Icons.location_on, color: Colors.red, size: 36),
+            ),
+          );
+          circles.add(
+            CircleMarker(
+              point: latLng,
+              color: Colors.green.withAlpha(20),
+              borderStrokeWidth: 2,
+              borderColor: Colors.green,
+              useRadiusInMeter: true,
+              radius: 20, // 20 meters
             ),
           );
         }
       }
     }
-    if (_pointerLatLng != null) {
-      markers.add(
-        Marker(
-          width: 40,
-          height: 40,
-          point: _pointerLatLng!,
-          child: const Icon(Icons.my_location, color: Colors.blue, size: 36),
-        ),
-      );
-    }
-    return Stack(
+    return FlutterMap(
+      options: MapOptions(
+        initialCenter: markers.isNotEmpty ? markers.first.point : defaultCenter,
+        initialZoom: 5.5,
+      ),
       children: [
-        FlutterMap(
-          options: MapOptions(
-            initialCenter: markers.isNotEmpty ? markers.first.point : defaultCenter,
-            initialZoom: 5.5,
-            onTap: (tapPosition, latlng) {
-              setState(() {
-                _pointerLatLng = latlng;
-              });
-            },
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              subdomains: const ['a', 'b', 'c'],
-              userAgentPackageName: 'com.example.attendance_app',
-            ),
-            MarkerLayer(markers: markers),
-            if (_pointerLatLng != null)
-              CircleLayer(
-                circles: [
-                  CircleMarker(
-                    point: _pointerLatLng!,
-                    color: Colors.green.withAlpha(20),
-                    borderStrokeWidth: 2,
-                    borderColor: Colors.green,
-                    useRadiusInMeter: true,
-                    radius: 20, // 20 meters
-                  ),
-                ],
-              ),
-          ],
+        TileLayer(
+          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          subdomains: const ['a', 'b', 'c'],
+          userAgentPackageName: 'com.example.attendance_app',
         ),
-        if (_pointerLatLng != null)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
-              ),
-              child: Text(
-                'Selected: Lat: ${_pointerLatLng!.latitude.toStringAsFixed(6)}, Lng: ${_pointerLatLng!.longitude.toStringAsFixed(6)}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
+        MarkerLayer(markers: markers),
+        if (circles.isNotEmpty)
+          CircleLayer(circles: circles),
       ],
     );
   }
