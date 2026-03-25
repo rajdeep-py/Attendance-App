@@ -39,11 +39,10 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+      onPopInvoked: (didPop) {
+        
           context.go('/profile');
-        }
-      },
+        },
       child: Scaffold(
         backgroundColor: kWhite,
         appBar: const PremiumAppBar(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/about_us/header_card.dart';
 import '../../cards/about_us/description_card.dart';
@@ -13,7 +14,14 @@ class AboutUsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final aboutUs = ref.watch(aboutUsProvider);
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        
+          context.go('/dashboard');
+        },
+        child:
+    Scaffold(
       backgroundColor: Colors.white,
       appBar: const PremiumAppBar(
         title: 'About Us',
@@ -31,6 +39,7 @@ class AboutUsScreen extends ConsumerWidget {
           ContactCard(aboutUs: aboutUs),
         ],
       ),
+    ),
     );
   }
 }

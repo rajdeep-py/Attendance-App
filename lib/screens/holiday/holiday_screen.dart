@@ -56,11 +56,10 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
     final holiday = holidayMap[normalizedDate];
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+      onPopInvoked: (didPop) {
+        
           context.go('/dashboard');
-        }
-      },
+        },
       child: Stack(
         children: [
           Scaffold(

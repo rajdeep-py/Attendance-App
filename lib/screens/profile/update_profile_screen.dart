@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'dart:io';
@@ -160,7 +161,14 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 				body: Center(child: CircularProgressIndicator()),
 			);
 		}
-		return Stack(
+		return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        
+          context.go('/profile');
+        },
+        child:
+    Stack(
 			children: [
 				Scaffold(
 					appBar: const PremiumAppBar(
@@ -318,7 +326,8 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 				),
 				if (_loading) const AppLoader(subText: 'Updating profile...'),
 			],
-		);
+		),
+    );
 	}
 
 }

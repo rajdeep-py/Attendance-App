@@ -58,11 +58,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+      onPopInvoked: (didPop) {
+        
           context.go('/dashboard');
-        }
-      },
+        },
       child:
     Scaffold(
       appBar: PremiumAppBar(

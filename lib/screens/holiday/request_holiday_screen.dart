@@ -62,12 +62,11 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-         context.go('/holidays');
-        }
-      },
+      canPop: false,
+      onPopInvoked: (didPop) {
+        
+          context.go('/holidays');
+        },
       child: Scaffold(
         appBar: const PremiumAppBar(
           title: 'Request Holiday',

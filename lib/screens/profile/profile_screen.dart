@@ -17,11 +17,10 @@ class ProfileScreen extends ConsumerWidget {
     final user = ref.watch(profileProvider);
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+      onPopInvoked: (didPop) {
+        
           context.go('/dashboard');
-        }
-      },
+        },
       child: Scaffold(
         appBar: const PremiumAppBar(
           title: 'Profile',

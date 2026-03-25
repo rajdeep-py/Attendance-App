@@ -65,11 +65,11 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
     final attendance = attendanceMap[normalizedDate];
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+      onPopInvoked: (didPop) {
+        
           context.go('/dashboard');
-        }
-      },
+        },
+      
       child: Stack(
         children: [
           Scaffold(
