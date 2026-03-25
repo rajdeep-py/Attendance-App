@@ -21,15 +21,7 @@ class CalendarCard extends ConsumerWidget {
     final attendanceMap = ref.watch(attendanceProvider);
     return Column(
       children: [
-        if (onRefresh != null)
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Iconsax.refresh, color: kBrown),
-              onPressed: onRefresh,
-              tooltip: 'Refresh Attendance',
-            ),
-          ),
+      
         Container(
           margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
           decoration: BoxDecoration(
