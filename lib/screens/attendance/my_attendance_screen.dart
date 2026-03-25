@@ -67,8 +67,7 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          final router = GoRouter.of(context);
-          router.go('/dashboard');
+          context.go('/dashboard');
         }
       },
       child: Stack(
