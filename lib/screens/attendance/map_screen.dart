@@ -114,10 +114,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         }
       }
     }
+    // India's bounding box: Southwest (6.4627, 68.1097), Northeast (35.5133, 97.3954)
+    final indiaBounds = LatLngBounds(
+      LatLng(6.4627, 68.1097), // Southwest
+      LatLng(35.5133, 97.3954), // Northeast
+    );
     return FlutterMap(
       options: MapOptions(
         initialCenter: markers.isNotEmpty ? markers.first.point : defaultCenter,
         initialZoom: 5.5,
+        maxBounds: indiaBounds,
+        // Optionally, restrict panning strictly inside bounds:
+        // keepAlive: true,
       ),
       children: [
         TileLayer(
