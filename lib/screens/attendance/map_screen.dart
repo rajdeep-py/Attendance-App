@@ -122,7 +122,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return FlutterMap(
       options: MapOptions(
         initialCenter: markers.isNotEmpty ? markers.first.point : defaultCenter,
-        initialZoom: 5.5,
+        initialZoom: 18.5,
         maxBounds: indiaBounds,
         // Optionally, restrict panning strictly inside bounds:
         // keepAlive: true,
