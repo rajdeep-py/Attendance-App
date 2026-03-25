@@ -96,4 +96,4 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/naiyo24_logo.png"
+  image_path: "assets/logo/attendx24_logo.png"

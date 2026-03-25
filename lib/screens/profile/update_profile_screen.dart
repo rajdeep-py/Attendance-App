@@ -10,6 +10,7 @@ import '../../models/user.dart';
 import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../services/api_url.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
@@ -159,159 +160,164 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 				body: Center(child: CircularProgressIndicator()),
 			);
 		}
-		return Scaffold(
-			appBar: const PremiumAppBar(
-				title: 'Manage Profile',
-				subtitle: 'View and manage your account',
-				logoAssetPath: '',
-				actions: [],
-				showBackIcon: true,
-			),
-			body: SingleChildScrollView(
-				padding: const EdgeInsets.all(16),
-				child: Form(
-					key: _formKey,
-					child: Column(
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: [
-							Center(
-								child: GestureDetector(
-									onTap: _showImagePickerSheet,
-									child: Container(
-										margin: const EdgeInsets.only(bottom: 24),
-										decoration: BoxDecoration(
-											shape: BoxShape.circle,
-											gradient: LinearGradient(
-												colors: [kPink, kBrown],
-												begin: Alignment.topLeft,
-												end: Alignment.bottomRight,
-											),
-											boxShadow: [
-												BoxShadow(
-													color: kBlack.withAlpha((0.18 * 255).toInt()),
-													blurRadius: 16,
-													offset: const Offset(0, 4),
-												),
-											],
-										),
-										padding: const EdgeInsets.all(2),
-										child: _profileImage != null
-												? ClipOval(
-														child: Image.file(
-															_profileImage!,
-															width: 80,
-															height: 80,
-															fit: BoxFit.cover,
+		return Stack(
+			children: [
+				Scaffold(
+					appBar: const PremiumAppBar(
+						title: 'Manage Profile',
+						subtitle: 'View and manage your account',
+						logoAssetPath: '',
+						actions: [],
+						showBackIcon: true,
+					),
+					body: SingleChildScrollView(
+						padding: const EdgeInsets.all(16),
+						child: Form(
+							key: _formKey,
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									Center(
+										child: GestureDetector(
+											onTap: _showImagePickerSheet,
+											child: Container(
+												margin: const EdgeInsets.only(bottom: 24),
+												decoration: BoxDecoration(
+													shape: BoxShape.circle,
+													gradient: LinearGradient(
+														colors: [kPink, kBrown],
+														begin: Alignment.topLeft,
+														end: Alignment.bottomRight,
+													),
+													boxShadow: [
+														BoxShadow(
+															color: kBlack.withAlpha((0.18 * 255).toInt()),
+															blurRadius: 16,
+															offset: const Offset(0, 4),
 														),
-													)
-												: (user.profilePhoto != null && user.profilePhoto!.isNotEmpty
-														? ClipOval(
-																child: Image.network(
-																	user.profilePhoto!.startsWith('http')
-																			? user.profilePhoto!
-																			: '${ApiUrl.baseUrl}/${user.profilePhoto!}',
-																	width: 80,
-																	height: 80,
-																	fit: BoxFit.cover,
-																	errorBuilder: (context, error, stackTrace) => const Icon(Iconsax.user, color: Colors.white, size: 48),
-																),
-															)
-														: const Icon(Iconsax.user, color: Colors.white, size: 48)),
+													],
+												),
+												padding: const EdgeInsets.all(2),
+												child: _profileImage != null
+																? ClipOval(
+																				child: Image.file(
+																					_profileImage!,
+																					width: 80,
+																					height: 80,
+																					fit: BoxFit.cover,
+																				),
+																			)
+																: (user.profilePhoto != null && user.profilePhoto!.isNotEmpty
+																				? ClipOval(
+																								child: Image.network(
+																									user.profilePhoto!.startsWith('http')
+																													? user.profilePhoto!
+																													: '${ApiUrl.baseUrl}/${user.profilePhoto!}',
+																									width: 80,
+																									height: 80,
+																									fit: BoxFit.cover,
+																									errorBuilder: (context, error, stackTrace) => const Icon(Iconsax.user, color: Colors.white, size: 48),
+																								),
+																							)
+																				: const Icon(Iconsax.user, color: Colors.white, size: 48)),
+											),
+										),
 									),
-								),
+									Text('Personal Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _fullNameController,
+										label: 'Full Name',
+										icon: Iconsax.user,
+										validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _phoneController,
+										label: 'Phone Number',
+										icon: Iconsax.call,
+										keyboardType: TextInputType.phone,
+										validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _emailController,
+										label: 'Email',
+										icon: Iconsax.sms,
+										keyboardType: TextInputType.emailAddress,
+										validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _addressController,
+										label: 'Address',
+										icon: Iconsax.location,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _designationController,
+										label: 'Designation',
+										icon: Iconsax.briefcase,
+									),
+									const SizedBox(height: 24),
+									Text('Security', style: kHeaderTextStyle.copyWith(fontSize: 20)),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _passwordController,
+										label: 'Password',
+										icon: Iconsax.lock,
+										obscureText: true,
+									),
+									const SizedBox(height: 24),
+									Text('Bank Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _bankAccountController,
+										label: 'Bank Account No',
+										icon: Iconsax.card,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _bankNameController,
+										label: 'Bank Name',
+										icon: Iconsax.bank,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _branchNameController,
+										label: 'Branch Name',
+										icon: Iconsax.building,
+									),
+									const SizedBox(height: 12),
+									_ModernTextField(
+										controller: _ifscController,
+										label: 'IFSC Code',
+										icon: Iconsax.code,
+									),
+									const SizedBox(height: 32),
+									SizedBox(
+										width: double.infinity,
+										child: ElevatedButton(
+											onPressed: _loading
+															? null
+															: () {
+																			if (_formKey.currentState?.validate() ?? false) {
+																				_handleUpdateProfile();
+																			}
+																		},
+											style: kPremiumButtonStyle,
+											child: _loading
+															? const CircularProgressIndicator(color: Colors.white)
+															: const Text('Update'),
+										),
+									),
+								],
 							),
-							Text('Personal Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _fullNameController,
-								label: 'Full Name',
-								icon: Iconsax.user,
-								validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _phoneController,
-								label: 'Phone Number',
-								icon: Iconsax.call,
-								keyboardType: TextInputType.phone,
-								validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _emailController,
-								label: 'Email',
-								icon: Iconsax.sms,
-								keyboardType: TextInputType.emailAddress,
-								validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _addressController,
-								label: 'Address',
-								icon: Iconsax.location,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _designationController,
-								label: 'Designation',
-								icon: Iconsax.briefcase,
-							),
-							const SizedBox(height: 24),
-							Text('Security', style: kHeaderTextStyle.copyWith(fontSize: 20)),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _passwordController,
-								label: 'Password',
-								icon: Iconsax.lock,
-								obscureText: true,
-							),
-							const SizedBox(height: 24),
-							Text('Bank Details', style: kHeaderTextStyle.copyWith(fontSize: 20)),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _bankAccountController,
-								label: 'Bank Account No',
-								icon: Iconsax.card,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _bankNameController,
-								label: 'Bank Name',
-								icon: Iconsax.bank,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _branchNameController,
-								label: 'Branch Name',
-								icon: Iconsax.building,
-							),
-							const SizedBox(height: 12),
-							_ModernTextField(
-								controller: _ifscController,
-								label: 'IFSC Code',
-								icon: Iconsax.code,
-							),
-							const SizedBox(height: 32),
-							SizedBox(
-								width: double.infinity,
-								child: ElevatedButton(
-									onPressed: _loading
-											? null
-											: () {
-													if (_formKey.currentState?.validate() ?? false) {
-														_handleUpdateProfile();
-													}
-												},
-									style: kPremiumButtonStyle,
-									child: _loading
-											? const CircularProgressIndicator(color: Colors.white)
-											: const Text('Update'),
-								),
-							),
-						],
+						),
 					),
 				),
-			),
+				if (_loading) const AppLoader(subText: 'Updating profile...'),
+			],
 		);
 	}
 
