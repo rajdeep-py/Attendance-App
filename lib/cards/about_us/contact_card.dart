@@ -121,14 +121,6 @@ class ContactCard extends StatelessWidget {
   Future<void> _launch(String url) async {
     Uri uri = Uri.parse(url);
 
-    // Chrome
-    if (url.contains('http') || url.contains('https')) {
-      final chromeUri = Uri.parse('googlechrome://$url');
-      if (await canLaunchUrl(chromeUri)) {
-        await launchUrl(chromeUri, mode: LaunchMode.externalApplication);
-        return;
-      }
-    }
     // Email
     if (url.startsWith('mailto:')) {
       if (await canLaunchUrl(uri)) {
@@ -143,7 +135,7 @@ class ContactCard extends StatelessWidget {
         return;
       }
     }
-    // Fallback: open in browser
+    // Website or fallback: open in browser
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
