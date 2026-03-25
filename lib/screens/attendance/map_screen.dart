@@ -123,6 +123,19 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               userAgentPackageName: 'com.example.attendance_app',
             ),
             MarkerLayer(markers: markers),
+            if (_pointerLatLng != null)
+              CircleLayer(
+                circles: [
+                  CircleMarker(
+                    point: _pointerLatLng!,
+                    color: Colors.green.withAlpha(20),
+                    borderStrokeWidth: 2,
+                    borderColor: Colors.green,
+                    useRadiusInMeter: true,
+                    radius: 20, // 20 meters
+                  ),
+                ],
+              ),
           ],
         ),
         if (_pointerLatLng != null)
