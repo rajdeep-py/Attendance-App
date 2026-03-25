@@ -38,11 +38,10 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
     final error = notifier.error;
 
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          final router = GoRouter.of(context);
-          router.go('/holidays');
+          context.go('/profile');
         }
       },
       child: Scaffold(

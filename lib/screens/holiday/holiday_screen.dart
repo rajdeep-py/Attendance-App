@@ -55,7 +55,7 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
     final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     final holiday = holidayMap[normalizedDate];
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           context.go('/dashboard');

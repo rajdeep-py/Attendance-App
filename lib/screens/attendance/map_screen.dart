@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import '../../services/attendance_services.dart';
 import '../../provider/profile_provider.dart';
@@ -55,7 +56,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          context.go('/dashboard');
+        }
+      },
+      child:
+    Scaffold(
       appBar: PremiumAppBar(
               title: 'My Stores',
               subtitle: 'View your store locations on the map',
@@ -69,6 +78,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           : _error != null
               ? Center(child: Text(_error!))
               : _buildMap(),
+    ),
     );
   }
 

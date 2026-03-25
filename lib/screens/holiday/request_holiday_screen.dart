@@ -65,8 +65,7 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          final router = GoRouter.of(context);
-          router.go('/holidays');
+         context.go('/holidays');
         }
       },
       child: Scaffold(
