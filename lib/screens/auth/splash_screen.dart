@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/profile_provider.dart';
+import '../../provider/attendance_provider.dart';
+import '../../provider/holiday_provider.dart';
 import '../../theme/app_theme.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -52,6 +54,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 			if (employeeId != null) {
 				// Fetch user profile before navigating to dashboard
 				await ref.read(profileProvider.notifier).fetchProfile(employeeId);
+				// Fetch attendance for employee
+				await ref.read(attendanceProvider.notifier).fetchAttendanceByEmployee(employeeId);
+			}
+			// Try to fetch holidays if adminId is available
+			final user = ref.read(profileProvider);
+			final adminId = user?.adminId;
+			if (adminId != null) {
+				await ref.read(holidayProvider.notifier).fetchHolidaysByAdmin(adminId);
 			}
 			if (!mounted) return;
 			context.go('/dashboard');

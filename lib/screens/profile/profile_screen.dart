@@ -16,7 +16,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(profileProvider);
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           final router = GoRouter.of(context);

@@ -64,7 +64,7 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
     final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     final attendance = attendanceMap[normalizedDate];
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           final router = GoRouter.of(context);
