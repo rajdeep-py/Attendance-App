@@ -3,7 +3,7 @@ class ApiUrl {
 
   // Base URL
 	static const String baseUrl = 'https://attendxappbackend.naiyo24.com'; // Replace with your backend URL
-
+  //static const String baseUrl = 'http://0.0.0.0:8000'; // For local testing
   // Employee Endpoints
 	static const String loginEmployee = '/login/employees/';
 	static const String getEmployeeById = '/get-by/employees/'; // Usage: /get-by/employees/{employee_id}
