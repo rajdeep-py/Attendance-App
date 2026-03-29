@@ -11,10 +11,20 @@ class DashboardNotifier extends StateNotifier<Attendance> {
 		Future<void> fetchLatestAttendance(int employeeId) async {
 			final records = await _attendanceServices.getAttendanceByEmployee(employeeId);
 			if (records.isNotEmpty) {
-				state = records.first;
-			} else {
-				state = Attendance();
+				final latest = records.first;
+				if (latest.checkIn != null) {
+					final now = DateTime.now();
+					final localCheckIn = latest.checkIn!.toLocal();
+					if (localCheckIn.year == now.year &&
+						localCheckIn.month == now.month &&
+						localCheckIn.day == now.day) {
+						state = latest;
+						return;
+					}
+				}
 			}
+			// Reset state if no record for today
+			state = Attendance();
 		}
 	final AttendanceServices _attendanceServices = AttendanceServices();
 	DashboardNotifier() : super(Attendance());
@@ -33,11 +43,7 @@ class DashboardNotifier extends StateNotifier<Attendance> {
 			photo: File(photoPath),
 		);
 		// Fetch latest attendance and update state
-		final records = await _attendanceServices.getAttendanceByEmployee(employeeId);
-		if (records.isNotEmpty) {
-			// Assuming the latest record is the first one
-			state = records.first;
-		}
+		await fetchLatestAttendance(employeeId);
 	}
 
 	Future<void> checkOut({
@@ -53,10 +59,6 @@ class DashboardNotifier extends StateNotifier<Attendance> {
 			photo: File(photoPath),
 		);
 		// Fetch latest attendance and update state
-		final records = await _attendanceServices.getAttendanceByEmployee(employeeId);
-		if (records.isNotEmpty) {
-			// Assuming the latest record is the first one
-			state = records.first;
-		}
+		await fetchLatestAttendance(employeeId);
 	}
 }

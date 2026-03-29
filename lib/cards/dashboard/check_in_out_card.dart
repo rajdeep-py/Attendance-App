@@ -33,16 +33,16 @@ class CheckInOutCard extends ConsumerWidget {
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime? checkInDate = attendance.checkIn != null
         ? DateTime(
-            attendance.checkIn!.year,
-            attendance.checkIn!.month,
-            attendance.checkIn!.day,
+            attendance.checkIn!.toLocal().year,
+            attendance.checkIn!.toLocal().month,
+            attendance.checkIn!.toLocal().day,
           )
         : null;
     final DateTime? checkOutDate = attendance.checkOut != null
         ? DateTime(
-            attendance.checkOut!.year,
-            attendance.checkOut!.month,
-            attendance.checkOut!.day,
+            attendance.checkOut!.toLocal().year,
+            attendance.checkOut!.toLocal().month,
+            attendance.checkOut!.toLocal().day,
           )
         : null;
     final bool isTodayCheckIn = checkInDate != null && checkInDate == today;

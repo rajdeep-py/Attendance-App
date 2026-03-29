@@ -18,7 +18,7 @@ class AttendanceNotifier extends StateNotifier<Map<DateTime, Attendance>> {
     }
   }
 
-  static DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
+  static DateTime _dateOnly(DateTime dt) => DateTime(dt.toLocal().year, dt.toLocal().month, dt.toLocal().day);
 
   void setAttendance(DateTime date, Attendance attendance) {
     final key = _dateOnly(date);
