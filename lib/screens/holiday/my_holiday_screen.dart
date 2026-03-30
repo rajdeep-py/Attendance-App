@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/holiday/my_holiday_card.dart';
 import '../../provider/holiday_provider.dart';
-import '../../provider/auth_provider.dart';
+import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 
 class MyHolidayScreen extends ConsumerStatefulWidget {
@@ -24,7 +24,7 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
   }
 
   Future<void> _fetchRequests() async {
-    final user = ref.read(authProvider);
+    final user = ref.read(profileProvider);
     if (user?.employeeId != null) {
       await ref.read(holidayProvider.notifier).fetchRequests(user!.employeeId!);
     }

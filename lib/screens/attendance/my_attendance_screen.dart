@@ -2,7 +2,7 @@ import '../../widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../provider/auth_provider.dart';
+import '../../provider/profile_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/attendance/calendar_card.dart';
 import '../../cards/attendance/attendance_card.dart';
@@ -21,7 +21,7 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
       bool _isLoading = false;
     Future<void> _refreshAttendance() async {
       setState(() => _isLoading = true);
-      final user = ref.read(authProvider);
+      final user = ref.read(profileProvider);
       if (user?.employeeId != null) {
         await ref.read(attendanceProvider.notifier).fetchAttendanceByEmployee(user!.employeeId!);
       }

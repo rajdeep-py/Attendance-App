@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../provider/auth_provider.dart';
+import '../../provider/profile_provider.dart';
 import '../../provider/holiday_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
@@ -28,7 +28,7 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
       _submitting = true;
       _error = null;
     });
-    final user = ref.read(authProvider);
+    final user = ref.read(profileProvider);
     if (user?.employeeId == null || user?.adminId == null) {
       setState(() {
         _error = 'User info missing';
