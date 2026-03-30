@@ -11,16 +11,19 @@ class DashboardNotifier extends StateNotifier<Attendance> {
 		Future<void> fetchLatestAttendance(int employeeId) async {
 			final records = await _attendanceServices.getAttendanceByEmployee(employeeId);
 			if (records.isNotEmpty) {
-				final latest = records.first;
-				if (latest.checkIn != null) {
-					final now = DateTime.now();
-					final localCheckIn = latest.checkIn!.toLocal();
-					if (localCheckIn.year == now.year &&
-						localCheckIn.month == now.month &&
-						localCheckIn.day == now.day) {
-						state = latest;
-						return;
-					}
+				final now = DateTime.now();
+				try {
+					final todayRecord = records.firstWhere((r) {
+						if (r.checkIn == null) return false;
+						final localCheckIn = r.checkIn!.toLocal();
+						return localCheckIn.year == now.year &&
+							   localCheckIn.month == now.month &&
+							   localCheckIn.day == now.day;
+					});
+					state = todayRecord;
+					return;
+				} catch (_) {
+					// No record for today
 				}
 			}
 			// Reset state if no record for today
