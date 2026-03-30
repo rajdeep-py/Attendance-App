@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../theme/app_theme.dart';
 
 class HomeFooter extends StatelessWidget {
@@ -20,7 +19,12 @@ class HomeFooter extends StatelessWidget {
             width: double.infinity,
             color: kWhite.withAlpha(128),
             alignment: Alignment.center,
-            child: Text('Creating a Cheaper and More Accessible Attendance System', style: kDescriptionTextStyle.copyWith(color: kBlack.withAlpha(200))),
+            child: Text(
+              'Creating a Cheaper and More Accessible Attendance System',
+              style: kDescriptionTextStyle.copyWith(
+                color: kBlack.withAlpha(200),
+              ),
+            ),
           );
         },
       ),

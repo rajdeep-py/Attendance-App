@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../provider/profile_provider.dart';
 import '../../provider/holiday_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/leave_request_success_popup.dart';
 import 'package:iconsax/iconsax.dart';
+
 class RequestHolidayScreen extends ConsumerStatefulWidget {
   const RequestHolidayScreen({super.key});
 
   @override
-  ConsumerState<RequestHolidayScreen> createState() => _RequestHolidayScreenState();
+  ConsumerState<RequestHolidayScreen> createState() =>
+      _RequestHolidayScreenState();
 }
 
 class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
@@ -37,12 +38,14 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
       return;
     }
     try {
-      await ref.read(holidayProvider.notifier).createRequest(
-        adminId: user!.adminId!,
-        employeeId: user.employeeId!,
-        date: _selectedDate!,
-        reason: _reasonController.text,
-      );
+      await ref
+          .read(holidayProvider.notifier)
+          .createRequest(
+            adminId: user!.adminId!,
+            employeeId: user.employeeId!,
+            date: _selectedDate!,
+            reason: _reasonController.text,
+          );
       if (!mounted) return;
       await showDialog(
         context: context,
@@ -64,9 +67,8 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
-          context.go('/holidays');
-        },
+        context.go('/holidays');
+      },
       child: Scaffold(
         appBar: const PremiumAppBar(
           title: 'Request Holiday',
@@ -83,7 +85,10 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                Text('Select Date', style: kHeaderTextStyle.copyWith(fontSize: 18, color: kBlack)),
+                Text(
+                  'Select Date',
+                  style: kHeaderTextStyle.copyWith(fontSize: 18, color: kBlack),
+                ),
                 const SizedBox(height: 8),
                 Container(
                   decoration: BoxDecoration(
@@ -106,16 +111,17 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                         onSurface: kBlack, // default text
                       ),
                       textButtonTheme: TextButtonThemeData(
-                        style: TextButton.styleFrom(
-                          foregroundColor: kBrown,
-                        ),
+                        style: TextButton.styleFrom(foregroundColor: kBrown),
                       ),
                     ),
                     child: CalendarDatePicker(
                       initialDate: DateTime.now(),
-                      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+                      firstDate: DateTime.now().subtract(
+                        const Duration(days: 365),
+                      ),
                       lastDate: DateTime.now().add(const Duration(days: 365)),
-                      onDateChanged: (date) => setState(() => _selectedDate = date),
+                      onDateChanged: (date) =>
+                          setState(() => _selectedDate = date),
                     ),
                   ),
                 ),
@@ -124,7 +130,11 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                   controller: _reasonController,
                   style: kCaptionTextStyle.copyWith(color: kBlack),
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Iconsax.note_2, color: kBrown, size: 22),
+                    prefixIcon: const Icon(
+                      Iconsax.note_2,
+                      color: kBrown,
+                      size: 22,
+                    ),
                     labelText: 'Reason',
                     labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
                     hintText: 'E.g. Family function, health, etc.',
@@ -133,17 +143,26 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                     fillColor: kWhite,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                      borderSide: const BorderSide(
+                        color: kWhiteGrey,
+                        width: 1.2,
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                      borderSide: const BorderSide(
+                        color: kWhiteGrey,
+                        width: 1.2,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: const BorderSide(color: kPink, width: 1.5),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 16,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -151,7 +170,11 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                   controller: _messageController,
                   style: kCaptionTextStyle.copyWith(color: kBlack),
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Iconsax.message, color: kBrown, size: 22),
+                    prefixIcon: const Icon(
+                      Iconsax.message,
+                      color: kBrown,
+                      size: 22,
+                    ),
                     labelText: 'Message',
                     labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
                     hintText: 'Add any extra details (optional)',
@@ -160,17 +183,26 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                     fillColor: kWhite,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                      borderSide: const BorderSide(
+                        color: kWhiteGrey,
+                        width: 1.2,
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: kWhiteGrey, width: 1.2),
+                      borderSide: const BorderSide(
+                        color: kWhiteGrey,
+                        width: 1.2,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: const BorderSide(color: kPink, width: 1.5),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 16,
+                    ),
                   ),
                   maxLines: 3,
                 ),
@@ -179,7 +211,10 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                   Center(
                     child: Text(
                       _error!,
-                      style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 16),
+                      style: kDescriptionTextStyle.copyWith(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 Center(
@@ -195,13 +230,19 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        textStyle: kHeaderTextStyle.copyWith(fontSize: 17, fontWeight: FontWeight.bold),
+                        textStyle: kHeaderTextStyle.copyWith(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       icon: _submitting
                           ? const SizedBox(
                               width: 24,
                               height: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: kWhite,
+                              ),
                             )
                           : const Icon(Iconsax.send_2, size: 22),
                       label: _submitting
@@ -218,5 +259,3 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
     );
   }
 }
-           
-

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../widgets/app_bar.dart';
 import '../../cards/notification/notification_card.dart';
 import '../../provider/notification_provider.dart';
@@ -16,7 +15,7 @@ class NotificationScreen extends ConsumerStatefulWidget {
   ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends ConsumerState<NotificationScreen> {  
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   bool _fetched = false;
   final bool _isLoading = false;
 
@@ -26,7 +25,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     if (!_fetched) {
       final user = ref.read(profileProvider);
       if (user != null && user.employeeId != null) {
-        ref.read(notificationProvider.notifier).fetchNotificationsForEmployee(user.employeeId!);
+        ref
+            .read(notificationProvider.notifier)
+            .fetchNotificationsForEmployee(user.employeeId!);
         _fetched = true;
       }
     }
@@ -58,7 +59,10 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                 ? Center(
                     child: Text(
                       'No notifications yet',
-                      style: kDescriptionTextStyle.copyWith(color: kBrown, fontSize: 18),
+                      style: kDescriptionTextStyle.copyWith(
+                        color: kBrown,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                 : ListView.builder(
@@ -69,7 +73,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                       return NotificationCard(
                         notification: notification,
                         onTap: () {
-                          ref.read(notificationProvider.notifier).markAsRead(notification.id);
+                          ref
+                              .read(notificationProvider.notifier)
+                              .markAsRead(notification.id);
                         },
                       );
                     },

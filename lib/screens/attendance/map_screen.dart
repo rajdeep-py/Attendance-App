@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
@@ -41,7 +40,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         });
         return;
       }
-      final matrices = await AttendanceServices().getLocationMatrixByAdmin(adminId);
+      final matrices = await AttendanceServices().getLocationMatrixByAdmin(
+        adminId,
+      );
       setState(() {
         _locationMatrices = matrices;
         _isLoading = false;
@@ -59,25 +60,22 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
-          context.go('/dashboard');
-        },
-      child:
-    Scaffold(
-      appBar: PremiumAppBar(
-              title: 'My Stores',
-              subtitle: 'View your store locations on the map',
-              logoAssetPath: '',
-              actions: [
-              ],
-              showBackIcon: true,
-            ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? Center(child: Text(_error!))
-              : _buildMap(),
-    ),
+        context.go('/dashboard');
+      },
+      child: Scaffold(
+        appBar: PremiumAppBar(
+          title: 'My Stores',
+          subtitle: 'View your store locations on the map',
+          logoAssetPath: '',
+          actions: [],
+          showBackIcon: true,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+            ? Center(child: Text(_error!))
+            : _buildMap(),
+      ),
     );
   }
 
@@ -134,8 +132,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           userAgentPackageName: 'com.example.attendance_app',
         ),
         MarkerLayer(markers: markers),
-        if (circles.isNotEmpty)
-          CircleLayer(circles: circles),
+        if (circles.isNotEmpty) CircleLayer(circles: circles),
       ],
     );
   }

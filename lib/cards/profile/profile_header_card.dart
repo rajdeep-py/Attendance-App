@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
-
 import 'package:go_router/go_router.dart';
 import '../../models/user.dart';
 import '../../services/api_url.dart';
@@ -56,7 +55,12 @@ class ProfileHeaderCard extends StatelessWidget {
                         width: 60,
                         height: 60,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Iconsax.user, color: Colors.white, size: 40),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Iconsax.user,
+                              color: Colors.white,
+                              size: 40,
+                            ),
                       ),
                     )
                   : const Icon(Iconsax.user, color: Colors.white, size: 40),
