@@ -4,7 +4,7 @@ import '../../widgets/attendance_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../provider/auth_provider.dart';
+import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/dashboard_provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,7 +28,7 @@ class CheckInOutCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ImagePicker picker = ImagePicker();
     final attendance = ref.watch(dashboardProvider);
-    final user = ref.watch(authProvider);
+    final user = ref.watch(profileProvider);
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime? checkInDate = attendance.checkIn != null
