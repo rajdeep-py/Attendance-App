@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp.router(
-        title: 'Medorica Attendance',
+        title: 'AttendX24',
         debugShowCheckedModeBanner: false,
         theme: appTheme,
         routerConfig: appRouter,
@@ -22,4 +22,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
