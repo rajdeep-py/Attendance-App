@@ -28,16 +28,16 @@ class _ForceUpdateScreenState extends State<ForceUpdateScreen> {
     });
 
     try {
-      await _updateService.downloadAndInstallUpdate(
-        widget.apkUrl,
-        (received, total) {
-          if (total != -1) {
-            setState(() {
-              _progress = received / total;
-            });
-          }
-        },
-      );
+      await _updateService.downloadAndInstallUpdate(widget.apkUrl, (
+        received,
+        total,
+      ) {
+        if (total != -1) {
+          setState(() {
+            _progress = received / total;
+          });
+        }
+      });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,18 +69,15 @@ class _ForceUpdateScreenState extends State<ForceUpdateScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const AppLogo(size: 100),
+                const AppLogo(size: 200),
                 const SizedBox(height: 40),
                 Text(
                   'Update Required',
-                  style: kHeaderTextStyle.copyWith(
-                    color: kBlack,
-                    fontSize: 32,
-                  ),
+                  style: kHeaderTextStyle.copyWith(color: kBlack, fontSize: 32),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'A new version (${widget.latestVersion}) of the app is available and requires an update to continue using the application.',
+                  'A new version of the app is available and requires an update to continue using the application.',
                   textAlign: TextAlign.center,
                   style: kBodyTextStyle.copyWith(
                     color: kBrown.withOpacity(0.8),
@@ -101,7 +98,9 @@ class _ForceUpdateScreenState extends State<ForceUpdateScreen> {
                       const SizedBox(height: 16),
                       Text(
                         'Downloading... ${(_progress * 100).toStringAsFixed(1)}%',
-                        style: kBodyTextStyle.copyWith(fontWeight: FontWeight.bold),
+                        style: kBodyTextStyle.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   )
@@ -113,7 +112,10 @@ class _ForceUpdateScreenState extends State<ForceUpdateScreen> {
                         const Size(double.infinity, 56),
                       ),
                     ),
-                    child: const Text('Update Now', style: TextStyle(fontSize: 18)),
+                    child: const Text(
+                      'Update Now',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
               ],
             ),
