@@ -48,6 +48,10 @@ dependencies:
   # OpenStreetMap integration
   flutter_map: ^6.1.0
   latlong2: ^0.9.0
+  package_info_plus: ^9.0.1
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  open_filex: ^4.7.0
 
 dev_dependencies:
 # For generating app icons and splash screens

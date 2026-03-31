@@ -13,6 +13,7 @@ import '../screens/holiday/request_holiday_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/profile/update_profile_screen.dart';
+import '../screens/update/force_update_screen.dart';
 
 final GoRouter appRouter = GoRouter(
 	initialLocation: '/splash',
@@ -130,6 +131,24 @@ final GoRouter appRouter = GoRouter(
 					return FadeTransition(opacity: animation, child: child);
 				},
 			),
+		),
+		GoRoute(
+			path: '/force-update',
+			pageBuilder: (context, state) {
+				final extra = state.extra as Map<String, dynamic>? ?? {};
+				final apkUrl = extra['apkUrl'] as String? ?? '';
+				final latestVersion = extra['latestVersion'] as String? ?? 'Unknown';
+
+				return CustomTransitionPage(
+					child: ForceUpdateScreen(
+						apkUrl: apkUrl,
+						latestVersion: latestVersion,
+					),
+					transitionsBuilder: (context, animation, secondaryAnimation, child) {
+						return FadeTransition(opacity: animation, child: child);
+					},
+				);
+			},
 		),
 	],
 );

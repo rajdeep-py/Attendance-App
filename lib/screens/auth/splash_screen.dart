@@ -7,6 +7,7 @@ import '../../provider/profile_provider.dart';
 import '../../provider/attendance_provider.dart';
 import '../../provider/holiday_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../services/force_update_services.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -61,6 +62,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _checkLoginAndNavigate() async {
     await Future.delayed(const Duration(milliseconds: 2500));
+    
+    // Check for App Updates first
+    final updateService = ForceUpdateService();
+    final updateResult = await updateService.checkForUpdate();
+    if (!mounted) return;
+    
+    if (updateResult['hasUpdate'] == true) {
+      context.go('/force-update', extra: {
+        'apkUrl': updateResult['apkUrl'],
+        'latestVersion': updateResult['latestVersion'],
+      });
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
     if (!mounted) return;

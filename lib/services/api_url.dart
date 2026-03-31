@@ -45,4 +45,10 @@ class ApiUrl {
       '/attendance/employee/'; // Usage: /attendance/employee/{employee_id}
   static const String getAttendanceByAdminAndEmployee =
       '/attendance/admin/'; // Usage: /attendance/admin/{admin_id}/employee/{employee_id}
+
+  // App Updates
+  static const String getAllVersions = '/get-all/versions';
+  static const String downloadSpecificApk = '/download/'; // Usage: /download/{filename}
+  static const String downloadLatestApk = '/download-latest';
+  static const String getLatestVersion = '/latest-version';
 }
