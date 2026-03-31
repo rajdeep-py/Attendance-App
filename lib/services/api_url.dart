@@ -1,7 +1,8 @@
 class ApiUrl {
   // Base URL
-  //static const String baseUrl = 'https://attendxappbackend.naiyo24.com'; // Replace with your backend URL
-  static const String baseUrl = 'http://192.168.1.44:8000'; // For local testing
+  static const String baseUrl =
+      'https://attendxappbackend.naiyo24.com'; // Replace with your backend URL
+  //static const String baseUrl = 'http://192.168.1.44:8000'; // For local testing
   // Employee Endpoints
   static const String loginEmployee = '/login/employees/';
   static const String getEmployeeById =
@@ -48,7 +49,8 @@ class ApiUrl {
 
   // App Updates
   static const String getAllVersions = '/get-all/versions';
-  static const String downloadSpecificApk = '/download/'; // Usage: /download/{filename}
+  static const String downloadSpecificApk =
+      '/download/'; // Usage: /download/{filename}
   static const String downloadLatestApk = '/download-latest';
   static const String getLatestVersion = '/latest-version';
 }
