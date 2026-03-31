@@ -12,22 +12,11 @@ class BreakTimeNotifier extends StateNotifier<List<BreakTime>> {
 
   BreakTimeNotifier() : super([]);
 
-  // Fetch all breaks and filter for today's active ones (or just expose all for today)
-  Future<void> fetchTodayBreaks(int employeeId) async {
+  // Fetch all breaks for calendar
+  Future<void> fetchAllBreaks(int employeeId) async {
     try {
       final records = await _breakTimeServices.getBreaksByEmployee(employeeId);
-      final now = DateTime.now();
-
-      // Filter the records that happen today
-      final todayBreaks = records.where((r) {
-        if (r.breakInTime == null) return false;
-        final localBreakIn = r.breakInTime!.toLocal();
-        return localBreakIn.year == now.year &&
-            localBreakIn.month == now.month &&
-            localBreakIn.day == now.day;
-      }).toList();
-
-      state = todayBreaks;
+      state = records;
     } catch (e) {
       state = [];
       // Ignore or log error
@@ -43,7 +32,7 @@ class BreakTimeNotifier extends StateNotifier<List<BreakTime>> {
       photo: File(photoPath),
     );
     // Fetch latest breaks to update state
-    await fetchTodayBreaks(employeeId);
+    await fetchAllBreaks(employeeId);
   }
 
   Future<void> endBreak({
@@ -55,7 +44,7 @@ class BreakTimeNotifier extends StateNotifier<List<BreakTime>> {
       photo: File(photoPath),
     );
     // Fetch latest breaks to update state
-    await fetchTodayBreaks(employeeId);
+    await fetchAllBreaks(employeeId);
   }
 
   // Helper method to get the current active break, if any

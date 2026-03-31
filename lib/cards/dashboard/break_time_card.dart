@@ -36,7 +36,7 @@ class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
   Future<void> _fetchBreaks() async {
     final user = ref.read(profileProvider);
     if (user?.employeeId != null) {
-      await ref.read(breakTimeProvider.notifier).fetchTodayBreaks(user!.employeeId!);
+      await ref.read(breakTimeProvider.notifier).fetchAllBreaks(user!.employeeId!);
     }
   }
 

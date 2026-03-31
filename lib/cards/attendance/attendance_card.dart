@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../models/attendance.dart';
+import '../../models/break_time.dart'; // import BreakTime model
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AttendanceCard extends StatelessWidget {
   final Attendance? attendance;
-  const AttendanceCard({required this.attendance, super.key});
+  final List<BreakTime>? dailyBreaks; // add daily breaks argument
+  const AttendanceCard({required this.attendance, this.dailyBreaks, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +165,43 @@ class AttendanceCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  // Break Timestamps
+                  if (dailyBreaks != null && dailyBreaks!.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    const Divider(color: kWhiteGrey, thickness: 1.5, height: 1),
+                    const SizedBox(height: 16),
+                    ...dailyBreaks!.map(
+                      (b) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildTimeBox(
+                                icon: Iconsax.cup,
+                                color: kGreen,
+                                title: 'Break Start',
+                                time: b.breakInTime != null
+                                    ? _formatTime(b.breakInTime!)
+                                    : '--:--',
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildTimeBox(
+                                icon: Iconsax.stop,
+                                color: kerror,
+                                title: 'Break End',
+                                time: b.breakOutTime != null
+                                    ? _formatTime(b.breakOutTime!)
+                                    : '--:--',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

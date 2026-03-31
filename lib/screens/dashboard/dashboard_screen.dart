@@ -37,7 +37,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (user?.employeeId != null) {
       await Future.wait([
         ref.read(dashboardProvider.notifier).fetchLatestAttendance(user!.employeeId!),
-        ref.read(breakTimeProvider.notifier).fetchTodayBreaks(user.employeeId!),
+        ref.read(breakTimeProvider.notifier).fetchAllBreaks(user.employeeId!),
       ]);
     }
     if (mounted) setState(() => _isLoading = false);

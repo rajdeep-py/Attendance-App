@@ -8,6 +8,7 @@ import '../../widgets/app_bar.dart';
 import '../../cards/attendance/calendar_card.dart';
 import '../../cards/attendance/attendance_card.dart';
 import '../../provider/attendance_provider.dart';
+import '../../provider/break_time_provider.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,9 +25,10 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
     setState(() => _isLoading = true);
     final user = ref.read(profileProvider);
     if (user?.employeeId != null) {
-      await ref
-          .read(attendanceProvider.notifier)
-          .fetchAttendanceByEmployee(user!.employeeId!);
+      await Future.wait([
+        ref.read(attendanceProvider.notifier).fetchAttendanceByEmployee(user!.employeeId!),
+        ref.read(breakTimeProvider.notifier).fetchAllBreaks(user.employeeId!),
+      ]);
     }
     if (mounted) setState(() => _isLoading = false);
   }
@@ -63,12 +65,21 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final attendanceMap = ref.watch(attendanceProvider);
+    final allBreaks = ref.watch(breakTimeProvider);
     final normalizedDate = DateTime(
       _selectedDate.year,
       _selectedDate.month,
       _selectedDate.day,
     );
     final attendance = attendanceMap[normalizedDate];
+    final dailyBreaks = allBreaks.where((b) {
+      if (b.breakInTime == null) return false;
+      final local = b.breakInTime!.toLocal();
+      return local.year == _selectedDate.year &&
+          local.month == _selectedDate.month &&
+          local.day == _selectedDate.day;
+    }).toList();
+
 
     return PopScope(
       canPop: false,
@@ -119,7 +130,7 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
                       onRefresh: _refreshAttendance,
                     ),
                     const SizedBox(height: 16),
-                    AttendanceCard(attendance: attendance),
+                    AttendanceCard(attendance: attendance, dailyBreaks: dailyBreaks),
                     const SizedBox(height: 48), // Padding before nav bar
                   ],
                 ),
