@@ -14,106 +14,115 @@ import '../../cards/dashboard/footer_card.dart';
 import '../../theme/app_theme.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-	const DashboardScreen({super.key});
+  const DashboardScreen({super.key});
 
-	@override
-	ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+  @override
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
+
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-	bool _isLoading = false;
+  bool _isLoading = false;
 
-	@override
-	void initState() {
-		super.initState();
-		_fetchAttendance();
-	}
+  @override
+  void initState() {
+    super.initState();
+    _fetchAttendance();
+  }
 
-	Future<void> _fetchAttendance() async {
-		setState(() => _isLoading = true);
-		final user = ref.read(profileProvider);
-		if (user?.employeeId != null) {
-			await ref.read(dashboardProvider.notifier).fetchLatestAttendance(user!.employeeId!);
-		}
-		if (mounted) setState(() => _isLoading = false);
-	}
+  Future<void> _fetchAttendance() async {
+    setState(() => _isLoading = true);
+    final user = ref.read(profileProvider);
+    if (user?.employeeId != null) {
+      await ref
+          .read(dashboardProvider.notifier)
+          .fetchLatestAttendance(user!.employeeId!);
+    }
+    if (mounted) setState(() => _isLoading = false);
+  }
 
-	int _currentIndex = 0;
+  int _currentIndex = 0;
 
-	void _onNavTap(int index) {
-		setState(() {
-			_currentIndex = index;
-		});
-		final router = GoRouter.of(context);
-		switch (index) {
-			case 0:
-				router.go('/dashboard');
-				break;
-			case 1:
-				router.go('/my-attendance');
-				break;
-			case 2:
-				router.go('/holidays');
-				break;
-			case 3:
-				router.go('/profile');
-				break;
-		}
-	}
+  void _onNavTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    final router = GoRouter.of(context);
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        router.go('/my-attendance');
+        break;
+      case 2:
+        router.go('/holidays');
+        break;
+      case 3:
+        router.go('/profile');
+        break;
+    }
+  }
 
-	@override
-	Widget build(BuildContext context) {
-		final user = ref.watch(profileProvider);
-		return PopScope(
-			canPop: false,
-			onPopInvoked: (didPop) async {
-				final shouldExit = await showModalBottomSheet<bool>(
-					context: context,
-					isScrollControlled: true,
-					backgroundColor: Colors.transparent,
-					builder: (context) => const QuitAppBottomSheet(),
-				);
-				if (shouldExit == true) {
-					// Exit the app
-					// ignore: use_build_context_synchronously
-					Navigator.of(context).pop();
-				}
-			},
-			child: Stack(
-				children: [
-					Scaffold(
-						backgroundColor: kWhite,
-						appBar: const PremiumAppBar(
-							title: 'Dashboard',
-							subtitle: 'Record your attendance easily',
-							logoAssetPath: 'assets/logo/A24.png',
-						),
-						body: SingleChildScrollView(
-							padding: const EdgeInsets.all(kScreenPadding),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									WelcomeCard(userName: user?.fullName ?? 'User', cardColor: kWhite),
-									CheckInOutCard(
-										cardColor: kWhite,
-										onLoading: (loading) {
-											if (mounted) setState(() => _isLoading = loading);
-										},
-										onRefresh: _fetchAttendance,
-									),
-									const FeatureCard(cardColor: kWhite),
-									const SizedBox(height: 16),
-									const HomeFooter(),
-								],
-							),
-						),
-						bottomNavigationBar: BottomNavBar(
-							currentIndex: _currentIndex,
-							onTap: _onNavTap,
-						),
-					),
-					if (_isLoading) const AppLoader(subText: 'Syncing attendance...'),
-				],
-			),
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(profileProvider);
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        final shouldExit = await showModalBottomSheet<bool>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => const QuitAppBottomSheet(),
+        );
+        if (shouldExit == true) {
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop();
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: kWhiteGrey,
+            appBar: const PremiumAppBar(
+              title: 'Dashboard',
+              subtitle: 'Record your attendance easily',
+              logoAssetPath: 'assets/logo/A24.png',
+              showBackIcon: false,
+            ),
+            body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WelcomeCard(userName: user?.fullName ?? 'User'),
+                  const SizedBox(height: 16),
+                  CheckInOutCard(
+                    onLoading: (loading) {
+                      if (mounted) setState(() => _isLoading = loading);
+                    },
+                    onRefresh: _fetchAttendance,
+                  ),
+                  const SizedBox(height: 16),
+                  const FeatureCard(),
+                  const SizedBox(height: 24),
+                  const HomeFooter(),
+                  const SizedBox(height: 48), // Padding before BottomNavBar
+                ],
+              ),
+            ),
+            bottomNavigationBar: BottomNavBar(
+              currentIndex: _currentIndex,
+              onTap: _onNavTap,
+            ),
+          ),
+          if (_isLoading) const AppLoader(subText: 'Syncing attendance...'),
+        ],
+      ),
+    );
+  }
 }
