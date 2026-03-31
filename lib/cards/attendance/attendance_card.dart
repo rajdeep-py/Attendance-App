@@ -11,138 +11,206 @@ class AttendanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (attendance == null) {
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
           color: kWhite,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: kBrown.withAlpha(15), width: 1),
           boxShadow: [
             BoxShadow(
-              color: kerror.withAlpha((0.13 * 255).toInt()),
-              blurRadius: 24,
+              color: kBlack.withAlpha(10),
+              blurRadius: 20,
               offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: Row(
+        child: Column(
           children: [
-            Icon(Iconsax.info_circle, color: kerror, size: 28),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                'No attendance check in and check out.',
-                style: kHeaderTextStyle.copyWith(
-                  color: kerror,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+            Icon(Iconsax.user_octagon, color: kBrown.withAlpha(80), size: 48),
+            const SizedBox(height: 12),
+            Text(
+              'No Record Found',
+              style: kHeaderTextStyle.copyWith(
+                fontSize: 18,
+                color: kBrown.withAlpha(150),
               ),
             ),
           ],
         ),
       );
     }
-    // Determine present/absent
+
     final bool isPresent = attendance!.checkIn != null;
     final Color statusColor = isPresent ? kGreen : kerror;
+    final IconData statusIcon = isPresent
+        ? Iconsax.verify
+        : Iconsax.close_circle;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+      width: double.infinity,
       decoration: BoxDecoration(
+        color: kWhite,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: kBrown.withAlpha(15), width: 1),
         boxShadow: [
           BoxShadow(
-            color: statusColor.withAlpha((0.13 * 255).toInt()),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
+            color: kBlack.withAlpha(15),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
           ),
         ],
-        color: kWhite,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          children: [
+            // Colored Status Line on Left
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: Container(width: 6, color: statusColor),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: statusColor.withAlpha(25),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(statusIcon, color: statusColor, size: 28),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isPresent ? 'Present' : 'Absent',
+                              style: kHeaderTextStyle.copyWith(
+                                fontSize: 22,
+                                color: kBlack,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            if (isPresent) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                'Logged for ${_formatTime(attendance!.checkIn!)}',
+                                style: kTaglineTextStyle.copyWith(
+                                  fontSize: 14,
+                                  color: kBrown.withAlpha(180),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      if (isPresent && attendance!.checkOut != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: kWhiteGrey,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Completed',
+                            style: kCaptionTextStyle.copyWith(
+                              color: kBrown,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Divider(color: kWhiteGrey, thickness: 1.5, height: 1),
+                  const SizedBox(height: 16),
+
+                  // Timestamps
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildTimeBox(
+                          icon: Iconsax.login,
+                          color: kGreen,
+                          title: 'Check In',
+                          time: attendance!.checkIn != null
+                              ? _formatDateTime(attendance!.checkIn!)
+                              : '--:--',
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildTimeBox(
+                          icon: Iconsax.logout,
+                          color: kerror,
+                          title: 'Check Out',
+                          time: attendance!.checkOut != null
+                              ? _formatDateTime(attendance!.checkOut!)
+                              : '--:--',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeBox({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String time,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: kWhiteGrey,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-            child: Row(
-              children: [
-                Icon(
-                  isPresent ? Iconsax.tick_circle : Iconsax.close_circle,
-                  color: statusColor,
-                  size: 28,
+          Row(
+            children: [
+              Icon(icon, color: color, size: 16),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: kCaptionTextStyle.copyWith(
+                  color: kBrown.withAlpha(150),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  isPresent ? 'Present' : 'Absent',
-                  style: kHeaderTextStyle.copyWith(
-                    color: statusColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                if (attendance!.checkIn != null)
-                  Text(
-                    _formatTime(attendance!.checkIn!),
-                    style: kHeaderTextStyle.copyWith(
-                      color: kText,
-                      fontSize: 16,
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Divider(height: 1, color: kGrey.withAlpha(2)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Iconsax.location, color: kPrimary, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        attendance!.location.isNotEmpty ? attendance!.location : 'No location',
-                        style: kBodyTextStyle.copyWith(fontSize: 15, color: kText),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Icon(Iconsax.login, color: kGreen, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Check-in: ',
-                      style: kBodyTextStyle.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      attendance!.checkIn != null ? _formatDateTime(attendance!.checkIn!) : 'N/A',
-                      style: kBodyTextStyle,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(Iconsax.logout, color: kerror, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Check-out: ',
-                      style: kBodyTextStyle.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      attendance!.checkOut != null ? _formatDateTime(attendance!.checkOut!) : 'N/A',
-                      style: kBodyTextStyle,
-                    ),
-                  ],
-                ),
-              ],
+          const SizedBox(height: 6),
+          Text(
+            time,
+            style: kBodyTextStyle.copyWith(
+              color: kBlack,
+              fontWeight: FontWeight.bold,
+              fontSize: 13.5,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -154,6 +222,6 @@ class AttendanceCard extends StatelessWidget {
   }
 
   String _formatDateTime(DateTime dt) {
-    return "${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}  ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+    return "${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
   }
 }

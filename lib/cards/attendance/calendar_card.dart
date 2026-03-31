@@ -9,6 +9,7 @@ class CalendarCard extends ConsumerWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
   final Future<void> Function()? onRefresh;
+
   const CalendarCard({
     required this.selectedDate,
     required this.onDateSelected,
@@ -19,163 +20,126 @@ class CalendarCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attendanceMap = ref.watch(attendanceProvider);
-    return Column(
-      children: [
-      
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-          decoration: BoxDecoration(
-            color: kWhite,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: kBrown.withAlpha((0.07 * 255).toInt()),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
+
+    return Container(
+      decoration: BoxDecoration(
+        color: kWhite,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: kBrown.withAlpha(15), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: kBlack.withAlpha(15),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TableCalendar(
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: TableCalendar(
           focusedDay: selectedDate,
           firstDay: DateTime.utc(2020, 1, 1),
           lastDay: DateTime.utc(2030, 12, 31),
           selectedDayPredicate: (day) => isSameDay(day, selectedDate),
           onDaySelected: (selected, _) => onDateSelected(selected),
-          daysOfWeekHeight: 32,
+          daysOfWeekHeight: 40,
+          rowHeight: 52,
           daysOfWeekStyle: DaysOfWeekStyle(
-            weekdayStyle: TextStyle(
+            weekdayStyle: kCaptionTextStyle.copyWith(
               color: kBrown,
-              fontWeight: FontWeight.w600,
-              fontFamily: kFontFamily,
-              fontSize: 14,
-              height: 1.2,
+              fontWeight: FontWeight.bold,
             ),
-            weekendStyle: TextStyle(
-              color: kPink,
-              fontWeight: FontWeight.w600,
-              fontFamily: kFontFamily,
-              fontSize: 14,
-              height: 1.2,
-            ),
-            decoration: BoxDecoration(
-              color: kWhiteGrey,
-              borderRadius: BorderRadius.circular(8),
+            weekendStyle: kCaptionTextStyle.copyWith(
+              color: kBlack,
+              fontWeight: FontWeight.bold,
             ),
           ),
           calendarStyle: CalendarStyle(
+            outsideDaysVisible: false,
             todayDecoration: BoxDecoration(
-              color: kWhiteGrey,
+              color: kGreen.withAlpha(25),
               shape: BoxShape.circle,
-              border: Border.all(color: kBrown, width: 2),
             ),
-            selectedDecoration: BoxDecoration(
-              color: kPink,
-              shape: BoxShape.circle,
-              border: Border.all(color: kBrown, width: 2),
-              boxShadow: [
-                BoxShadow(
-                  color: kPink.withAlpha(20),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+            todayTextStyle: kBodyTextStyle.copyWith(
+              color: kGreen,
+              fontWeight: FontWeight.bold,
             ),
-            markerDecoration: BoxDecoration(
+            selectedDecoration: const BoxDecoration(
               color: kBlack,
               shape: BoxShape.circle,
             ),
-            markersMaxCount: 1,
-            outsideDaysVisible: false,
-            todayTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.bold, fontFamily: kFontFamily),
-            selectedTextStyle: TextStyle(color: kWhite, fontWeight: FontWeight.bold, fontFamily: kFontFamily),
-            weekendTextStyle: TextStyle(color: kPink, fontFamily: kFontFamily),
-            defaultTextStyle: TextStyle(color: kBlack, fontFamily: kFontFamily),
-            withinRangeTextStyle: TextStyle(color: kBrown, fontFamily: kFontFamily),
-            disabledTextStyle: TextStyle(color: kWhiteGrey, fontFamily: kFontFamily),
+            selectedTextStyle: kBodyTextStyle.copyWith(
+              color: kWhite,
+              fontWeight: FontWeight.bold,
+            ),
+            defaultTextStyle: kBodyTextStyle.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            weekendTextStyle: kBodyTextStyle.copyWith(
+              color: kBrown,
+              fontWeight: FontWeight.w600,
+            ),
+            cellMargin: const EdgeInsets.all(6),
           ),
           headerStyle: HeaderStyle(
-            titleTextStyle: TextStyle(color: kBlack, fontWeight: FontWeight.bold, fontSize: 18, fontFamily: kFontFamily),
-            formatButtonDecoration: BoxDecoration(
-              color: kWhiteGrey,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: kBrown),
+            titleTextStyle: kHeaderTextStyle.copyWith(
+              fontSize: 20,
+              color: kBlack,
             ),
-            formatButtonTextStyle: TextStyle(color: kBrown, fontWeight: FontWeight.w600, fontFamily: kFontFamily),
-            leftChevronIcon: const Icon(Iconsax.arrow_left, color: kBrown, size: 20),
-            rightChevronIcon: const Icon(Iconsax.arrow_right, color: kBrown, size: 20),
-            headerPadding: const EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-              color: kWhiteGrey,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            formatButtonVisible: false,
+            leftChevronIcon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: kWhiteGrey,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Iconsax.arrow_left_2, color: kBlack, size: 18),
             ),
+            rightChevronIcon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: kWhiteGrey,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Iconsax.arrow_right_3, color: kBlack, size: 18),
+            ),
+            headerPadding: const EdgeInsets.only(bottom: 16),
           ),
           calendarBuilders: CalendarBuilders(
             markerBuilder: (context, date, events) {
               final normalizedDate = DateTime(date.year, date.month, date.day);
-              if (attendanceMap[normalizedDate] != null) {
-                // Present or absent
-                final isPresent = attendanceMap[normalizedDate]?.checkIn != null;
-                return Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      margin: const EdgeInsets.only(bottom: 2),
-                      decoration: BoxDecoration(
-                        color: isPresent ? kGreen : kerror,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: (isPresent ? kGreen : kerror).withAlpha((0.3 * 255).toInt()),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
+              final att = attendanceMap[normalizedDate];
+              if (att != null) {
+                final isPresent = att.checkIn != null;
+                final isSelected = isSameDay(date, selectedDate);
+                final markerColor = isPresent ? kGreen : kerror;
+
+                return Positioned(
+                  bottom: 4,
+                  child: Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: isSelected ? kWhite : markerColor,
+                      shape: BoxShape.circle,
+                      boxShadow: isSelected
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: markerColor.withAlpha(100),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                     ),
                   ),
                 );
               }
               return null;
             },
-            selectedBuilder: (context, date, _) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: kPink,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: kBrown, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: kPink.withAlpha((0.2 * 255).toInt()),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Icon(Iconsax.tick_circle, color: kWhite, size: 18),
-                ),
-              );
-            },
-            todayBuilder: (context, date, _) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: kWhiteGrey,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: kBrown, width: 2),
-                ),
-                child: Center(
-                  child: Icon(Iconsax.calendar, color: kBrown, size: 18),
-                ),
-              );
-            },
           ),
         ),
       ),
-    ),
-      ],
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../provider/profile_provider.dart';
+import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/attendance/calendar_card.dart';
 import '../../cards/attendance/attendance_card.dart';
@@ -18,18 +19,20 @@ class MyAttendanceScreen extends ConsumerStatefulWidget {
 }
 
 class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
-      bool _isLoading = false;
-    Future<void> _refreshAttendance() async {
-      setState(() => _isLoading = true);
-      final user = ref.read(profileProvider);
-      if (user?.employeeId != null) {
-        await ref.read(attendanceProvider.notifier).fetchAttendanceByEmployee(user!.employeeId!);
-      }
-      if (mounted) setState(() => _isLoading = false);
+  bool _isLoading = false;
+  Future<void> _refreshAttendance() async {
+    setState(() => _isLoading = true);
+    final user = ref.read(profileProvider);
+    if (user?.employeeId != null) {
+      await ref
+          .read(attendanceProvider.notifier)
+          .fetchAttendanceByEmployee(user!.employeeId!);
     }
+    if (mounted) setState(() => _isLoading = false);
+  }
+
   DateTime _selectedDate = DateTime.now();
   int _currentIndex = 1;
-
 
   void _onDateSelected(DateTime date) {
     setState(() {
@@ -47,7 +50,6 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
         router.go('/dashboard');
         break;
       case 1:
-        router.go('/my-attendance');
         break;
       case 2:
         router.go('/holidays');
@@ -61,48 +63,74 @@ class _MyAttendanceScreenState extends ConsumerState<MyAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final attendanceMap = ref.watch(attendanceProvider);
-    final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final normalizedDate = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
     final attendance = attendanceMap[normalizedDate];
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
-          context.go('/dashboard');
-        },
-      
+        context.go('/dashboard');
+      },
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: kWhiteGrey,
             appBar: PremiumAppBar(
               title: 'My Attendance',
               subtitle: 'View your daily records',
               logoAssetPath: '',
               actions: [
-                IconButton(
-                  icon: const Icon(Iconsax.refresh, color: Colors.black),
-                  onPressed: _refreshAttendance,
-                  tooltip: 'Refresh',
+                Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    color: kWhite,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: kBlack.withAlpha(10),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Iconsax.refresh, color: kBrown, size: 22),
+                    onPressed: _refreshAttendance,
+                    tooltip: 'Refresh',
+                  ),
                 ),
               ],
               showBackIcon: false,
             ),
-            body: Column(
-              children: [
-                CalendarCard(
-                  selectedDate: _selectedDate,
-                  onDateSelected: _onDateSelected,
-                  onRefresh: _refreshAttendance,
+            body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    CalendarCard(
+                      selectedDate: _selectedDate,
+                      onDateSelected: _onDateSelected,
+                      onRefresh: _refreshAttendance,
+                    ),
+                    const SizedBox(height: 16),
+                    AttendanceCard(attendance: attendance),
+                    const SizedBox(height: 48), // Padding before nav bar
+                  ],
                 ),
-                AttendanceCard(attendance: attendance),
-              ],
+              ),
             ),
             bottomNavigationBar: BottomNavBar(
               currentIndex: _currentIndex,
               onTap: _onNavTap,
             ),
           ),
-          if (_isLoading) const AppLoader(subText: 'Loading attendance...'),
+          if (_isLoading) const AppLoader(subText: 'Refreshing...'),
         ],
       ),
     );
