@@ -8,6 +8,8 @@ import '../../widgets/bottom_nav_bar.dart';
 import '../../cards/dashboard/welcome_card.dart';
 import '../../provider/profile_provider.dart';
 import '../../cards/dashboard/check_in_out_card.dart';
+import '../../cards/dashboard/break_time_card.dart'; // Added BreakTimeCard Import
+import '../../provider/break_time_provider.dart'; // Added BreakTimeProvider Import
 import '../../widgets/loader.dart';
 import '../../cards/dashboard/feature_card.dart';
 import '../../cards/dashboard/footer_card.dart';
@@ -33,9 +35,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     setState(() => _isLoading = true);
     final user = ref.read(profileProvider);
     if (user?.employeeId != null) {
-      await ref
-          .read(dashboardProvider.notifier)
-          .fetchLatestAttendance(user!.employeeId!);
+      await Future.wait([
+        ref.read(dashboardProvider.notifier).fetchLatestAttendance(user!.employeeId!),
+        ref.read(breakTimeProvider.notifier).fetchTodayBreaks(user.employeeId!),
+      ]);
     }
     if (mounted) setState(() => _isLoading = false);
   }
@@ -106,6 +109,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       if (mounted) setState(() => _isLoading = loading);
                     },
                     onRefresh: _fetchAttendance,
+                  ),
+                  const SizedBox(height: 16),
+                  BreakTimeCard(
+                    onLoading: (loading) {
+                      if (mounted) setState(() => _isLoading = loading);
+                    },
                   ),
                   const SizedBox(height: 16),
                   const FeatureCard(),
