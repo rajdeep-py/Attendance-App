@@ -28,10 +28,7 @@ class WelcomeCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: kGreen.withAlpha(25),
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: kBlack, shape: BoxShape.circle),
             child: const Icon(Iconsax.user, color: kGreen, size: 32),
           ),
           const SizedBox(width: 20),

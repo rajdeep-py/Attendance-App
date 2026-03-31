@@ -31,10 +31,10 @@ class FeatureCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: kBlack.withAlpha(10),
+                  color: kBlack,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Icon(Iconsax.info_circle, color: kBlack, size: 28),
+                child: const Icon(Iconsax.info_circle, color: kGreen, size: 28),
               ),
               const SizedBox(width: 16),
               Text(

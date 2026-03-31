@@ -73,7 +73,7 @@ class CheckInOutCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: kGreen.withAlpha(25),
+                    color: kBlack,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Icon(Iconsax.clock, color: kGreen, size: 28),
