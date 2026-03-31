@@ -27,10 +27,7 @@ class MyHolidayCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: kBlack,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: kBlack, shape: BoxShape.circle),
             padding: const EdgeInsets.all(10),
             child: const Icon(Iconsax.calendar, color: Colors.green, size: 24),
           ),
@@ -43,11 +40,17 @@ class MyHolidayCard extends StatelessWidget {
                   children: [
                     Text(
                       _formatDate(request.date),
-                      style: kHeaderTextStyle.copyWith(fontSize: 16, color: kBrown),
+                      style: kHeaderTextStyle.copyWith(
+                        fontSize: 16,
+                        color: kBrown,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: kGreen.withAlpha((0.15 * 255).toInt()),
                         borderRadius: BorderRadius.circular(12),
@@ -83,7 +86,10 @@ class MyHolidayCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   request.message,
-                  style: kDescriptionTextStyle.copyWith(color: kBlack.withAlpha((0.85 * 255).toInt()), fontSize: 14),
+                  style: kDescriptionTextStyle.copyWith(
+                    color: kBlack.withAlpha((0.85 * 255).toInt()),
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
@@ -101,8 +107,18 @@ class MyHolidayCard extends StatelessWidget {
 
   String _monthName(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return months[month - 1];
   }

@@ -41,7 +41,6 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
         router.go('/my-attendance');
         break;
       case 2:
-        // Already on Holidays
         break;
       case 3:
         router.go('/profile');
@@ -52,18 +51,22 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
   @override
   Widget build(BuildContext context) {
     final holidayMap = ref.watch(holidayProvider);
-    final normalizedDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final normalizedDate = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
     final holiday = holidayMap[normalizedDate];
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
-          context.go('/dashboard');
-        },
+        context.go('/dashboard');
+      },
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: kWhite,
+            backgroundColor: kWhiteGrey,
             appBar: const PremiumAppBar(
               title: 'Holidays',
               subtitle: 'View upcoming holidays',
@@ -71,37 +74,53 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
               actions: [],
               showBackIcon: false,
             ),
-            body: Column(
-              children: [
-                HolidayCalendarCard(
-                  selectedDate: _selectedDate,
-                  onDateSelected: _onDateSelected,
+            body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    HolidayCalendarCard(
+                      selectedDate: _selectedDate,
+                      onDateSelected: _onDateSelected,
+                    ),
+                    const SizedBox(height: 16),
+                    HolidayDetailCard(holiday: holiday),
+                    const SizedBox(height: 100), // padding for FAB
+                  ],
                 ),
-                HolidayDetailCard(holiday: holiday),
-              ],
+              ),
             ),
-            floatingActionButton: SizedBox(
-              height: 56,
+            floatingActionButton: Container(
+              height: 58,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: kGreen.withAlpha(75),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: FloatingActionButton.extended(
                 onPressed: () {
                   GoRouter.of(context).go('/request-holiday');
                 },
-                backgroundColor: kPink,
-                elevation: 10,
+                backgroundColor: kGreen,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                icon: const Icon(Iconsax.logout, color: Colors.white, size: 28),
-                label: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                icon: const Icon(Iconsax.add_circle, color: kWhite, size: 28),
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Text(
                     'Request Leave',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: kFontFamily,
-                      fontSize: 18,
-                      letterSpacing: 0.2,
+                    style: kHeaderTextStyle.copyWith(
+                      color: kWhite,
+                      fontSize: 16,
                     ),
                   ),
                 ),

@@ -23,6 +23,13 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
   bool _submitting = false;
   String? _error;
 
+  @override
+  void dispose() {
+    _reasonController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
   Future<void> _submit() async {
     if (_selectedDate == null || _reasonController.text.isEmpty) return;
     setState(() {
@@ -52,7 +59,6 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
         barrierDismissible: false,
         builder: (context) => const LeaveRequestSuccessPopup(),
       );
-      // Do not call setState after dialog, as widget may be disposed
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -60,6 +66,66 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
         _submitting = false;
       });
     }
+  }
+
+  Widget _buildPremiumTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required String labelText,
+    required IconData icon,
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            labelText,
+            style: kHeaderTextStyle.copyWith(fontSize: 16, color: kBrown),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: kWhite,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: kBlack.withAlpha(10),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            border: Border.all(color: kBrown.withAlpha(26)),
+          ),
+          child: TextField(
+            controller: controller,
+            maxLines: maxLines,
+            style: kBodyTextStyle.copyWith(fontWeight: FontWeight.w600),
+            decoration: InputDecoration(
+              prefixIcon: maxLines == 1
+                  ? Icon(icon, color: kBrown.withAlpha(180))
+                  : Padding(
+                      padding: const EdgeInsets.only(bottom: 48),
+                      child: Icon(icon, color: kBrown.withAlpha(180)),
+                    ),
+              hintText: hintText,
+              hintStyle: kBodyTextStyle.copyWith(color: kGrey),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
+              filled: false,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -70,45 +136,47 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
         context.go('/holidays');
       },
       child: Scaffold(
+        backgroundColor: kWhiteGrey,
         appBar: const PremiumAppBar(
-          title: 'Request Holiday',
-          subtitle: 'Submit your holiday request',
+          title: 'Request Leave',
+          subtitle: 'Submit an application',
           showBackIcon: true,
           logoAssetPath: '',
           actions: [],
         ),
-        backgroundColor: kWhiteGrey,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
                 Text(
                   'Select Date',
-                  style: kHeaderTextStyle.copyWith(fontSize: 18, color: kBlack),
+                  style: kHeaderTextStyle.copyWith(fontSize: 16, color: kBrown),
                 ),
                 const SizedBox(height: 8),
                 Container(
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: kWhite,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: kBrown.withAlpha(15), width: 1),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
+                        color: kBlack.withAlpha(10),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
                   child: Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.light(
-                        primary: kPink, // selected day
-                        onPrimary: kWhite, // selected day text
-                        surface: kWhiteGrey, // calendar background
-                        onSurface: kBlack, // default text
+                      colorScheme: const ColorScheme.light(
+                        primary: kBlack, // Selected day color
+                        onPrimary: kWhite, // Selected day text
+                        surface: kWhite, // Calendar background
+                        onSurface: kBlack, // Default text
                       ),
                       textButtonTheme: TextButtonThemeData(
                         style: TextButton.styleFrom(foregroundColor: kBrown),
@@ -125,132 +193,79 @@ class _RequestHolidayScreenState extends ConsumerState<RequestHolidayScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextField(
+                const SizedBox(height: 28),
+                _buildPremiumTextField(
                   controller: _reasonController,
-                  style: kCaptionTextStyle.copyWith(color: kBlack),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Iconsax.note_2,
-                      color: kBrown,
-                      size: 22,
-                    ),
-                    labelText: 'Reason',
-                    labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
-                    hintText: 'E.g. Family function, health, etc.',
-                    hintStyle: kDescriptionTextStyle.copyWith(color: kGrey),
-                    filled: true,
-                    fillColor: kWhite,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                        color: kWhiteGrey,
-                        width: 1.2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                        color: kWhiteGrey,
-                        width: 1.2,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: kPink, width: 1.5),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-                  ),
+                  labelText: 'Reason',
+                  hintText: 'e.g., Sick leave, Personal...',
+                  icon: Iconsax.note_2,
                 ),
-                const SizedBox(height: 16),
-                TextField(
+                const SizedBox(height: 20),
+                _buildPremiumTextField(
                   controller: _messageController,
-                  style: kCaptionTextStyle.copyWith(color: kBlack),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Iconsax.message,
-                      color: kBrown,
-                      size: 22,
-                    ),
-                    labelText: 'Message',
-                    labelStyle: kDescriptionTextStyle.copyWith(color: kBrown),
-                    hintText: 'Add any extra details (optional)',
-                    hintStyle: kDescriptionTextStyle.copyWith(color: kGrey),
-                    filled: true,
-                    fillColor: kWhite,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                        color: kWhiteGrey,
-                        width: 1.2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                        color: kWhiteGrey,
-                        width: 1.2,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: kPink, width: 1.5),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-                  ),
+                  labelText: 'Additional Details',
+                  hintText: 'Optional message to HR...',
+                  icon: Iconsax.message,
                   maxLines: 3,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
+
                 if (_error != null)
-                  Center(
-                    child: Text(
-                      _error!,
-                      style: kDescriptionTextStyle.copyWith(
-                        color: Colors.red,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _submitting ? null : _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kPink,
-                        foregroundColor: kWhite,
-                        elevation: 8,
-                        minimumSize: const Size(0, 54),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        textStyle: kHeaderTextStyle.copyWith(
-                          fontSize: 17,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Center(
+                      child: Text(
+                        _error!,
+                        style: kBodyTextStyle.copyWith(
+                          color: Colors.redAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      icon: _submitting
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: kWhite,
-                              ),
-                            )
-                          : const Icon(Iconsax.send_2, size: 22),
-                      label: _submitting
-                          ? const Text('Submitting...')
-                          : const Text('Submit Request'),
                     ),
                   ),
+
+                Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kGreen.withAlpha(75),
+                        blurRadius: 16,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: _submitting ? null : _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kGreen,
+                      foregroundColor: kWhite,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: _submitting
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: kWhite,
+                            ),
+                          )
+                        : Text(
+                            'Submit Request',
+                            style: kHeaderTextStyle.copyWith(
+                              fontSize: 18,
+                              color: kWhite,
+                            ),
+                          ),
+                  ),
                 ),
+                const SizedBox(height: 48), // Padding at bottom
               ],
             ),
           ),

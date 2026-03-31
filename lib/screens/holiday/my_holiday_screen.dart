@@ -40,9 +40,8 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
-          context.go('/profile');
-        },
+        context.go('/profile');
+      },
       child: Scaffold(
         backgroundColor: kWhite,
         appBar: const PremiumAppBar(
@@ -55,27 +54,33 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
         body: loading
             ? const Center(child: CircularProgressIndicator())
             : error != null
-                ? Center(
-                    child: Text(
-                      'Error: $error',
-                      style: kDescriptionTextStyle.copyWith(color: Colors.red, fontSize: 18),
-                    ),
-                  )
-                : requests.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No holiday requests yet',
-                          style: kDescriptionTextStyle.copyWith(color: kBrown, fontSize: 18),
-                        ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.only(top: 12, bottom: 24),
-                        itemCount: requests.length,
-                        itemBuilder: (context, index) {
-                          final request = requests[index];
-                          return MyHolidayCard(request: request);
-                        },
-                      ),
+            ? Center(
+                child: Text(
+                  'Error: $error',
+                  style: kDescriptionTextStyle.copyWith(
+                    color: Colors.red,
+                    fontSize: 18,
+                  ),
+                ),
+              )
+            : requests.isEmpty
+            ? Center(
+                child: Text(
+                  'No holiday requests yet',
+                  style: kDescriptionTextStyle.copyWith(
+                    color: kBrown,
+                    fontSize: 18,
+                  ),
+                ),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.only(top: 12, bottom: 24),
+                itemCount: requests.length,
+                itemBuilder: (context, index) {
+                  final request = requests[index];
+                  return MyHolidayCard(request: request);
+                },
+              ),
       ),
     );
   }
