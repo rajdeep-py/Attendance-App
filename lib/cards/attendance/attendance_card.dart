@@ -105,7 +105,7 @@ class AttendanceCard extends StatelessWidget {
                             if (isPresent) ...[
                               const SizedBox(height: 4),
                               Text(
-                                'Logged for ${_formatTime(attendance!.checkIn!)}',
+                                'Checked in at ${_formatTime(attendance!.checkIn!)}',
                                 style: kTaglineTextStyle.copyWith(
                                   fontSize: 14,
                                   color: kBrown.withAlpha(180),

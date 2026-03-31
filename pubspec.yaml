@@ -34,23 +34,51 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+
+  # Table Calendar for Calendar view
   table_calendar: ^3.2.0
+
+  # URL Launcher for launching urls, dialers, mail, etc..
   url_launcher: ^6.3.2
+
+  # DIO for API Integration
   pretty_dio_logger: ^1.4.0
   dio: ^5.9.2
+
+  # Image Picker for Picking images from gallery and camera
   image_picker: ^1.0.7
+
+  # Flutter Riverpod for State Management
   flutter_riverpod: ^3.3.1
+
+  # Go Router for Navigation
   go_router: ^17.1.0
+
+  # Icons
   iconsax: ^0.0.8
+
+  # Geolocator for Location
   geolocator: ^14.0.2
+
+  # Shared Preferences for Local Storage
   shared_preferences: ^2.5.4
 
   # OpenStreetMap integration
   flutter_map: ^6.1.0
+
+  # Latlong for extracting the current latitude and longitude of the user
   latlong2: ^0.9.0
+
+  # Package version 
   package_info_plus: ^9.0.1
+
+  # Path provider for file operations
   path_provider: ^2.1.5
+
+  # Permission handler for requesting permissions
   permission_handler: ^12.0.1
+
+  # Open file for opening files
   open_filex: ^4.7.0
 
 dev_dependencies:

@@ -118,10 +118,7 @@ class CheckInOutCard extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Text(
                       attendance.checkIn != null
-                          ? attendance.checkIn!.toLocal().toString().substring(
-                              0,
-                              16,
-                            )
+                          ? _formatDateTime(attendance.checkIn!)
                           : '--',
                       style: kBodyTextStyle.copyWith(
                         color: kBlack,
@@ -177,10 +174,7 @@ class CheckInOutCard extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Text(
                       attendance.checkOut != null
-                          ? attendance.checkOut!.toLocal().toString().substring(
-                              0,
-                              16,
-                            )
+                          ? _formatDateTime(attendance.checkOut!)
                           : '--',
                       style: kBodyTextStyle.copyWith(
                         color: kBlack,
@@ -378,4 +372,16 @@ class CheckInOutCard extends ConsumerWidget {
       if (onLoading != null) onLoading!(false);
     }
   }
+}
+
+String _formatDateTime(DateTime dt) {
+  final localDt = dt.toLocal();
+  final year = localDt.year;
+  final month = localDt.month.toString().padLeft(2, '0');
+  final day = localDt.day.toString().padLeft(2, '0');
+  final hour = localDt.hour;
+  final minute = localDt.minute.toString().padLeft(2, '0');
+  final period = hour >= 12 ? 'PM' : 'AM';
+  final hour12 = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+  return '$year-$month-$day ${hour12.toString().padLeft(2, '0')}:$minute $period';
 }

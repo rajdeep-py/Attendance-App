@@ -56,7 +56,9 @@ class BreakTimeServices {
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
-        throw Exception(e.response?.data['detail'] ?? 'Failed to complete break check-in');
+        throw Exception(
+          e.response?.data['detail'] ?? 'Failed to complete break check-in',
+        );
       }
       throw Exception(e.message);
     }
@@ -89,7 +91,9 @@ class BreakTimeServices {
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
-        throw Exception(e.response?.data['detail'] ?? 'Failed to complete break check-out');
+        throw Exception(
+          e.response?.data['detail'] ?? 'Failed to complete break check-out',
+        );
       }
       throw Exception(e.message);
     }

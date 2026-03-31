@@ -123,7 +123,7 @@ class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
                     const SizedBox(height: 6),
                     Text(
                       isOnBreak 
-                          ? 'Since ${activeBreak.breakInTime!.toLocal().toString().substring(11, 16)}'
+                          ? 'Since ${_formatTimeOnly(activeBreak.breakInTime!)}'
                           : 'You can start your break now.',
                       style: kBodyTextStyle.copyWith(
                         color: kBlack,
@@ -233,4 +233,13 @@ class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
       if (widget.onLoading != null) widget.onLoading!(false);
     }
   }
+}
+
+String _formatTimeOnly(DateTime dt) {
+  final localDt = dt.toLocal();
+  final hour = localDt.hour;
+  final minute = localDt.minute.toString().padLeft(2, '0');
+  final period = hour >= 12 ? 'PM' : 'AM';
+  final hour12 = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+  return '${hour12.toString().padLeft(2, '0')}:$minute $period';
 }

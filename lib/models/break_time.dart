@@ -26,11 +26,11 @@ class BreakTime {
       employeeId: json['employee_id'],
       adminId: json['admin_id'],
       breakInTime: json['break_in_time'] != null
-          ? DateTime.parse(json['break_in_time']).toLocal()
+          ? DateTime.parse('${json['break_in_time']}Z').toLocal()
           : null,
       breakInPhoto: json['break_in_photo'],
       breakOutTime: json['break_out_time'] != null
-          ? DateTime.parse(json['break_out_time']).toLocal()
+          ? DateTime.parse('${json['break_out_time']}Z').toLocal()
           : null,
       breakOutPhoto: json['break_out_photo'],
     );
