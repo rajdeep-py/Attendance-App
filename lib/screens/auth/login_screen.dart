@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -21,10 +23,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final passwordController = TextEditingController();
   bool isLoading = false;
 
-  static Uri get _adminPortalUri => Uri.parse('https://adminattendx.naiyo24.com/#/splash');
+  static Uri get _adminPortalUri =>
+      Uri.parse('https://adminattendx.naiyo24.com/#/splash');
+
+  static const String _demoPhoneNumber = '6289398298';
+  static const String _demoPassword = '12345678';
+
+  late final TapGestureRecognizer _demoTapRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _demoTapRecognizer = TapGestureRecognizer()..onTap = _showDemoBottomSheet;
+  }
 
   @override
   void dispose() {
+    _demoTapRecognizer.dispose();
     phoneController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -97,6 +112,163 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
       }
     }
+  }
+
+  Future<void> _copyToClipboard(String value) async {
+    await Clipboard.setData(ClipboardData(text: value));
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Copied to clipboard.')));
+  }
+
+  void _showDemoBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: kBlack.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Demo Login',
+                style: kHeaderTextStyle.copyWith(fontSize: 20, color: kBlack),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Use these credentials to explore the app.',
+                style: kBodyTextStyle.copyWith(color: kBrown.withOpacity(0.7)),
+              ),
+              const SizedBox(height: 18),
+              _demoCredentialTile(
+                label: 'Phone Number',
+                value: _demoPhoneNumber,
+                onCopy: () => _copyToClipboard(_demoPhoneNumber),
+              ),
+              const SizedBox(height: 12),
+              _demoCredentialTile(
+                label: 'Password',
+                value: _demoPassword,
+                onCopy: () => _copyToClipboard(_demoPassword),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showForgotPasswordBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: kBlack.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Forgot Password?',
+                style: kHeaderTextStyle.copyWith(fontSize: 20, color: kerror),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Please contact your organizational admin to reset your password.',
+                style: kBodyTextStyle.copyWith(
+                  color: kBrown.withOpacity(0.7),
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _demoCredentialTile({
+    required String label,
+    required String value,
+    required VoidCallback onCopy,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: kWhite,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: kBlack.withOpacity(0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: kBrown.withOpacity(0.1)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: kCaptionTextStyle.copyWith(
+                    color: kBrown.withOpacity(0.7),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  value,
+                  style: kBodyTextStyle.copyWith(
+                    color: kBlack,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: onCopy,
+            icon: const Icon(Icons.copy_rounded),
+            color: kBrown,
+            tooltip: 'Copy',
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTextField({
@@ -235,12 +407,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: _showForgotPasswordBottomSheet,
                         style: TextButton.styleFrom(foregroundColor: kBrown),
                         child: Text(
                           'Forgot Password?',
                           style: kCaptionTextStyle.copyWith(
-                            color: kBrown,
+                            color: kerror,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -284,14 +456,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             : Text(
                                 'Login',
                                 style: kHeaderTextStyle.copyWith(
-                                  fontSize: 18,
+                                  fontSize: 22,
                                   color: kWhite,
                                 ),
                               ),
                       ),
                     ),
                     const SizedBox(height: 18),
-                    const Divider(color: kGreen, thickness: 2),
+                    const Divider(color: kBlack, thickness: 1),
                     const SizedBox(height: 12),
                     // Login as Admin Section
                     Row(
@@ -312,6 +484,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text.rich(
+                        TextSpan(
+                          style: kCaptionTextStyle.copyWith(color: kGrey),
+                          children: [
+                            const TextSpan(text: 'Need a demo? '),
+                            TextSpan(
+                              text: 'Get a Demo',
+                              recognizer: _demoTapRecognizer,
+                              style: kCaptionTextStyle.copyWith(
+                                color: kGreen,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     const SizedBox(height: 24),
                   ],
