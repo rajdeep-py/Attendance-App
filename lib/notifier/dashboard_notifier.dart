@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/legacy.dart';
 import '../models/attendance.dart';
 import '../services/attendance_services.dart';
+import '../services/background_location_service.dart';
 
 class DashboardNotifier extends StateNotifier<Attendance> {
   // Public method to fetch and set the latest attendance for a given employee
@@ -46,6 +47,9 @@ class DashboardNotifier extends StateNotifier<Attendance> {
     );
     // Fetch latest attendance and update state
     await fetchLatestAttendance(employeeId);
+
+	// Start background tracking after a successful check-in.
+	await BackgroundLocationService.startTracking(employeeId: employeeId);
   }
 
   Future<void> checkOut({
@@ -62,5 +66,8 @@ class DashboardNotifier extends StateNotifier<Attendance> {
     );
     // Fetch latest attendance and update state
     await fetchLatestAttendance(employeeId);
+
+	// Stop background tracking after a successful check-out.
+	await BackgroundLocationService.stopTracking();
   }
 }

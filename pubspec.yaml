@@ -81,6 +81,12 @@ dependencies:
   # Open file for opening files
   open_filex: ^4.7.0
 
+  # Background service for persistent location tracking
+  flutter_background_service: ^5.1.0
+
+  # Foreground service notification channel (Android)
+  flutter_local_notifications: ^21.0.0
+
 dev_dependencies:
 # For generating app icons and splash screens
   flutter_launcher_icons: ^0.14.4

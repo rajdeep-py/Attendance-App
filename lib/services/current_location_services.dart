@@ -24,10 +24,12 @@ class CurrentLocationService {
 		String? timestamp,
 	}) async {
 		final url = '${ApiUrl.postCurrentLocation}$employeeId';
+		final effectiveTimestamp =
+			timestamp ?? DateTime.now().toUtc().toIso8601String();
 		final data = {
 			'latitude': latitude,
 			'longitude': longitude,
-			'timestamp': ?timestamp,
+			'timestamp': effectiveTimestamp,
 		};
 		await _dio.post(url, data: data);
 	}

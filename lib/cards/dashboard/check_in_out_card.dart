@@ -8,6 +8,7 @@ import '../../theme/app_theme.dart';
 import '../../provider/dashboard_provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../services/background_location_permissions.dart';
 
 typedef LoaderCallback = void Function(bool isLoading);
 typedef RefreshCallback = Future<void> Function();
@@ -253,34 +254,48 @@ class CheckInOutCard extends ConsumerWidget {
   ) async {
     if (onLoading != null) onLoading!(true);
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        await Geolocator.openLocationSettings();
-        return;
-      }
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
+      if (isCheckIn) {
+        final ok = await BackgroundLocationPermissions.ensureForTracking();
+        if (!ok) {
           if (context.mounted) {
             await AttendancePopup.show(
               context,
               message:
-                  'Location permission denied. Please allow location access.',
+                  'Permissions required: allow location "All the time" and notifications for background tracking.',
             );
           }
           return;
         }
-      }
-      if (permission == LocationPermission.deniedForever) {
-        if (context.mounted) {
-          await AttendancePopup.show(
-            context,
-            message:
-                'Location permission permanently denied. Please enable it from settings.',
-          );
+      } else {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        if (!serviceEnabled) {
+          await Geolocator.openLocationSettings();
+          return;
         }
-        return;
+        LocationPermission permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+          if (permission == LocationPermission.denied) {
+            if (context.mounted) {
+              await AttendancePopup.show(
+                context,
+                message:
+                    'Location permission denied. Please allow location access.',
+              );
+            }
+            return;
+          }
+        }
+        if (permission == LocationPermission.deniedForever) {
+          if (context.mounted) {
+            await AttendancePopup.show(
+              context,
+              message:
+                  'Location permission permanently denied. Please enable it from settings.',
+            );
+          }
+          return;
+        }
       }
 
       Position position = await Geolocator.getCurrentPosition(

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routes/app_router.dart';
 import 'theme/app_theme.dart';
+import 'services/background_location_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await BackgroundLocationService.initialize();
+  await BackgroundLocationService.ensureRunningIfEnabled();
   runApp(const MyApp());
 }
 
