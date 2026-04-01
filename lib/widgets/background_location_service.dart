@@ -9,7 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'api_url.dart';
+import '../services/api_url.dart';
 
 class BackgroundLocationService {
   static const String prefsEnabledKey = 'bg_location_enabled';

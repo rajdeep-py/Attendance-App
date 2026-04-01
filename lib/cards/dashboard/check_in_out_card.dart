@@ -8,7 +8,7 @@ import '../../theme/app_theme.dart';
 import '../../provider/dashboard_provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../services/background_location_permissions.dart';
+import '../../widgets/background_location_permissions.dart';
 
 typedef LoaderCallback = void Function(bool isLoading);
 typedef RefreshCallback = Future<void> Function();
