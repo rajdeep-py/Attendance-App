@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../provider/profile_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../provider/auth_provider.dart';
@@ -19,6 +20,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
+
+  static Uri get _adminPortalUri => Uri.parse('https://adminattendx.naiyo24.com/#/splash');
 
   @override
   void dispose() {
@@ -60,6 +63,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() {
           isLoading = false;
         });
+      }
+    }
+  }
+
+  Future<void> _openAdminPortal() async {
+    try {
+      final uri = _adminPortalUri;
+      final canLaunch = await canLaunchUrl(uri);
+      if (!canLaunch) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open admin portal.')),
+          );
+        }
+        return;
+      }
+
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open admin portal.')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open admin portal.')),
+        );
       }
     }
   }
@@ -267,9 +302,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           style: kBodyTextStyle.copyWith(color: kGrey),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: _openAdminPortal,
                           child: Text(
-                            " Admin",
+                            " Organization Admin",
                             style: kBodyTextStyle.copyWith(
                               color: kBlack,
                               fontWeight: FontWeight.bold,
