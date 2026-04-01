@@ -7,6 +7,7 @@ import 'widgets/background_location_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await BackgroundLocationService.initialize();
+  await BackgroundLocationService.flushPendingLocations();
   await BackgroundLocationService.ensureRunningIfEnabled();
   runApp(const MyApp());
 }

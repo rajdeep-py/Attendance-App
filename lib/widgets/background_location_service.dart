@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -16,6 +17,8 @@ class BackgroundLocationService {
   static const String prefsEmployeeIdKey = 'bg_location_employee_id';
   static const String prefsAuthTokenKey = 'bg_location_auth_token';
   static const String prefsIntervalSecondsKey = 'bg_location_interval_seconds';
+  static const String prefsPendingLocationsKey =
+      'bg_location_pending_locations';
 
   static const String invokeStartTracking = 'startTracking';
   static const String invokeStopTracking = 'stopTracking';
@@ -24,6 +27,152 @@ class BackgroundLocationService {
   static const int notificationId = 24001;
 
   static const int defaultIntervalSeconds = 15;
+  static const int maxPendingLocations = 200;
+
+  static List<Map<String, dynamic>> _readPendingLocations(
+    SharedPreferences prefs,
+  ) {
+    final raw = prefs.getString(prefsPendingLocationsKey);
+    if (raw == null || raw.isEmpty) return <Map<String, dynamic>>[];
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) return <Map<String, dynamic>>[];
+      return decoded
+          .whereType<Map>()
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList(growable: true);
+    } catch (_) {
+      return <Map<String, dynamic>>[];
+    }
+  }
+
+  static Future<void> _writePendingLocations(
+    SharedPreferences prefs,
+    List<Map<String, dynamic>> locations,
+  ) async {
+    await prefs.setString(prefsPendingLocationsKey, jsonEncode(locations));
+  }
+
+  static Future<void> enqueuePendingLocation({
+    required double latitude,
+    required double longitude,
+    required String timestampUtcIso,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final pending = _readPendingLocations(prefs);
+    pending.add({
+      'latitude': latitude,
+      'longitude': longitude,
+      'timestamp': timestampUtcIso,
+    });
+    if (pending.length > maxPendingLocations) {
+      pending.removeRange(0, pending.length - maxPendingLocations);
+    }
+    await _writePendingLocations(prefs, pending);
+  }
+
+  static Future<void> flushPendingLocations() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final employeeId = prefs.getInt(prefsEmployeeIdKey);
+    if (employeeId == null) return;
+
+    final pending = _readPendingLocations(prefs);
+    if (pending.isEmpty) return;
+
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: ApiUrl.baseUrl,
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 40),
+        sendTimeout: const Duration(seconds: 20),
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
+
+    bool isTransient(DioException e) {
+      final statusCode = e.response?.statusCode;
+      if (statusCode != null) {
+        if (statusCode == 408 || statusCode == 429) return true;
+        if (statusCode >= 500) return true;
+        return false;
+      }
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+        case DioExceptionType.connectionError:
+        case DioExceptionType.unknown:
+          return true;
+        case DioExceptionType.badResponse:
+        case DioExceptionType.cancel:
+        case DioExceptionType.badCertificate:
+          return false;
+      }
+    }
+
+    Future<void> safePost({
+      required String url,
+      required Map<String, dynamic> data,
+      Options? options,
+    }) async {
+      const maxAttempts = 3;
+      for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          await dio.post(url, data: data, options: options);
+          return;
+        } on DioException catch (e) {
+          final canRetry = attempt < maxAttempts && isTransient(e);
+          if (!canRetry) rethrow;
+          await Future.delayed(Duration(seconds: 2 * attempt));
+        }
+      }
+    }
+
+    final authToken = prefs.getString(prefsAuthTokenKey);
+    final headers = <String, dynamic>{};
+    if (authToken != null && authToken.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $authToken';
+    }
+
+    final url = '${ApiUrl.postCurrentLocation}$employeeId';
+    final remaining = <Map<String, dynamic>>[];
+
+    for (var i = 0; i < pending.length; i++) {
+      final item = pending[i];
+      final lat = item['latitude'];
+      final lng = item['longitude'];
+      final ts = item['timestamp'];
+
+      if (lat is! num || lng is! num || ts is! String || ts.isEmpty) {
+        continue;
+      }
+
+      try {
+        await safePost(
+          url: url,
+          data: {
+            'latitude': lat.toDouble(),
+            'longitude': lng.toDouble(),
+            'timestamp': ts,
+          },
+          options: Options(headers: headers.isEmpty ? null : headers),
+        );
+      } on DioException catch (e) {
+        if (isTransient(e)) {
+          remaining.addAll(pending.sublist(i));
+          break;
+        }
+        // Non-transient (e.g. 401/400): drop item to avoid infinite queue.
+      }
+    }
+
+    if (remaining.isEmpty) {
+      await prefs.remove(prefsPendingLocationsKey);
+    } else {
+      await _writePendingLocations(prefs, remaining);
+    }
+  }
 
   static Future<void> initialize() async {
     final FlutterLocalNotificationsPlugin localNotifications =
@@ -121,7 +270,13 @@ Future<bool> backgroundServiceOnIosBackground(ServiceInstance service) async {
 @pragma('vm:entry-point')
 void backgroundServiceOnStart(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized();
+  // On Android, registering all plugins in the background isolate can trigger
+  // `flutter_background_service_android`'s "main isolate only" warning.
+  // The background Flutter engine already registers plugins; keep the explicit
+  // registrant for non-Android platforms.
+  if (service is! AndroidServiceInstance) {
+    DartPluginRegistrant.ensureInitialized();
+  }
 
   final prefs = await SharedPreferences.getInstance();
 
@@ -139,7 +294,7 @@ void backgroundServiceOnStart(ServiceInstance service) async {
     if (service is AndroidServiceInstance) {
       await service.setForegroundNotificationInfo(
         title: 'AttendX24 tracking',
-        content: content,
+        content: 'You are being tracked for attendance purposes.',
       );
     }
   }
@@ -169,6 +324,10 @@ void backgroundServiceOnStart(ServiceInstance service) async {
       return;
     }
 
+    double? bufferedLat;
+    double? bufferedLng;
+    String? bufferedTimestampUtc;
+
     try {
       _isPosting = true;
 
@@ -178,6 +337,10 @@ void backgroundServiceOnStart(ServiceInstance service) async {
           timeLimit: Duration(seconds: 15),
         ),
       );
+
+      bufferedLat = position.latitude;
+      bufferedLng = position.longitude;
+      bufferedTimestampUtc = DateTime.now().toUtc().toIso8601String();
 
       final authToken = prefs.getString(
         BackgroundLocationService.prefsAuthTokenKey,
@@ -236,9 +399,9 @@ void backgroundServiceOnStart(ServiceInstance service) async {
       await safePost(
         url: url,
         data: {
-          'latitude': position.latitude,
-          'longitude': position.longitude,
-          'timestamp': DateTime.now().toUtc().toIso8601String(),
+          'latitude': bufferedLat,
+          'longitude': bufferedLng,
+          'timestamp': bufferedTimestampUtc,
         },
         options: Options(headers: headers.isEmpty ? null : headers),
       );
@@ -254,6 +417,31 @@ void backgroundServiceOnStart(ServiceInstance service) async {
 
       if (e is DioException) {
         final statusCode = e.response?.statusCode;
+        final isTransientNetworkFailure =
+            e.type == DioExceptionType.connectionTimeout ||
+            e.type == DioExceptionType.sendTimeout ||
+            e.type == DioExceptionType.receiveTimeout ||
+            e.type == DioExceptionType.connectionError ||
+            e.type == DioExceptionType.unknown ||
+            statusCode == 408 ||
+            statusCode == 429 ||
+            (statusCode != null && statusCode >= 500);
+
+        if (isTransientNetworkFailure &&
+            bufferedLat != null &&
+            bufferedLng != null &&
+            bufferedTimestampUtc != null) {
+          try {
+            await BackgroundLocationService.enqueuePendingLocation(
+              latitude: bufferedLat,
+              longitude: bufferedLng,
+              timestampUtcIso: bufferedTimestampUtc,
+            );
+          } catch (_) {
+            // Ignore buffering errors.
+          }
+        }
+
         final type = e.type.name;
         final message = (e.message ?? '').trim();
         final shortMessage = message.isEmpty
@@ -262,7 +450,7 @@ void backgroundServiceOnStart(ServiceInstance service) async {
         await setNotification(
           statusCode == null
               ? 'HTTP error ($type) ${shortMessage.isEmpty ? '' : '| $shortMessage'}'
-              : 'HTTP $statusCode (${type}) ${shortMessage.isEmpty ? '' : '| $shortMessage'}',
+              : 'HTTP $statusCode ($type) ${shortMessage.isEmpty ? '' : '| $shortMessage'}',
         );
       } else {
         await setNotification('Tracking error: ${e.runtimeType}');
