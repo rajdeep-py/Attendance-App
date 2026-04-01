@@ -24,20 +24,9 @@ class BreakTimeCard extends ConsumerStatefulWidget {
 class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
   final ImagePicker _picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
-    // After build completes, fetch breaks for employee
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchBreaks();
-    });
-  }
-
-  Future<void> _fetchBreaks() async {
-    final user = ref.read(profileProvider);
-    if (user?.employeeId != null) {
-      await ref.read(breakTimeProvider.notifier).fetchAllBreaks(user!.employeeId!);
-    }
+  DateTime _dateOnly(DateTime dt) {
+    final local = dt.toLocal();
+    return DateTime(local.year, local.month, local.day);
   }
 
   @override
@@ -45,21 +34,38 @@ class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
     final attendance = ref.watch(dashboardProvider);
     final user = ref.watch(profileProvider);
     final breaks = ref.watch(breakTimeProvider);
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
     
-    // Check if attendance is active
-    final bool isAttendanceActive = attendance.checkIn != null && attendance.checkOut == null;
-    
-    // Check if user is currently on a break
-    BreakTime? activeBreak;
-    if (breaks.isNotEmpty) {
-      try {
-        activeBreak = breaks.firstWhere((b) => b.breakInTime != null && b.breakOutTime == null);
-      } catch (_) {
-        activeBreak = null;
+    final DateTime? checkInDate = attendance.checkIn != null
+        ? _dateOnly(attendance.checkIn!)
+        : null;
+    final DateTime? checkOutDate = attendance.checkOut != null
+        ? _dateOnly(attendance.checkOut!)
+        : null;
+
+    final bool isTodayCheckIn = checkInDate != null && checkInDate == today;
+    final bool isTodayCheckOut = checkOutDate != null && checkOutDate == today;
+    final bool isAttendanceActive = isTodayCheckIn && !isTodayCheckOut;
+
+    final List<BreakTime> breaksToday = breaks
+        .where(
+          (b) => b.breakInTime != null && _dateOnly(b.breakInTime!) == today,
+        )
+        .toList();
+
+    BreakTime? activeBreakToday;
+    for (final b in breaksToday) {
+      if (b.breakInTime != null && b.breakOutTime == null) {
+        if (activeBreakToday == null ||
+            b.breakInTime!.isAfter(activeBreakToday.breakInTime!)) {
+          activeBreakToday = b;
+        }
       }
     }
-    
-    final bool isOnBreak = activeBreak != null;
+
+    final bool isOnBreak = activeBreakToday != null;
 
     // Only show card UI if we have a resolved state and user is checked in
     if (!isAttendanceActive) {
@@ -123,7 +129,7 @@ class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
                     const SizedBox(height: 6),
                     Text(
                       isOnBreak 
-                          ? 'Since ${_formatTimeOnly(activeBreak.breakInTime!)}'
+                          ? 'Since ${_formatTimeOnly(activeBreakToday.breakInTime!)}'
                           : 'You can start your break now.',
                       style: kBodyTextStyle.copyWith(
                         color: kBlack,
@@ -194,6 +200,41 @@ class _BreakTimeCardState extends ConsumerState<BreakTimeCard> {
 
   Future<void> _handleBreakAction(dynamic user, {required bool isStarting}) async {
     if (user?.employeeId == null) return;
+
+    // Hard guard: backend is day-scoped; only allow actions for today's breaks.
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final currentBreaks = ref.read(breakTimeProvider);
+    BreakTime? activeBreakToday;
+    for (final b in currentBreaks) {
+      if (b.breakInTime == null) continue;
+      if (_dateOnly(b.breakInTime!) != today) continue;
+      if (b.breakOutTime != null) continue;
+      if (activeBreakToday == null ||
+          b.breakInTime!.isAfter(activeBreakToday.breakInTime!)) {
+        activeBreakToday = b;
+      }
+    }
+
+    if (!isStarting && activeBreakToday == null) {
+      if (mounted) {
+        BreakTimePopup.show(
+          context,
+          message: 'No active break to end for today.',
+        );
+      }
+      return;
+    }
+
+    if (isStarting && activeBreakToday != null) {
+      if (mounted) {
+        BreakTimePopup.show(
+          context,
+          message: 'You are already on a break.',
+        );
+      }
+      return;
+    }
     
     if (widget.onLoading != null) widget.onLoading!(true);
 

@@ -70,7 +70,7 @@ class ProfileHeaderCard extends StatelessWidget {
                                 width: 86,
                                 height: 86,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) =>
+                                errorBuilder: (_, _, _) =>
                                     _InitialsAvatar(initials: initials),
                               )
                             : _InitialsAvatar(initials: initials),

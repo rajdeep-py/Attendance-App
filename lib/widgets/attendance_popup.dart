@@ -20,7 +20,7 @@ class AttendancePopup {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: kerror.withAlpha(8),
+                    color: kGreen.withAlpha(8),
                     shape: BoxShape.circle,
                   ),
                   padding: const EdgeInsets.all(16),
@@ -43,7 +43,7 @@ class AttendancePopup {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kerror,
+                      backgroundColor: kBlack,
                       foregroundColor: kWhite,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 14),
