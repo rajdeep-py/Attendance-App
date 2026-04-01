@@ -140,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: 44,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: kBlack.withOpacity(0.15),
+                    color: kBlack.withAlpha(38),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -153,7 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 6),
               Text(
                 'Use these credentials to explore the app.',
-                style: kBodyTextStyle.copyWith(color: kBrown.withOpacity(0.7)),
+                style: kBodyTextStyle.copyWith(color: kBrown.withAlpha(179)),
               ),
               const SizedBox(height: 18),
               _demoCredentialTile(
@@ -192,7 +192,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: 44,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: kBlack.withOpacity(0.15),
+                    color: kBlack.withAlpha(38),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -206,7 +206,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Text(
                 'Please contact your organizational admin to reset your password.',
                 style: kBodyTextStyle.copyWith(
-                  color: kBrown.withOpacity(0.7),
+                  color: kBrown.withAlpha(179),
                   height: 1.4,
                 ),
               ),
@@ -228,12 +228,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: kBlack.withOpacity(0.04),
+            color: kBlack.withAlpha(10),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: kBrown.withOpacity(0.1)),
+        border: Border.all(color: kBrown.withAlpha(26)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
@@ -245,7 +245,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Text(
                   label,
                   style: kCaptionTextStyle.copyWith(
-                    color: kBrown.withOpacity(0.7),
+                    color: kBrown.withAlpha(179),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -283,12 +283,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: kBlack.withOpacity(0.04),
+            color: kBlack.withAlpha(10),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: kBrown.withOpacity(0.1)),
+        border: Border.all(color: kBrown.withAlpha(26)),
       ),
       child: TextField(
         controller: controller,
@@ -296,7 +296,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         keyboardType: isPassword ? TextInputType.text : TextInputType.phone,
         style: kBodyTextStyle.copyWith(fontWeight: FontWeight.w600),
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: kBrown.withOpacity(0.7)),
+          prefixIcon: Icon(icon, color: kBrown.withAlpha(179)),
           hintText: hintText,
           hintStyle: kBodyTextStyle.copyWith(color: kGrey),
           border: InputBorder.none,
@@ -329,7 +329,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kGreen.withOpacity(0.08),
+                color: kGreen.withAlpha(20),
               ),
             ),
           ),
@@ -356,7 +356,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: kBlack.withOpacity(0.05),
+                            color: kBlack.withAlpha(13),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -382,7 +382,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Text(
                       'Sign in to access your activity hub and \nmanage your attendance.',
                       style: kBodyTextStyle.copyWith(
-                        color: kBrown.withOpacity(0.7),
+                        color: kBrown.withAlpha(179),
                         height: 1.4,
                       ),
                     ),
@@ -428,7 +428,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: kGreen.withOpacity(0.3),
+                            color: kGreen.withAlpha(77),
                             blurRadius: 16,
                             offset: const Offset(0, 8),
                           ),

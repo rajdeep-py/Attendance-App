@@ -80,7 +80,7 @@ class _ForceUpdateScreenState extends State<ForceUpdateScreen> {
                   'A new version of the app is available and requires an update to continue using the application.',
                   textAlign: TextAlign.center,
                   style: kBodyTextStyle.copyWith(
-                    color: kBrown.withOpacity(0.8),
+                    color: kBrown.withAlpha(204),
                     height: 1.5,
                   ),
                 ),
@@ -90,7 +90,7 @@ class _ForceUpdateScreenState extends State<ForceUpdateScreen> {
                     children: [
                       LinearProgressIndicator(
                         value: _progress,
-                        backgroundColor: kGrey.withOpacity(0.2),
+                        backgroundColor: kGrey.withAlpha(51),
                         valueColor: const AlwaysStoppedAnimation<Color>(kGreen),
                         minHeight: 12,
                         borderRadius: BorderRadius.circular(6),

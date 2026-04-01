@@ -173,7 +173,7 @@ class _AnimatedDots extends StatelessWidget {
               height: 6,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kGreen.withOpacity(0.3 + opacity * 0.7),
+                color: kGreen.withAlpha(((0.3 + opacity * 0.7) * 255).round()),
               ),
             );
           }),

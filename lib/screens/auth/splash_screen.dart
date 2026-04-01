@@ -120,7 +120,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kGreen.withOpacity(0.12),
+                color: kGreen.withAlpha(31),
               ),
             ),
           ),
@@ -132,7 +132,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kBrown.withOpacity(0.08),
+                color: kBrown.withAlpha(20),
               ),
             ),
           ),
@@ -160,12 +160,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           color: kWhite,
                           boxShadow: [
                             BoxShadow(
-                              color: kGreen.withOpacity(0.25),
+                              color: kGreen.withAlpha(64),
                               blurRadius: 50,
                               offset: const Offset(0, 15),
                             ),
                             BoxShadow(
-                              color: kBlack.withOpacity(0.05),
+                              color: kBlack.withAlpha(13),
                               blurRadius: 15,
                               spreadRadius: 2,
                             ),
@@ -205,7 +205,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       Text(
                         'Powered by Naiyo24',
                         style: kTaglineTextStyle.copyWith(
-                          color: kBrown.withOpacity(0.8),
+                          color: kBrown.withAlpha(204),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.5,
