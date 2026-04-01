@@ -1,8 +1,8 @@
 class ApiUrl {
   // Base URL
-  //static const String baseUrl =
-      //'https://attendxappbackend.naiyo24.com'; // Replace with your backend URL
-  static const String baseUrl = 'http://192.168.1.44:8000'; // For local testing
+  static const String baseUrl =
+      'https://attendxappbackend.naiyo24.com'; // Replace with your backend URL
+  //static const String baseUrl = 'http://192.168.1.44:8000'; // For local testing
   // Employee Endpoints
   static const String loginEmployee = '/login/employees/';
   static const String getEmployeeById =
