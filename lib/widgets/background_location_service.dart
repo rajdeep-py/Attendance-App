@@ -38,7 +38,8 @@ class BackgroundLocationService {
 
     await localNotifications
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
 
     final service = FlutterBackgroundService();
@@ -69,19 +70,20 @@ class BackgroundLocationService {
     int intervalSeconds = defaultIntervalSeconds,
   }) async {
     final prefs = await SharedPreferences.getInstance();
+    final clampedIntervalSeconds = intervalSeconds.clamp(2, 3600).toInt();
     await prefs.setBool(prefsEnabledKey, true);
     await prefs.setInt(prefsEmployeeIdKey, employeeId);
     if (authToken != null && authToken.isNotEmpty) {
       await prefs.setString(prefsAuthTokenKey, authToken);
     }
-    await prefs.setInt(prefsIntervalSecondsKey, intervalSeconds);
+    await prefs.setInt(prefsIntervalSecondsKey, clampedIntervalSeconds);
 
     final service = FlutterBackgroundService();
     await service.startService();
     service.invoke(invokeStartTracking, {
       'employeeId': employeeId,
       'authToken': authToken,
-      'intervalSeconds': intervalSeconds,
+      'intervalSeconds': clampedIntervalSeconds,
     });
   }
 
@@ -126,11 +128,10 @@ void backgroundServiceOnStart(ServiceInstance service) async {
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiUrl.baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 20),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      connectTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 40),
+      sendTimeout: const Duration(seconds: 20),
+      headers: {'Content-Type': 'application/json'},
     ),
   );
 
@@ -160,7 +161,9 @@ void backgroundServiceOnStart(ServiceInstance service) async {
 
     if (_isPosting) return;
 
-    final employeeId = prefs.getInt(BackgroundLocationService.prefsEmployeeIdKey);
+    final employeeId = prefs.getInt(
+      BackgroundLocationService.prefsEmployeeIdKey,
+    );
     if (employeeId == null) {
       await setNotification('Missing employee id');
       return;
@@ -172,18 +175,66 @@ void backgroundServiceOnStart(ServiceInstance service) async {
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 15),
         ),
       );
 
-      final authToken = prefs.getString(BackgroundLocationService.prefsAuthTokenKey);
+      final authToken = prefs.getString(
+        BackgroundLocationService.prefsAuthTokenKey,
+      );
       final headers = <String, dynamic>{};
       if (authToken != null && authToken.isNotEmpty) {
         headers['Authorization'] = 'Bearer $authToken';
       }
 
       final url = '${ApiUrl.postCurrentLocation}$employeeId';
-      await dio.post(
-        url,
+      Future<void> safePost({
+        required String url,
+        required Map<String, dynamic> data,
+        Options? options,
+      }) async {
+        const maxAttempts = 3;
+
+        bool shouldRetry(DioException e) {
+          final statusCode = e.response?.statusCode;
+          if (statusCode != null) {
+            if (statusCode == 408 || statusCode == 429) return true;
+            if (statusCode >= 500) return true;
+            return false;
+          }
+
+          switch (e.type) {
+            case DioExceptionType.connectionTimeout:
+            case DioExceptionType.sendTimeout:
+            case DioExceptionType.receiveTimeout:
+            case DioExceptionType.connectionError:
+            case DioExceptionType.unknown:
+              return true;
+            case DioExceptionType.badResponse:
+            case DioExceptionType.cancel:
+            case DioExceptionType.badCertificate:
+              return false;
+          }
+        }
+
+        for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+          try {
+            await dio.post(url, data: data, options: options);
+            return;
+          } on DioException catch (e) {
+            final canRetry = attempt < maxAttempts && shouldRetry(e);
+            if (!canRetry) rethrow;
+            final delay = Duration(seconds: 2 * attempt);
+            await setNotification(
+              'Network issue, retrying in ${delay.inSeconds}s',
+            );
+            await Future.delayed(delay);
+          }
+        }
+      }
+
+      await safePost(
+        url: url,
         data: {
           'latitude': position.latitude,
           'longitude': position.longitude,
@@ -200,7 +251,22 @@ void backgroundServiceOnStart(ServiceInstance service) async {
         debugPrint('Background location tick failed: $e');
         debugPrintStack(stackTrace: st);
       }
-      await setNotification('Tracking error: ${e.runtimeType}');
+
+      if (e is DioException) {
+        final statusCode = e.response?.statusCode;
+        final type = e.type.name;
+        final message = (e.message ?? '').trim();
+        final shortMessage = message.isEmpty
+            ? ''
+            : (message.length > 60 ? message.substring(0, 60) : message);
+        await setNotification(
+          statusCode == null
+              ? 'HTTP error ($type) ${shortMessage.isEmpty ? '' : '| $shortMessage'}'
+              : 'HTTP $statusCode (${type}) ${shortMessage.isEmpty ? '' : '| $shortMessage'}',
+        );
+      } else {
+        await setNotification('Tracking error: ${e.runtimeType}');
+      }
     } finally {
       _isPosting = false;
     }
@@ -208,13 +274,12 @@ void backgroundServiceOnStart(ServiceInstance service) async {
 
   void startLoop() {
     _locationTimer?.cancel();
-    final intervalSeconds = prefs.getInt(
-          BackgroundLocationService.prefsIntervalSecondsKey,
-        ) ??
+    final intervalSeconds =
+        prefs.getInt(BackgroundLocationService.prefsIntervalSecondsKey) ??
         BackgroundLocationService.defaultIntervalSeconds;
 
     _locationTimer = Timer.periodic(
-      Duration(seconds: intervalSeconds.clamp(10, 60)),
+      Duration(seconds: intervalSeconds.clamp(2, 3600)),
       (_) => tick(),
     );
     unawaited(tick());
@@ -224,17 +289,25 @@ void backgroundServiceOnStart(ServiceInstance service) async {
     await stopLoop();
   });
 
-  service.on(BackgroundLocationService.invokeStartTracking).listen((event) async {
+  service.on(BackgroundLocationService.invokeStartTracking).listen((
+    event,
+  ) async {
     if (event != null) {
       final employeeId = event['employeeId'];
       final authToken = event['authToken'];
       final intervalSeconds = event['intervalSeconds'];
 
       if (employeeId is int) {
-        await prefs.setInt(BackgroundLocationService.prefsEmployeeIdKey, employeeId);
+        await prefs.setInt(
+          BackgroundLocationService.prefsEmployeeIdKey,
+          employeeId,
+        );
       }
       if (authToken is String && authToken.isNotEmpty) {
-        await prefs.setString(BackgroundLocationService.prefsAuthTokenKey, authToken);
+        await prefs.setString(
+          BackgroundLocationService.prefsAuthTokenKey,
+          authToken,
+        );
       }
       if (intervalSeconds is int) {
         await prefs.setInt(
@@ -249,7 +322,8 @@ void backgroundServiceOnStart(ServiceInstance service) async {
   });
 
   // If the service is started by the OS (boot, process restart), resume if needed.
-  final enabled = prefs.getBool(BackgroundLocationService.prefsEnabledKey) ?? false;
+  final enabled =
+      prefs.getBool(BackgroundLocationService.prefsEnabledKey) ?? false;
   if (enabled) {
     startLoop();
   } else {

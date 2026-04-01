@@ -48,8 +48,11 @@ class DashboardNotifier extends StateNotifier<Attendance> {
     // Fetch latest attendance and update state
     await fetchLatestAttendance(employeeId);
 
-	// Start background tracking after a successful check-in.
-	await BackgroundLocationService.startTracking(employeeId: employeeId);
+    // Start background tracking after a successful check-in.
+    await BackgroundLocationService.startTracking(
+      employeeId: employeeId,
+      intervalSeconds: 2,
+    );
   }
 
   Future<void> checkOut({
@@ -67,7 +70,7 @@ class DashboardNotifier extends StateNotifier<Attendance> {
     // Fetch latest attendance and update state
     await fetchLatestAttendance(employeeId);
 
-	// Stop background tracking after a successful check-out.
-	await BackgroundLocationService.stopTracking();
+    // Stop background tracking after a successful check-out.
+    await BackgroundLocationService.stopTracking();
   }
 }
