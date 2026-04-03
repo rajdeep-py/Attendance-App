@@ -18,6 +18,10 @@ class ApiUrl {
   static const String getTermsConditions =
       '/get/terms-conditions/'; // Usage: /get/terms-conditions/
 
+  // Privacy Policy
+  static const String getPrivacyPolicy =
+      '/get/privacy-policy/'; // Usage: /get/privacy-policy/
+
   // Leave Requests
   static const String createLeaveRequest = '/create/leave_requests/';
   static const String getLeaveRequestsByEmployee =

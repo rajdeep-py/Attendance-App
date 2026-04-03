@@ -2,32 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../cards/terms_conditions/terms_conditions_card.dart';
-import '../../provider/terms_conditions_provider.dart';
+import '../../cards/privacy_policy/privacy_policy_card.dart';
+import '../../provider/privacy_policy_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 
-class TermsConditionsScreen extends ConsumerStatefulWidget {
-  const TermsConditionsScreen({super.key});
+class PrivacyPolicyScreen extends ConsumerStatefulWidget {
+  const PrivacyPolicyScreen({super.key});
 
   @override
-  ConsumerState<TermsConditionsScreen> createState() =>
-      _TermsConditionsScreenState();
+  ConsumerState<PrivacyPolicyScreen> createState() =>
+      _PrivacyPolicyScreenState();
 }
 
-class _TermsConditionsScreenState extends ConsumerState<TermsConditionsScreen> {
+class _PrivacyPolicyScreenState extends ConsumerState<PrivacyPolicyScreen> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(termsConditionsProvider.notifier).fetchTermsConditions();
+      ref.read(privacyPolicyProvider.notifier).fetchPrivacyPolicies();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.watch(termsConditionsProvider.notifier);
-    final termsList = ref.watch(termsConditionsProvider);
+    final notifier = ref.watch(privacyPolicyProvider.notifier);
+    final policies = ref.watch(privacyPolicyProvider);
     final loading = notifier.loading;
     final error = notifier.error;
 
@@ -41,8 +41,8 @@ class _TermsConditionsScreenState extends ConsumerState<TermsConditionsScreen> {
       child: Scaffold(
         backgroundColor: kWhite,
         appBar: const PremiumAppBar(
-          title: 'Terms & Conditions',
-          subtitle: 'Read our terms and conditions',
+          title: 'Privacy Policy',
+          subtitle: 'Read our privacy policy',
           logoAssetPath: '',
           showBackIcon: true,
           actions: [],
@@ -60,10 +60,10 @@ class _TermsConditionsScreenState extends ConsumerState<TermsConditionsScreen> {
                   textAlign: TextAlign.center,
                 ),
               )
-            : termsList.isEmpty
+            : policies.isEmpty
             ? Center(
                 child: Text(
-                  'No terms available',
+                  'No privacy policy available',
                   style: kDescriptionTextStyle.copyWith(
                     color: kBrown,
                     fontSize: 18,
@@ -72,9 +72,9 @@ class _TermsConditionsScreenState extends ConsumerState<TermsConditionsScreen> {
               )
             : ListView.builder(
                 padding: const EdgeInsets.only(top: 12, bottom: 24),
-                itemCount: termsList.length,
+                itemCount: policies.length,
                 itemBuilder: (context, index) {
-                  return TermsConditionsCard(terms: termsList[index]);
+                  return PrivacyPolicyCard(policy: policies[index]);
                 },
               ),
       ),

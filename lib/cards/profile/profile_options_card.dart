@@ -154,7 +154,11 @@ class ProfileOptionsCard extends ConsumerWidget {
                 }
               } else if (option['title'] == 'Terms & Conditions') {
                 if (context.mounted) {
-                  GoRouter.of(context).go('/terms-conditions');
+                  context.push('/terms-conditions');
+                }
+              } else if (option['title'] == 'Privacy Policy') {
+                if (context.mounted) {
+                  context.push('/privacy-policy');
                 }
               }
             },

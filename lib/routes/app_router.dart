@@ -12,6 +12,7 @@ import '../screens/holiday/request_holiday_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/profile/update_profile_screen.dart';
+import '../screens/privacy_policy/privacy_policy_screen.dart';
 import '../screens/terms_conditions/terms_conditions_screen.dart';
 import '../screens/update/force_update_screen.dart';
 
@@ -40,6 +41,15 @@ final GoRouter appRouter = GoRouter(
       path: '/terms-conditions',
       pageBuilder: (context, state) => CustomTransitionPage(
         child: const TermsConditionsScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    ),
+    GoRoute(
+      path: '/privacy-policy',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        child: const PrivacyPolicyScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
