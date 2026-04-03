@@ -14,6 +14,10 @@ class ApiUrl {
   static const String getNotificationsForEmployee =
       '/notifications/employee/'; // Usage: /notifications/employee/{employee_id}
 
+  // Terms & Conditions
+  static const String getTermsConditions =
+      '/get/terms-conditions/'; // Usage: /get/terms-conditions/
+
   // Leave Requests
   static const String createLeaveRequest = '/create/leave_requests/';
   static const String getLeaveRequestsByEmployee =
@@ -48,7 +52,8 @@ class ApiUrl {
       '/attendance/admin/'; // Usage: /attendance/admin/{admin_id}/employee/{employee_id}
 
   // Current Location
-  static const String postCurrentLocation = '/current-location/employee/'; // Usage: /current-location/employee/{employee_id}
+  static const String postCurrentLocation =
+      '/current-location/employee/'; // Usage: /current-location/employee/{employee_id}
 
   // Break Time
   static const String breakCheckIn =

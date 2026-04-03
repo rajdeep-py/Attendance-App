@@ -14,15 +14,21 @@ class ProfileOptionsCard extends ConsumerWidget {
     final user = ref.read(profileProvider);
     if (user?.employeeId == null) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User info missing')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('User info missing')));
       }
       return;
     }
     try {
-      final slips = await SalarySlipServices().getSalarySlipsByEmployee(user!.employeeId!);
+      final slips = await SalarySlipServices().getSalarySlipsByEmployee(
+        user!.employeeId!,
+      );
       if (slips.isEmpty) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No salary slips found.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No salary slips found.')),
+          );
         }
         return;
       }
@@ -33,15 +39,22 @@ class ProfileOptionsCard extends ConsumerWidget {
         slipId: slip.slipId,
       );
       if (await canLaunchUrl(Uri.parse(pdfUrl))) {
-        await launchUrl(Uri.parse(pdfUrl), mode: LaunchMode.externalApplication);
+        await launchUrl(
+          Uri.parse(pdfUrl),
+          mode: LaunchMode.externalApplication,
+        );
       } else {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open salary slip PDF.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open salary slip PDF.')),
+          );
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -75,6 +88,16 @@ class ProfileOptionsCard extends ConsumerWidget {
         'subtitle': 'Learn more about the company',
       },
       {
+        'icon': Iconsax.document_text,
+        'title': 'Terms & Conditions',
+        'subtitle': 'Read our terms and conditions',
+      },
+      {
+        'icon': Iconsax.shield_tick,
+        'title': 'Privacy Policy',
+        'subtitle': 'Read our privacy policy',
+      },
+      {
         'icon': Iconsax.message,
         'title': 'Help Center',
         'subtitle': 'Get support and assistance',
@@ -104,7 +127,10 @@ class ProfileOptionsCard extends ConsumerWidget {
         itemCount: options.length,
         separatorBuilder: (_, _) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: Divider(height: 1, color: kWhiteGrey.withAlpha((0.8 * 255).toInt())),
+          child: Divider(
+            height: 1,
+            color: kWhiteGrey.withAlpha((0.8 * 255).toInt()),
+          ),
         ),
         itemBuilder: (context, index) {
           final option = options[index];
@@ -125,6 +151,10 @@ class ProfileOptionsCard extends ConsumerWidget {
               } else if (option['title'] == 'About Us') {
                 if (context.mounted) {
                   GoRouter.of(context).go('/about-us');
+                }
+              } else if (option['title'] == 'Terms & Conditions') {
+                if (context.mounted) {
+                  GoRouter.of(context).go('/terms-conditions');
                 }
               }
             },
@@ -150,7 +180,11 @@ class ProfileOptionsCard extends ConsumerWidget {
                       ],
                     ),
                     padding: const EdgeInsets.all(12),
-                    child: Icon(option['icon'] as IconData, color: Colors.white, size: 24),
+                    child: Icon(
+                      option['icon'] as IconData,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
                   const SizedBox(width: 18),
                   Expanded(
