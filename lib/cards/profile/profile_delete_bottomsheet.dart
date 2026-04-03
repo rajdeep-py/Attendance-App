@@ -75,21 +75,33 @@ class _ProfileDeleteBottomSheetState
       if (mounted) {
         final statusCode = e.response?.statusCode;
 
+        String? apiMessage;
+        final data = e.response?.data;
+        if (data is Map) {
+          final detail = data['detail'];
+          final message = data['message'];
+          apiMessage = (detail ?? message)?.toString().trim();
+        } else if (data is String) {
+          apiMessage = data.trim();
+        }
+        if (apiMessage != null && apiMessage.isEmpty) {
+          apiMessage = null;
+        }
+
         String message;
         if (statusCode == 401 || statusCode == 403) {
-          message = 'Incorrect password. Please try again.';
+          message = apiMessage ?? 'Incorrect password. Please try again.';
         } else if (statusCode == 400) {
-          final data = e.response?.data;
-          final raw = data is String ? data : data?.toString();
+          final raw = apiMessage ?? data?.toString();
           final lower = (raw ?? '').toLowerCase();
           message =
               lower.contains('password') ||
                   lower.contains('invalid') ||
                   lower.contains('incorrect')
-              ? 'Incorrect password. Please try again.'
-              : 'Could not delete account. Please try again.';
+              ? (apiMessage ?? 'Incorrect password. Please try again.')
+              : (apiMessage ?? 'Could not delete account. Please try again.');
         } else {
-          message = 'Could not delete account. Please try again.';
+          message = apiMessage ?? 'Could not delete account. Please try again.';
         }
 
         ScaffoldMessenger.of(
