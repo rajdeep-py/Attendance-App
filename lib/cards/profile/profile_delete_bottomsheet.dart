@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -70,11 +71,38 @@ class _ProfileDeleteBottomSheetState
       if (!mounted) return;
       context.pop();
       context.go('/splash');
-    } catch (e) {
+    } on DioException catch (e) {
       if (mounted) {
+        final statusCode = e.response?.statusCode;
+
+        String message;
+        if (statusCode == 401 || statusCode == 403) {
+          message = 'Incorrect password. Please try again.';
+        } else if (statusCode == 400) {
+          final data = e.response?.data;
+          final raw = data is String ? data : data?.toString();
+          final lower = (raw ?? '').toLowerCase();
+          message =
+              lower.contains('password') ||
+                  lower.contains('invalid') ||
+                  lower.contains('incorrect')
+              ? 'Incorrect password. Please try again.'
+              : 'Could not delete account. Please try again.';
+        } else {
+          message = 'Could not delete account. Please try again.';
+        }
+
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Delete failed: $e')));
+        ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not delete account. Please try again.'),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _loading = false);
