@@ -95,9 +95,13 @@ class ProfileOptionsCard extends ConsumerWidget {
         'title': 'Privacy Policy',
         'subtitle': 'Read our privacy policy',
       },
-
       {
-        'icon': Iconsax.message,
+        'icon': Iconsax.filter_search5,
+        'title': 'Documentation',
+        'subtitle': 'Read our App Flow documentation',
+      },
+      {
+        'icon': Iconsax.call,
         'title': 'Help Center',
         'subtitle': 'Get support and assistance',
       },

@@ -505,6 +505,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Read Documentation',
+                          style: kCaptionTextStyle.copyWith(
+                            color: kerror,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     const SizedBox(height: 24),
                   ],
                 ),
