@@ -51,4 +51,8 @@ class ProfileNotifier extends StateNotifier<User?> {
       rethrow;
     }
   }
+
+  void clear() {
+    state = null;
+  }
 }

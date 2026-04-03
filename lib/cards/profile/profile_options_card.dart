@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../services/salary_slip_services.dart';
 import '../../provider/profile_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'profile_delete_bottomsheet.dart';
 
 class ProfileOptionsCard extends ConsumerWidget {
   const ProfileOptionsCard({super.key});
@@ -97,6 +98,7 @@ class ProfileOptionsCard extends ConsumerWidget {
         'title': 'Privacy Policy',
         'subtitle': 'Read our privacy policy',
       },
+
       {
         'icon': Iconsax.message,
         'title': 'Help Center',
@@ -106,6 +108,11 @@ class ProfileOptionsCard extends ConsumerWidget {
         'icon': Iconsax.logout,
         'title': 'Log Out',
         'subtitle': 'Sign out of your account',
+      },
+      {
+        'icon': Iconsax.trash,
+        'title': 'Delete Account',
+        'subtitle': 'Permanently delete your account',
       },
     ];
     return Container(
@@ -134,7 +141,9 @@ class ProfileOptionsCard extends ConsumerWidget {
         ),
         itemBuilder: (context, index) {
           final option = options[index];
-          final isLogout = option['title'] == 'Log Out';
+          final isDestructive =
+              option['title'] == 'Log Out' ||
+              option['title'] == 'Delete Account';
           return InkWell(
             borderRadius: BorderRadius.circular(18),
             onTap: () async {
@@ -160,6 +169,14 @@ class ProfileOptionsCard extends ConsumerWidget {
                 if (context.mounted) {
                   context.push('/privacy-policy');
                 }
+              } else if (option['title'] == 'Delete Account') {
+                if (!context.mounted) return;
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const ProfileDeleteBottomSheet(),
+                );
               }
             },
             child: Padding(
@@ -169,7 +186,7 @@ class ProfileOptionsCard extends ConsumerWidget {
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: isLogout
+                        colors: isDestructive
                             ? [kerror.withAlpha((0.8 * 255).toInt()), kerror]
                             : [kBlack, kGreen],
                         begin: Alignment.topLeft,
@@ -198,7 +215,7 @@ class ProfileOptionsCard extends ConsumerWidget {
                         Text(
                           option['title'] as String,
                           style: TextStyle(
-                            color: isLogout ? kerror : kBlack,
+                            color: isDestructive ? kerror : kBlack,
                             fontWeight: FontWeight.w700,
                             fontFamily: kFontFamily,
                             fontSize: 17,

@@ -9,6 +9,8 @@ class ApiUrl {
       '/get-by/employees/'; // Usage: /get-by/employees/{employee_id}
   static const String updateEmployeeById =
       '/update/employees/'; // Usage: /update/employees/{employee_id}
+  static const String deleteEmployeeByAdmin =
+      '/delete/employees/'; // Usage: /delete/employees/{employee_id}/admin/{admin_id}
 
   // Notifications
   static const String getNotificationsForEmployee =
