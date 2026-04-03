@@ -17,6 +17,8 @@ const String _pushChannelId = 'attendx24_push_notifications';
 const String _pushChannelName = 'Attendance notifications';
 const String _pushChannelDescription = 'Push notifications from AttendX24.';
 
+const String _allUsersTopic = 'attendx24_all';
+
 const String _pushPrefsKey = 'push_notifications_cache_v1';
 const int _maxStoredPushNotifications = 50;
 
@@ -69,8 +71,7 @@ AppNotification? _notificationFromMap(Map<String, dynamic> map) {
     id: id,
     title: map['title']?.toString() ?? '',
     message: map['message']?.toString() ?? '',
-    date:
-        DateTime.tryParse(map['date']?.toString() ?? '') ?? DateTime.now(),
+    date: DateTime.tryParse(map['date']?.toString() ?? '') ?? DateTime.now(),
     isRead: map['isRead'] == true,
   );
 }
@@ -108,8 +109,7 @@ Future<void> _storeNotification(AppNotification n) async {
     final prev = byId[n.id];
     byId[n.id] = prev == null ? n : n.copyWith(isRead: prev.isRead);
 
-    final list = byId.values.toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
+    final list = byId.values.toList()..sort((a, b) => b.date.compareTo(a.date));
 
     final trimmed = list.length > _maxStoredPushNotifications
         ? list.sublist(0, _maxStoredPushNotifications)
@@ -228,6 +228,15 @@ class PushNotificationService {
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
+    // Subscribe every install to a broadcast topic (useful for Firebase Console
+    // sends like: "Send to topic" -> attendx24_all).
+    // Note: topic delivery requires the app to be opened at least once.
+    try {
+      await FirebaseMessaging.instance.subscribeToTopic(_allUsersTopic);
+    } catch (_) {
+      // Best-effort.
+    }
+
     // Load any stored notifications (e.g. received while app was backgrounded).
     final stored = await _loadStoredNotifications();
     for (final n in stored) {
@@ -258,6 +267,12 @@ class PushNotificationService {
     if (kDebugMode) {
       debugPrint('FCM token: $token');
     }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      if (kDebugMode) {
+        debugPrint('FCM token refreshed: $newToken');
+      }
+    });
 
     FirebaseMessaging.onMessage.listen((message) async {
       final n = _toAppNotification(message);
