@@ -177,6 +177,21 @@ class ProfileOptionsCard extends ConsumerWidget {
                   backgroundColor: Colors.transparent,
                   builder: (context) => const ProfileDeleteBottomSheet(),
                 );
+              } else if (option['title'] == 'Help Center') {
+                final telUri = Uri.parse('tel:+916289171798');
+                final canLaunch = await canLaunchUrl(telUri);
+                if (!canLaunch) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Could not open the dialer.'),
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                await launchUrl(telUri, mode: LaunchMode.externalApplication);
               }
             },
             child: Padding(
