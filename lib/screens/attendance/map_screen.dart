@@ -60,7 +60,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        context.go('/dashboard');
+        context.go('/profile');
       },
       child: Scaffold(
         appBar: PremiumAppBar(

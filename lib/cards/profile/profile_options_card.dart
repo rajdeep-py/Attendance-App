@@ -79,11 +79,7 @@ class ProfileOptionsCard extends ConsumerWidget {
         'title': 'My Holidays',
         'subtitle': 'View and manage your holiday requests',
       },
-      {
-        'icon': Iconsax.notification,
-        'title': 'Notifications',
-        'subtitle': 'Manage notification preferences',
-      },
+
       {
         'icon': Iconsax.info_circle,
         'title': 'About Us',

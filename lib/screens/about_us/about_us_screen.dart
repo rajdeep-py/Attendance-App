@@ -18,7 +18,7 @@ class AboutUsScreen extends ConsumerWidget {
       canPop: false,
       onPopInvoked: (didPop) {
         
-          context.go('/dashboard');
+          context.go('/profile');
         },
         child:
     Scaffold(
