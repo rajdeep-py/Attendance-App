@@ -507,15 +507,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 10),
                     Center(
-                      child: Text.rich(
-                        TextSpan(
-                          text: 'Read Documentation',
-                          style: kCaptionTextStyle.copyWith(
-                            color: kerror,
-                            fontWeight: FontWeight.w700,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.push('/documentation');
+                        },
+                        child: Text.rich(
+                          TextSpan(
+                            text: 'Read Documentation',
+                            style: kCaptionTextStyle.copyWith(
+                              color: kerror,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                     const SizedBox(height: 24),

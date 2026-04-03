@@ -170,6 +170,10 @@ class ProfileOptionsCard extends ConsumerWidget {
                 if (context.mounted) {
                   context.push('/privacy-policy');
                 }
+              } else if (option['title'] == 'Documentation') {
+                if (context.mounted) {
+                  context.push('/documentation');
+                }
               } else if (option['title'] == 'Delete Account') {
                 if (!context.mounted) return;
                 showModalBottomSheet(

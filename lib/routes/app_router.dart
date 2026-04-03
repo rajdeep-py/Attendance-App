@@ -15,6 +15,7 @@ import '../screens/profile/update_profile_screen.dart';
 import '../screens/privacy_policy/privacy_policy_screen.dart';
 import '../screens/terms_conditions/terms_conditions_screen.dart';
 import '../screens/update/force_update_screen.dart';
+import '../screens/documentation/documentation_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -50,6 +51,15 @@ final GoRouter appRouter = GoRouter(
       path: '/privacy-policy',
       pageBuilder: (context, state) => CustomTransitionPage(
         child: const PrivacyPolicyScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    ),
+    GoRoute(
+      path: '/documentation',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        child: const DocumentationScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

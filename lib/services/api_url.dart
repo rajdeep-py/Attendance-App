@@ -24,6 +24,10 @@ class ApiUrl {
   static const String getPrivacyPolicy =
       '/get/privacy-policy/'; // Usage: /get/privacy-policy/
 
+  // Documentation
+  static const String getDocumentation =
+      '/get/documentation/'; // Usage: /get/documentation/
+
   // Leave Requests
   static const String createLeaveRequest = '/create/leave_requests/';
   static const String getLeaveRequestsByEmployee =
