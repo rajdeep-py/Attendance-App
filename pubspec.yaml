@@ -87,6 +87,10 @@ dependencies:
   # Foreground service notification channel (Android)
   flutter_local_notifications: ^21.0.0
 
+  # Firebase Core and Messaging for push notifications
+  firebase_core: ^4.6.0
+  firebase_messaging: ^16.1.3
+
 dev_dependencies:
 # For generating app icons and splash screens
   flutter_launcher_icons: ^0.14.4
