@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/app_theme.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/salary_slip_services.dart';
+import '../../provider/auth_provider.dart';
 import '../../provider/profile_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'profile_delete_bottomsheet.dart';
+import '../../widgets/background_location_service.dart';
 
 class ProfileOptionsCard extends ConsumerWidget {
   const ProfileOptionsCard({super.key});
@@ -192,6 +195,31 @@ class ProfileOptionsCard extends ConsumerWidget {
                 }
 
                 await launchUrl(telUri, mode: LaunchMode.externalApplication);
+              } else if (option['title'] == 'Log Out') {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('is_logged_in', false);
+                await prefs.remove('employee_id');
+
+                // Clear background tracking prefs for the current user
+                await prefs.remove(BackgroundLocationService.prefsEnabledKey);
+                await prefs.remove(
+                  BackgroundLocationService.prefsEmployeeIdKey,
+                );
+                await prefs.remove(BackgroundLocationService.prefsAuthTokenKey);
+                await prefs.remove(
+                  BackgroundLocationService.prefsIntervalSecondsKey,
+                );
+                await prefs.remove(
+                  BackgroundLocationService.prefsPendingLocationsKey,
+                );
+
+                await BackgroundLocationService.stopTracking();
+
+                ref.read(authProvider.notifier).logout();
+                ref.read(profileProvider.notifier).clear();
+
+                if (!context.mounted) return;
+                context.go('/splash');
               }
             },
             child: Padding(
