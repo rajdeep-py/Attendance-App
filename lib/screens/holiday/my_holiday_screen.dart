@@ -32,7 +32,9 @@ class _MyHolidayScreenState extends ConsumerState<MyHolidayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.watch(holidayProvider.notifier);
+    // Watch the provider state so this screen rebuilds when the notifier updates.
+    ref.watch(holidayProvider);
+    final notifier = ref.read(holidayProvider.notifier);
     final requests = notifier.requests;
     final loading = notifier.loading;
     final error = notifier.error;

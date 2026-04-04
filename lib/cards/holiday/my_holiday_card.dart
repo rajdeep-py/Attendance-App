@@ -7,6 +7,43 @@ class MyHolidayCard extends StatelessWidget {
   final HolidayRequest request;
   const MyHolidayCard({required this.request, super.key});
 
+  String get _statusLabel {
+    final raw = (request.status ?? '').trim();
+    if (raw.isEmpty) return 'Pending';
+
+    final normalized = raw.toLowerCase();
+    switch (normalized) {
+      case 'approved':
+        return 'Approved';
+      case 'rejected':
+        return 'Rejected';
+      case 'pending':
+        return 'Pending';
+      default:
+        return raw;
+    }
+  }
+
+  Color get _statusColor {
+    switch (_statusLabel.toLowerCase()) {
+      case 'approved':
+        return kGreen;
+      case 'rejected':
+        return kerror;
+      default:
+        return kBrown;
+    }
+  }
+
+  String get _secondaryMessage {
+    final message = request.message.trim();
+    final reason = request.reason.trim();
+    if (message.isEmpty || message.toLowerCase() == reason.toLowerCase()) {
+      return '';
+    }
+    return message;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,13 +89,13 @@ class MyHolidayCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: kGreen.withAlpha((0.15 * 255).toInt()),
+                        color: _statusColor.withAlpha((0.15 * 255).toInt()),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        'Pending',
+                        _statusLabel,
                         style: TextStyle(
-                          color: kGreen,
+                          color: _statusColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                           fontFamily: kFontFamily,
@@ -84,13 +121,14 @@ class MyHolidayCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  request.message,
-                  style: kDescriptionTextStyle.copyWith(
-                    color: kBlack.withAlpha((0.85 * 255).toInt()),
-                    fontSize: 14,
+                if (_secondaryMessage.isNotEmpty)
+                  Text(
+                    _secondaryMessage,
+                    style: kDescriptionTextStyle.copyWith(
+                      color: kBlack.withAlpha((0.85 * 255).toInt()),
+                      fontSize: 14,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
