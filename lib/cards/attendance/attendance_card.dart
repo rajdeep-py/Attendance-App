@@ -9,6 +9,44 @@ class AttendanceCard extends StatelessWidget {
   final List<BreakTime>? dailyBreaks; // add daily breaks argument
   const AttendanceCard({required this.attendance, this.dailyBreaks, super.key});
 
+  String _capitalize(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return trimmed;
+    return '${trimmed[0].toUpperCase()}${trimmed.substring(1)}';
+  }
+
+  ({String label, Color color, IconData icon}) _statusUi(Attendance a) {
+    final raw = (a.status ?? '').trim();
+    final normalized = raw.toLowerCase();
+
+    switch (normalized) {
+      case 'present':
+        return (label: 'Present', color: kGreen, icon: Iconsax.verify);
+      case 'absent':
+        return (label: 'Absent', color: kerror, icon: Iconsax.close_circle);
+      case 'rejected':
+        return (label: 'Rejected', color: kerror, icon: Iconsax.close_circle);
+      case 'approved':
+        return (label: 'Approved', color: kGreen, icon: Iconsax.verify);
+      case 'pending':
+        return (label: 'Pending', color: kBrown, icon: Iconsax.info_circle);
+      default:
+        if (raw.isNotEmpty) {
+          return (
+            label: _capitalize(raw),
+            color: kBrown,
+            icon: Iconsax.info_circle,
+          );
+        }
+
+        // Fallback for older/partial payloads.
+        if (a.checkIn != null) {
+          return (label: 'Present', color: kGreen, icon: Iconsax.verify);
+        }
+        return (label: 'Absent', color: kerror, icon: Iconsax.close_circle);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (attendance == null) {
@@ -43,11 +81,8 @@ class AttendanceCard extends StatelessWidget {
       );
     }
 
-    final bool isPresent = attendance!.checkIn != null;
-    final Color statusColor = isPresent ? kGreen : kerror;
-    final IconData statusIcon = isPresent
-        ? Iconsax.verify
-        : Iconsax.close_circle;
+    final statusUi = _statusUi(attendance!);
+    final bool hasCheckIn = attendance!.checkIn != null;
 
     return Container(
       width: double.infinity,
@@ -72,7 +107,7 @@ class AttendanceCard extends StatelessWidget {
               left: 0,
               top: 0,
               bottom: 0,
-              child: Container(width: 6, color: statusColor),
+              child: Container(width: 6, color: statusUi.color),
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -84,10 +119,14 @@ class AttendanceCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: statusColor.withAlpha(25),
+                          color: statusUi.color.withAlpha(25),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Icon(statusIcon, color: statusColor, size: 28),
+                        child: Icon(
+                          statusUi.icon,
+                          color: statusUi.color,
+                          size: 28,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -95,14 +134,14 @@ class AttendanceCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isPresent ? 'Present' : 'Absent',
+                              statusUi.label,
                               style: kHeaderTextStyle.copyWith(
                                 fontSize: 22,
                                 color: kBlack,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            if (isPresent) ...[
+                            if (hasCheckIn) ...[
                               const SizedBox(height: 4),
                               Text(
                                 'Checked in at ${_formatTime(attendance!.checkIn!)}',
@@ -115,7 +154,7 @@ class AttendanceCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (isPresent && attendance!.checkOut != null)
+                      if (attendance!.checkOut != null)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
