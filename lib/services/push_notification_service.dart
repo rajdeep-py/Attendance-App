@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -185,7 +186,10 @@ Future<void> _showLocalNotification(
     id: DateTime.now().millisecondsSinceEpoch.remainder(1 << 31),
     title: title,
     body: body,
-    notificationDetails: NotificationDetails(android: androidDetails, iOS: iOSDetails),
+    notificationDetails: NotificationDetails(
+      android: androidDetails,
+      iOS: iOSDetails,
+    ),
   );
 }
 
@@ -221,21 +225,41 @@ class PushNotificationService {
 
   static FlutterLocalNotificationsPlugin? _localNotifications;
 
+  static Future<String?> _getTokenWithRetry({int maxAttempts = 3}) async {
+    // Avoid blocking app startup indefinitely. FCM can legitimately be
+    // unavailable on some emulators/devices (e.g. preview system images).
+    const delays = <Duration>[
+      Duration(seconds: 1),
+      Duration(seconds: 3),
+      Duration(seconds: 10),
+    ];
+
+    Object? lastError;
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        final token = await FirebaseMessaging.instance.getToken();
+        if (token != null && token.isNotEmpty) return token;
+      } catch (e) {
+        lastError = e;
+      }
+
+      if (attempt < delays.length) {
+        await Future<void>.delayed(delays[attempt]);
+      }
+    }
+
+    if (kDebugMode && lastError != null) {
+      debugPrint('FCM getToken failed: $lastError');
+    }
+    return null;
+  }
+
   static Future<void> initialize(ProviderContainer container) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
-    // Subscribe every install to a broadcast topic (useful for Firebase Console
-    // sends like: "Send to topic" -> attendx24_all).
-    // Note: topic delivery requires the app to be opened at least once.
-    try {
-      await FirebaseMessaging.instance.subscribeToTopic(_allUsersTopic);
-    } catch (_) {
-      // Best-effort.
-    }
 
     // Load any stored notifications (e.g. received while app was backgrounded).
     final stored = await _loadStoredNotifications();
@@ -263,10 +287,26 @@ class PushNotificationService {
       );
     }
 
-    final token = await FirebaseMessaging.instance.getToken();
-    if (kDebugMode) {
-      debugPrint('FCM token: $token');
-    }
+    // Token + topic setup can fail transiently (or permanently on some
+    // emulators). Do it best-effort and don't block app startup.
+    unawaited(() async {
+      final token = await _getTokenWithRetry();
+      if (kDebugMode) {
+        debugPrint('FCM token: $token');
+      }
+
+      if (token != null) {
+        // Subscribe every install to a broadcast topic (useful for Firebase
+        // Console sends like: "Send to topic" -> attendx24_all).
+        try {
+          await FirebaseMessaging.instance.subscribeToTopic(_allUsersTopic);
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('FCM subscribeToTopic failed: $e');
+          }
+        }
+      }
+    }());
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       if (kDebugMode) {

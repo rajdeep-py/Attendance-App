@@ -9,7 +9,7 @@ class DocumentationServices {
     BaseOptions(
       baseUrl: ApiUrl.baseUrl,
       connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 40),
     ),
   )..interceptors.add(PrettyDioLogger());
 
