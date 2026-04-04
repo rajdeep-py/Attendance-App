@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../cards/dashboard/quit_app_bottomsheet.dart';
 import '../../provider/dashboard_provider.dart';
 import '../../widgets/app_bar.dart';
@@ -89,11 +90,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: [
           Scaffold(
             backgroundColor: kWhiteGrey,
-            appBar: const PremiumAppBar(
+            appBar: PremiumAppBar(
               title: 'Dashboard',
               subtitle: 'Record your attendance easily',
               logoAssetPath: 'assets/logo/A24.png',
               showBackIcon: false,
+              actions: [
+                IconButton(
+                  icon: const Icon(Iconsax.info_circle, color: kPink, size: 26),
+                  onPressed: () => context.push('/documentation'),
+                  tooltip: 'Documentation',
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Iconsax.notification,
+                    color: kPink,
+                    size: 28,
+                  ),
+                  onPressed: () => context.push('/notifications'),
+                  tooltip: 'Notifications',
+                ),
+              ],
             ),
             body: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
